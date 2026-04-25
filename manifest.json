@@ -1,0 +1,94 @@
+[
+    {
+        "id": "clean_1",
+        "variation": "clean",
+        "variation_label": "Clean Baseline",
+        "dataset": "LibriSpeech test-clean",
+        "file": "dataset/librispeech-clean/6829-68769-0000.wav",
+        "language": "en",
+        "reference": "KENNETH AND BETH REFRAINED FROM TELLING THE OTHER GIRLS OR UNCLE JOHN OF OLD WILL ROGERS'S VISIT BUT THEY GOT MISTER WATSON IN THE LIBRARY AND QUESTIONED HIM CLOSELY ABOUT THE PENALTY FOR FORGING A CHECK"
+    },
+    {
+        "id": "clean_2",
+        "variation": "clean",
+        "variation_label": "Clean Baseline",
+        "dataset": "LibriSpeech test-clean",
+        "file": "dataset/librispeech-clean/5639-40744-0031.wav",
+        "language": "en",
+        "reference": "SO PERSUASIVE WERE HER ENTREATIES AND SO STRONG HER ASSURANCES THAT NO HARM WHATEVER COULD RESULT TO THEM FROM THE INFORMATION SHE SOUGHT THEY WERE INDUCED TO CONFESS THAT ONE SUMMER'S NIGHT THE SAME SHE HAD MENTIONED THEMSELVES AND ANOTHER FRIEND BEING OUT ON A STROLL WITH RODOLFO THEY HAD BEEN CONCERNED IN THE ABDUCTION OF A GIRL WHOM RODOLFO CARRIED OFF WHILST THE REST OF THEM DETAINED HER FAMILY WHO MADE A GREAT OUTCRY AND WOULD HAVE DEFENDED HER IF THEY COULD"
+    },
+    {
+        "id": "noise_1",
+        "variation": "background_noise",
+        "variation_label": "Background Noise",
+        "dataset": "LibriSpeech test-other",
+        "file": "dataset/librispeech-noise/83-11691-0035.wav",
+        "language": "en",
+        "reference": "He returned to the palace and began to think it out. Left to himself, Udo very soon made up his mind. There were three courses open to him. He might stay where he was till he was restored to health."
+    },
+    {
+        "id": "noise_2",
+        "variation": "background_noise",
+        "variation_label": "Background Noise",
+        "dataset": "LibriSpeech test-other",
+        "file": "dataset/librispeech-noise/196-122150-0032.wav",
+        "language": "en",
+        "reference": "Said the German skipper to his new chief mate. An Arab, the leader of that pious voyage, came last. He walked slowly aboard, handsome and grave in his white gown and large turban. A string of servants followed, loaded with his luggage."
+    },
+    {
+        "id": "multi_speaker_1",
+        "variation": "multiple_speakers",
+        "variation_label": "Multiple Speakers",
+        "dataset": "AMI Corpus",
+        "file": "dataset/ami/EN2002a.wav",
+        "language": "en",
+        "reference": "SPEAKER_1: FUNKY SH STUFF LIKE THAT\nSPEAKER_2: WONDER HOW MUCH OF THE MEETINGS IS TALKING ABOUT THE STUFF AT THE MEETINGS\nSPEAKER_3: YEAH EXACTLY YEAH YEAH YEAH\nSPEAKER_1: YEAH\nSPEAKER_1: YEAH\nSPEAKER_1: LOOK AT ALL THIS STUFF MAN\nSPEAKER_2: YEAH\nSPEAKER_4: OKAY\nSPEAKER_1: OKAY\nSPEAKER_1: RIGHT\nSPEAKER_4: SO WHAT DO WE NEED TO TALK ABOUT\nSPEAKER_3: SHOULD WE\nSPEAKER_1: HAS ANYBODY\nSPEAKER_3: WELL SHOULD WE JUST GO AROUND AND EVERYONE SAYS WHAT THEY D WHAT THEY'VE BEEN DOING HOW FAR THEY'VE GOT\nSPEAKER_1: HAS ANYBODY DONE ANYTHING\nSPEAKER_2: NOT A LOT\nSPEAKER_2: NO\nSPEAKER_3: WELL I HOPE SO\nSPEAKER_2: HMM\nSPEAKER_4: YEAH\nSPEAKER_2: OKAY\nSPEAKER_2: SOUNDS LIKE YOU'VE DONE SOME STUFF\nSPEAKER_1: YOU BETTER START\nSPEAKER_3: OKAY\nSPEAKER_4: UH"
+    },
+    {
+        "id": "multi_speaker_2",
+        "variation": "multiple_speakers",
+        "variation_label": "Multiple Speakers",
+        "dataset": "AMI Corpus",
+        "file": "dataset/ami/TS3003d.wav",
+        "language": "en",
+        "reference": "SPEAKER_1: SO\nSPEAKER_1: HELLO\nSPEAKER_2: GOOD AFTERNOON\nSPEAKER_2: SORRY I'M A LITTLE LATE\nSPEAKER_1: NO PROBLEM\nSPEAKER_2: GOT STUCK IN THE TRAFFIC\nSPEAKER_1: OKAY\nSPEAKER_1: THAT'S POSSIBLE ON UH THIS TIME OF DAY\nSPEAKER_1: STARTS AT THREE O'CLOCK\nSPEAKER_1: UH UH LET ME SEE\nSPEAKER_2: YEAH\nSPEAKER_1: OUR FOURTH AND LAST MEETING\nSPEAKER_1: THERE HE IS\nSPEAKER_1: YES\nSPEAKER_1: OKAY THIS OUR LAST MEETING\nSPEAKER_1: IN THIS MEETING WE WILL DISCUSS OUR FINAL DESIGN\nSPEAKER_1: AND WE WILL DO SOME EVALUATION ABOUT THE NOT ONLY THE PRODUCT BUT ALSO THE PROJECT\nSPEAKER_1: AND THEN WE'RE GOING TO CLOSE THE PROJECT TODAY AS WELL\nSPEAKER_1: SO AFTER THIS YOU WILL BE UH FREE TO GO AND UH SPEND ALL YOUR MONEY\nSPEAKER_1: AND THIS UH DESIGN DETAILED DESIGN MEETING UH WE WILL DISCUSS UH THE LOOK AND FEEL OF THE DESIGN\nSPEAKER_1: THE USABILITY INTERFACE DESIGN AND WE WILL DO THE PRODUCT EVALUATION\nSPEAKER_1: UM IN ORDER TO DO THAT WE HAVE THIS AGENDA\nSPEAKER_1: WE'LL HAVE THE PROTOTYPE PRESENTATION FIRST\nSPEAKER_1: THEN WE WILL SET UP SOME EVALUATION CRI UM CRITERIA\nSPEAKER_1: THEN WE WILL LOOK AT THE FINANCE"
+    },
+    {
+        "id": "accent_1",
+        "variation": "accents",
+        "variation_label": "Non-Native Accents",
+        "dataset": "Speech Accent Archive",
+        "file": "dataset/speech_accent_archive/hindko1.mp3",
+        "language": "en",
+        "accent_origin": "Hindko-accented English",
+        "reference": "Please call Stella.  Ask her to bring these things with her from the store:  Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.  We also need a small plastic snake and a big toy frog for the kids.  She can scoop these things into three red bags, and we will go meet her Wednesday at the train station."
+    },
+    {
+        "id": "accent_2",
+        "variation": "accents",
+        "variation_label": "Non-Native Accents",
+        "dataset": "Speech Accent Archive",
+        "file": "dataset/speech_accent_archive/telugu1.mp3",
+        "language": "en",
+        "accent_origin": "Telugu-accented English",
+        "reference": "Please call Stella.  Ask her to bring these things with her from the store:  Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.  We also need a small plastic snake and a big toy frog for the kids.  She can scoop these things into three red bags, and we will go meet her Wednesday at the train station."
+    },
+    {
+        "id": "multilingual_1",
+        "variation": "multilingual",
+        "variation_label": "Non-English Languages",
+        "dataset": "FLEURS (hi_in)",
+        "file": "dataset/fleurs/multilingual_1.wav",
+        "language": "hi",
+        "reference": "कुछ अणुओं में अस्थिर केंद्रक होता है जिसका मतलब यह है कि उनमें थोड़े या बिना किसी झटके से टूटने की प्रवृत्ति होती है|"
+    },
+    {
+        "id": "multilingual_2",
+        "variation": "multilingual",
+        "variation_label": "Non-English Languages",
+        "dataset": "FLEURS (fr_fr)",
+        "file": "dataset/fleurs/multilingual_2.wav",
+        "language": "fr",
+        "reference": "l'accident a eu lieu en terrain montagneux et il semblerait que cela ait été causé par un incendie malveillant"
+    }
+]
