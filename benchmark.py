@@ -14,15 +14,14 @@ import json
 import logging
 import os
 import pathlib
+import re
+import shlex
+import subprocess
 import time
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Any, Optional
 
 import jiwer
-from google import genai
-from google.genai import types
-from google.genai import types as genai_types
-from openai import OpenAI
 from tqdm import tqdm
 
 # LOGGING
@@ -51,6 +50,28 @@ DEFAULT_OPENAI_MANUAL_MODE = (
     os.getenv("BENCHMARK_OPENAI_MANUAL_MODE", "false").strip().lower()
     in {"1", "true", "yes", "on"}
 )
+DEFAULT_LOCAL_MANUAL_MODE = (
+    os.getenv("BENCHMARK_LOCAL_MANUAL_MODE", "false").strip().lower()
+    in {"1", "true", "yes", "on"}
+)
+DEFAULT_LOCAL_OPENAI_BASE_URL = (
+    os.getenv("BENCHMARK_LOCAL_OPENAI_BASE_URL")
+    or os.getenv("LOCAL_OPENAI_BASE_URL")
+    or "http://localhost:8000/v1"
+).strip()
+DEFAULT_LOCAL_OPENAI_API_KEY = (
+    os.getenv("BENCHMARK_LOCAL_OPENAI_API_KEY")
+    or os.getenv("LOCAL_OPENAI_API_KEY")
+    or "local"
+).strip()
+DEFAULT_LOCAL_AUDIO_MODE = os.getenv("BENCHMARK_LOCAL_AUDIO_MODE", "input_audio").strip().lower()
+DEFAULT_LOCAL_MODELS_RAW = os.getenv("BENCHMARK_LOCAL_MODELS", "").strip()
+DEFAULT_LOCAL_COMMAND_MODELS_RAW = os.getenv("BENCHMARK_LOCAL_COMMAND_MODELS", "").strip()
+DEFAULT_LOCAL_COMMAND_TIMEOUT_SECONDS = float(
+    os.getenv("BENCHMARK_LOCAL_COMMAND_TIMEOUT_SECONDS", "600")
+)
+DEFAULT_MODEL_FILTER_RAW = os.getenv("BENCHMARK_MODELS", "").strip()
+LOCAL_AUDIO_MODES = {"input_audio", "audio_url"}
 
 # MODEL REGISTRY
 
@@ -94,26 +115,338 @@ MIME_MAP: dict[str, str] = {
     ".webm": "audio/webm",
 }
 
+OPENAI_AUDIO_FORMAT_MAP: dict[str, str] = {
+    ".wav": "wav",
+    ".flac": "flac",
+    ".mp3": "mp3",
+    ".ogg": "ogg",
+    ".m4a": "mp4",
+    ".opus": "opus",
+    ".webm": "webm",
+}
+
+
+def _split_specs(raw: str) -> list[str]:
+    if not raw:
+        return []
+    if raw.lstrip().startswith(("{", "[")):
+        return [raw]
+    return [part.strip() for part in raw.split(",") if part.strip()]
+
+
+def _split_csv(raw: str) -> list[str]:
+    return [part.strip() for part in raw.split(",") if part.strip()]
+
+
+def _slugify_model_key(value: str) -> str:
+    key = re.sub(r"[^a-zA-Z0-9_.-]+", "-", value.strip()).strip("-._")
+    return (key or "local-model").lower()
+
+
+def _display_name_from_key(model_key: str) -> str:
+    return model_key.replace("_", " ").replace("-", " ").title()
+
+
+def _env_or_value(value: Optional[str], default: str) -> str:
+    if not value:
+        return default
+    if value.startswith("env:"):
+        return os.getenv(value[4:], default)
+    return value
+
+
+def _build_local_openai_model_cfg(
+    key: str,
+    spec: Any,
+    default_base_url: str,
+    default_api_key: str,
+    default_audio_mode: str,
+) -> tuple[str, dict]:
+    if isinstance(spec, str):
+        model_id = spec.strip()
+        display = _display_name_from_key(key)
+        base_url = default_base_url
+        api_key = default_api_key
+        audio_mode = default_audio_mode
+    elif isinstance(spec, dict):
+        model_id = str(spec.get("model_id") or spec.get("model") or "").strip()
+        display = str(spec.get("display") or _display_name_from_key(key)).strip()
+        base_url = str(spec.get("base_url") or default_base_url).strip()
+        if spec.get("api_key_env") and not spec.get("api_key"):
+            api_key = os.getenv(str(spec["api_key_env"]), default_api_key)
+        else:
+            api_key = _env_or_value(spec.get("api_key"), default_api_key)
+        audio_mode = str(spec.get("audio_mode") or default_audio_mode).strip().lower()
+    else:
+        raise ValueError(f"Unsupported local model config for {key!r}: {spec!r}")
+
+    if not model_id:
+        raise ValueError(f"Local model {key!r} is missing a model_id")
+    if not base_url:
+        raise ValueError(f"Local model {key!r} is missing a base_url")
+    if audio_mode not in LOCAL_AUDIO_MODES:
+        raise ValueError(
+            f"Local model {key!r} has unsupported audio_mode={audio_mode!r}. "
+            f"Use one of: {', '.join(sorted(LOCAL_AUDIO_MODES))}"
+        )
+
+    return key, {
+        "provider": "local_openai_chat",
+        "model_id": model_id,
+        "display": display,
+        "base_url": base_url,
+        "api_key": api_key or "local",
+        "audio_mode": audio_mode,
+    }
+
+
+def parse_local_openai_model_specs(
+    specs: list[str],
+    default_base_url: str = DEFAULT_LOCAL_OPENAI_BASE_URL,
+    default_api_key: str = DEFAULT_LOCAL_OPENAI_API_KEY,
+    default_audio_mode: str = DEFAULT_LOCAL_AUDIO_MODE,
+) -> dict[str, dict]:
+    """
+    Parse audio-capable local OpenAI-compatible chat models.
+
+    Compact form:
+      --local-model gemma-4-local=gemma-4
+
+    JSON env form:
+      BENCHMARK_LOCAL_MODELS='{"gemma-4-local":{"model_id":"gemma-4","base_url":"http://localhost:8000/v1"}}'
+    """
+    models: dict[str, dict] = {}
+    for spec in specs:
+        spec = spec.strip()
+        if not spec:
+            continue
+
+        if spec.lstrip().startswith(("{", "[")):
+            payload = json.loads(spec)
+            if isinstance(payload, dict):
+                items = payload.items()
+            elif isinstance(payload, list):
+                items = []
+                for item in payload:
+                    if not isinstance(item, dict):
+                        raise ValueError("JSON local model lists must contain objects")
+                    key = str(
+                        item.get("key")
+                        or item.get("name")
+                        or _slugify_model_key(
+                            str(item.get("model_id") or item.get("model") or "")
+                        )
+                    )
+                    items.append((key, item))
+            else:
+                raise ValueError("Local model JSON must be an object or list")
+
+            for key, cfg_spec in items:
+                key = str(key).strip()
+                model_key, cfg = _build_local_openai_model_cfg(
+                    key=key,
+                    spec=cfg_spec,
+                    default_base_url=default_base_url,
+                    default_api_key=default_api_key,
+                    default_audio_mode=default_audio_mode,
+                )
+                models[model_key] = cfg
+            continue
+
+        if "=" in spec:
+            key, model_id = spec.split("=", 1)
+            key = key.strip()
+            model_id = model_id.strip()
+        else:
+            model_id = spec
+            key = _slugify_model_key(model_id)
+        model_key, cfg = _build_local_openai_model_cfg(
+            key=key,
+            spec=model_id,
+            default_base_url=default_base_url,
+            default_api_key=default_api_key,
+            default_audio_mode=default_audio_mode,
+        )
+        models[model_key] = cfg
+    return models
+
+
+def _build_local_command_model_cfg(
+    key: str,
+    spec: Any,
+    default_timeout_seconds: float,
+) -> tuple[str, dict]:
+    if isinstance(spec, str):
+        payload = spec.strip()
+        if "::" in payload:
+            display, command = payload.split("::", 1)
+            display = display.strip() or _display_name_from_key(key)
+            command = command.strip()
+        else:
+            display = _display_name_from_key(key)
+            command = payload
+        cfg = {
+            "provider": "local_command",
+            "display": display,
+            "command_template": command,
+            "timeout_seconds": default_timeout_seconds,
+        }
+    elif isinstance(spec, dict):
+        display = str(spec.get("display") or _display_name_from_key(key)).strip()
+        command = str(spec.get("command") or spec.get("command_template") or "").strip()
+        cfg = {
+            "provider": "local_command",
+            "display": display,
+            "command_template": command,
+            "cwd": spec.get("cwd"),
+            "output_file_template": spec.get("output_file")
+            or spec.get("output_file_template"),
+            "timeout_seconds": float(
+                spec.get("timeout_seconds", default_timeout_seconds)
+            ),
+        }
+    else:
+        raise ValueError(f"Unsupported local command model config for {key!r}: {spec!r}")
+
+    if not cfg.get("command_template") and not cfg.get("output_file_template"):
+        raise ValueError(
+            f"Local command model {key!r} needs a command or output_file template"
+        )
+    return key, cfg
+
+
+def parse_local_command_model_specs(
+    specs: list[str],
+    default_timeout_seconds: float = DEFAULT_LOCAL_COMMAND_TIMEOUT_SECONDS,
+) -> dict[str, dict]:
+    """
+    Parse local command/file transcript models such as Parakeet.
+
+    Compact form:
+      --local-command-model parakeet=Parakeet Local::python parakeet_asr.py {audio_q}
+
+    The command should print the transcript to stdout. JSON config can also
+    provide output_file when the tool writes transcripts to disk.
+    """
+    models: dict[str, dict] = {}
+    for spec in specs:
+        spec = spec.strip()
+        if not spec:
+            continue
+
+        if spec.lstrip().startswith(("{", "[")):
+            payload = json.loads(spec)
+            if isinstance(payload, dict):
+                items = payload.items()
+            elif isinstance(payload, list):
+                items = []
+                for item in payload:
+                    if not isinstance(item, dict):
+                        raise ValueError(
+                            "JSON local command model lists must contain objects"
+                        )
+                    key = str(item.get("key") or item.get("name") or "").strip()
+                    if not key:
+                        raise ValueError("JSON local command model is missing key")
+                    items.append((key, item))
+            else:
+                raise ValueError("Local command model JSON must be an object or list")
+
+            for key, cfg_spec in items:
+                model_key, cfg = _build_local_command_model_cfg(
+                    str(key).strip(),
+                    cfg_spec,
+                    default_timeout_seconds,
+                )
+                models[model_key] = cfg
+            continue
+
+        if "=" not in spec:
+            raise ValueError(
+                "Local command model specs must use KEY=COMMAND or KEY=DISPLAY::COMMAND"
+            )
+        key, payload = spec.split("=", 1)
+        model_key, cfg = _build_local_command_model_cfg(
+            key.strip(),
+            payload.strip(),
+            default_timeout_seconds,
+        )
+        models[model_key] = cfg
+    return models
+
+
+def register_local_models(
+    local_model_specs: Optional[list[str]] = None,
+    local_command_model_specs: Optional[list[str]] = None,
+    default_base_url: str = DEFAULT_LOCAL_OPENAI_BASE_URL,
+    default_api_key: str = DEFAULT_LOCAL_OPENAI_API_KEY,
+    default_audio_mode: str = DEFAULT_LOCAL_AUDIO_MODE,
+    default_command_timeout_seconds: float = DEFAULT_LOCAL_COMMAND_TIMEOUT_SECONDS,
+) -> None:
+    local_models = parse_local_openai_model_specs(
+        specs=local_model_specs or [],
+        default_base_url=default_base_url,
+        default_api_key=default_api_key,
+        default_audio_mode=default_audio_mode,
+    )
+    local_models.update(
+        parse_local_command_model_specs(
+            local_command_model_specs or [],
+            default_timeout_seconds=default_command_timeout_seconds,
+        )
+    )
+
+    for model_key in local_models:
+        if model_key in TRANSCRIPTION_MODELS:
+            raise ValueError(f"Local model key {model_key!r} already exists")
+    TRANSCRIPTION_MODELS.update(local_models)
+
+
 # API CLIENTS
 
-google_client: Optional[genai.Client] = None
-openai_client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL)
+google_client: Optional[Any] = None
+openai_client: Optional[Any] = None
+local_openai_clients: dict[tuple[str, str], Any] = {}
 
 
-def get_google_client() -> genai.Client:
+def get_google_client() -> Any:
     global google_client
     if google_client is None:
         if not GOOGLE_API_KEY or GOOGLE_API_KEY.startswith("YOUR_"):
             raise RuntimeError(
                 "GOOGLE_API_KEY is not configured. Set it or run with --google-manual-mode."
             )
+        from google import genai
+        from google.genai import types as google_types
+
         google_client = genai.Client(
             api_key=GOOGLE_API_KEY,
-            http_options=types.HttpOptions(
+            http_options=google_types.HttpOptions(
                 base_url="https://llmfoundry.straivedemo.com/gemini/",
             )
         )
     return google_client
+
+
+def get_openai_client() -> Any:
+    global openai_client
+    if openai_client is None:
+        from openai import OpenAI
+
+        openai_client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL)
+    return openai_client
+
+
+def get_local_openai_client(base_url: str, api_key: str) -> Any:
+    key = (base_url, api_key or "local")
+    if key not in local_openai_clients:
+        from openai import OpenAI
+
+        local_openai_clients[key] = OpenAI(
+            api_key=api_key or "local",
+            base_url=base_url,
+        )
+    return local_openai_clients[key]
 
 # TRANSCRIPTION LOGIC
 
@@ -144,8 +477,8 @@ def transcription_prompt_for_variation(variation: str) -> str:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Run ASR benchmark. Use --google-manual-mode to read Google model "
-            "transcripts from local text files exported from AI Studio."
+            "Run ASR benchmark. Supports cloud APIs, manual transcripts, "
+            "local OpenAI-compatible audio chat models, and local ASR commands."
         )
     )
     parser.add_argument(
@@ -173,6 +506,74 @@ def parse_args() -> argparse.Namespace:
         help=(
             "Directory containing manual transcripts. Expected files: "
             "<dir>/<model_key>/<audio_id>.txt"
+        ),
+    )
+    parser.add_argument(
+        "--local-model",
+        action="append",
+        default=_split_specs(DEFAULT_LOCAL_MODELS_RAW),
+        metavar="KEY=MODEL_ID",
+        help=(
+            "Add an audio-capable local OpenAI-compatible chat model. Repeatable. "
+            "Example: --local-model gemma-4-local=gemma-4"
+        ),
+    )
+    parser.add_argument(
+        "--local-openai-base-url",
+        default=DEFAULT_LOCAL_OPENAI_BASE_URL,
+        help=(
+            "Base URL for local OpenAI-compatible servers "
+            "(default: BENCHMARK_LOCAL_OPENAI_BASE_URL, LOCAL_OPENAI_BASE_URL, "
+            "or http://localhost:8000/v1)."
+        ),
+    )
+    parser.add_argument(
+        "--local-openai-api-key",
+        default=DEFAULT_LOCAL_OPENAI_API_KEY,
+        help="API key for local OpenAI-compatible servers (default: local).",
+    )
+    parser.add_argument(
+        "--local-audio-mode",
+        choices=sorted(LOCAL_AUDIO_MODES),
+        default=DEFAULT_LOCAL_AUDIO_MODE,
+        help=(
+            "Audio content block format for local chat models. Use input_audio "
+            "for OpenAI-style servers, audio_url for vLLM-style servers."
+        ),
+    )
+    parser.add_argument(
+        "--local-command-model",
+        action="append",
+        default=_split_specs(DEFAULT_LOCAL_COMMAND_MODELS_RAW),
+        metavar="KEY=DISPLAY::COMMAND",
+        help=(
+            "Add a local ASR command model such as Parakeet. The command should "
+            "print a transcript to stdout. Placeholders include {audio}, "
+            "{audio_q}, {audio_abs}, {audio_abs_q}, {audio_id}, {audio_stem}, "
+            "{audio_name}, {audio_parent}, {prompt}, {prompt_q}."
+        ),
+    )
+    parser.add_argument(
+        "--local-command-timeout-seconds",
+        type=float,
+        default=DEFAULT_LOCAL_COMMAND_TIMEOUT_SECONDS,
+        help="Default timeout for local command models.",
+    )
+    parser.add_argument(
+        "--local-manual-mode",
+        action=argparse.BooleanOptionalAction,
+        default=DEFAULT_LOCAL_MANUAL_MODE,
+        help=(
+            "Enable or disable manual mode for local models. When enabled, "
+            "transcripts are read from files instead of local model calls."
+        ),
+    )
+    parser.add_argument(
+        "--models",
+        default=DEFAULT_MODEL_FILTER_RAW,
+        help=(
+            "Optional comma-separated model keys to run after local models are "
+            "registered. Example: --models parakeet,gemma-4-local"
         ),
     )
     return parser.parse_args()
@@ -211,6 +612,8 @@ def transcribe_google(
     Transcribe using google-genai (Gemma-4 / Gemini models).
     Uses inline bytes for files < ~20 MB; falls back to Files API otherwise.
     """
+    from google.genai import types as genai_types
+
     mime = MIME_MAP.get(audio_path.suffix.lower(), "audio/wav")
     audio_bytes = audio_path.read_bytes()
     client = get_google_client()
@@ -270,9 +673,10 @@ def transcribe_openai(
     """
     Transcribe using OpenAI-compatible audio transcriptions.
     """
+    client = get_openai_client()
     t0 = time.monotonic()
     with audio_path.open("rb") as audio_file:
-        response = openai_client.audio.transcriptions.create(
+        response = client.audio.transcriptions.create(
             model=model_id,
             file=audio_file,
             prompt=prompt,
@@ -286,6 +690,176 @@ def transcribe_openai(
     return transcript, latency_ms
 
 
+def local_audio_content(
+    audio_path: pathlib.Path,
+    prompt: str,
+    audio_mode: str,
+) -> list[dict[str, Any]]:
+    audio_bytes = audio_path.read_bytes()
+    audio_b64 = base64.b64encode(audio_bytes).decode("ascii")
+    suffix = audio_path.suffix.lower()
+    mime = MIME_MAP.get(suffix, "audio/wav")
+
+    if audio_mode == "input_audio":
+        return [
+            {"type": "text", "text": prompt},
+            {
+                "type": "input_audio",
+                "input_audio": {
+                    "data": audio_b64,
+                    "format": OPENAI_AUDIO_FORMAT_MAP.get(
+                        suffix,
+                        suffix.lstrip(".") or "wav",
+                    ),
+                },
+            },
+        ]
+
+    if audio_mode == "audio_url":
+        return [
+            {"type": "text", "text": prompt},
+            {
+                "type": "audio_url",
+                "audio_url": {"url": f"data:{mime};base64,{audio_b64}"},
+            },
+        ]
+
+    raise ValueError(
+        f"Unsupported local audio mode {audio_mode!r}. "
+        f"Use one of: {', '.join(sorted(LOCAL_AUDIO_MODES))}"
+    )
+
+
+def transcribe_local_openai_chat(
+    model_id: str,
+    audio_path: pathlib.Path,
+    prompt: str = TRANSCRIPTION_PROMPT,
+    base_url: str = DEFAULT_LOCAL_OPENAI_BASE_URL,
+    api_key: str = DEFAULT_LOCAL_OPENAI_API_KEY,
+    audio_mode: str = DEFAULT_LOCAL_AUDIO_MODE,
+) -> tuple[str, float]:
+    """
+    Transcribe using a local OpenAI-compatible chat/completions endpoint.
+
+    The local model must be audio-capable. Text-only local LLMs cannot
+    transcribe raw audio unless the server adds audio preprocessing.
+    """
+    client = get_local_openai_client(base_url=base_url, api_key=api_key)
+    content = local_audio_content(audio_path, prompt, audio_mode)
+
+    t0 = time.monotonic()
+    response = client.chat.completions.create(
+        model=model_id,
+        messages=[{"role": "user", "content": content}],
+        temperature=0,
+    )
+    latency_ms = (time.monotonic() - t0) * 1000
+    transcript = response.choices[0].message.content
+    return str(transcript or "").strip(), latency_ms
+
+
+def _local_template_values(
+    audio_id: str,
+    audio_path: pathlib.Path,
+    prompt: str,
+) -> dict[str, str]:
+    return {
+        "audio": str(audio_path),
+        "audio_q": shlex.quote(str(audio_path)),
+        "audio_abs": str(audio_path.resolve()),
+        "audio_abs_q": shlex.quote(str(audio_path.resolve())),
+        "audio_id": audio_id,
+        "audio_stem": audio_path.stem,
+        "audio_name": audio_path.name,
+        "audio_parent": str(audio_path.parent),
+        "prompt": prompt,
+        "prompt_q": shlex.quote(prompt),
+    }
+
+
+def _render_local_template(
+    template: Optional[str],
+    values: dict[str, str],
+    field_name: str,
+) -> Optional[str]:
+    if not template:
+        return None
+    try:
+        return template.format(**values)
+    except KeyError as exc:
+        raise ValueError(
+            f"Unknown placeholder {{{exc.args[0]}}} in {field_name}"
+        ) from exc
+
+
+def transcribe_local_command(
+    model_key: str,
+    cfg: dict,
+    audio_id: str,
+    audio_path: pathlib.Path,
+    prompt: str,
+) -> tuple[str, float]:
+    """
+    Transcribe using a user-provided local command, e.g. a Parakeet wrapper.
+    The command should print only the transcript to stdout unless output_file
+    is configured.
+    """
+    values = _local_template_values(audio_id, audio_path, prompt)
+    cwd_text = _render_local_template(cfg.get("cwd"), values, "cwd")
+    cwd = pathlib.Path(cwd_text) if cwd_text else None
+    command = _render_local_template(
+        cfg.get("command_template"),
+        values,
+        "command",
+    )
+    output_file_text = _render_local_template(
+        cfg.get("output_file_template"),
+        values,
+        "output_file",
+    )
+
+    t0 = time.monotonic()
+    stdout = ""
+
+    if command:
+        argv = shlex.split(command, posix=True)
+        if not argv:
+            raise ValueError(f"Local command model {model_key!r} has an empty command")
+        completed = subprocess.run(
+            argv,
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=float(cfg.get("timeout_seconds", DEFAULT_LOCAL_COMMAND_TIMEOUT_SECONDS)),
+            check=False,
+        )
+        if completed.returncode != 0:
+            detail = (completed.stderr or completed.stdout or "").strip()
+            raise RuntimeError(
+                f"Local command failed with exit code {completed.returncode}: "
+                f"{detail[-1000:]}"
+            )
+        stdout = completed.stdout.strip()
+
+    latency_ms = (time.monotonic() - t0) * 1000
+
+    if output_file_text:
+        output_path = pathlib.Path(output_file_text)
+        if cwd and not output_path.is_absolute():
+            output_path = cwd / output_path
+        transcript = output_path.read_text(encoding="utf-8").strip()
+    else:
+        transcript = stdout
+
+    if not transcript:
+        raise ValueError(
+            f"Local command model {model_key!r} produced an empty transcript"
+        )
+    return transcript, latency_ms
+
+
 def transcribe(
     model_key: str,
     audio_id: str,
@@ -293,6 +867,7 @@ def transcribe(
     variation: str = "",
     google_manual_mode: bool = False,
     openai_manual_mode: bool = False,
+    local_manual_mode: bool = False,
     manual_transcript_dir: pathlib.Path = DEFAULT_MANUAL_TRANSCRIPT_DIR,
 ) -> tuple[str, float, Optional[str], str]:
     """
@@ -304,6 +879,7 @@ def transcribe(
         if (
             (cfg["provider"] == "google" and google_manual_mode)
             or (cfg["provider"] == "openai" and openai_manual_mode)
+            or (cfg["provider"] in {"local_openai_chat", "local_command"} and local_manual_mode)
         ):
             transcript, source_file = load_manual_transcript(
                 model_key=model_key,
@@ -315,9 +891,35 @@ def transcribe(
 
         if cfg["provider"] == "google":
             t, lat = transcribe_google(cfg["model_id"], audio_path, prompt)
-        else:
+            source = "api"
+        elif cfg["provider"] == "openai":
             t, lat = transcribe_openai(cfg["model_id"], audio_path, prompt)
-        return t, lat, None, "api"
+            source = "api"
+        elif cfg["provider"] == "local_openai_chat":
+            t, lat = transcribe_local_openai_chat(
+                model_id=cfg["model_id"],
+                audio_path=audio_path,
+                prompt=prompt,
+                base_url=cfg.get("base_url", DEFAULT_LOCAL_OPENAI_BASE_URL),
+                api_key=cfg.get("api_key", DEFAULT_LOCAL_OPENAI_API_KEY),
+                audio_mode=cfg.get("audio_mode", DEFAULT_LOCAL_AUDIO_MODE),
+            )
+            source = (
+                "local_openai_chat:"
+                f"{cfg.get('base_url', DEFAULT_LOCAL_OPENAI_BASE_URL)}"
+            )
+        elif cfg["provider"] == "local_command":
+            t, lat = transcribe_local_command(
+                model_key=model_key,
+                cfg=cfg,
+                audio_id=audio_id,
+                audio_path=audio_path,
+                prompt=prompt,
+            )
+            source = "local_command"
+        else:
+            raise ValueError(f"Unsupported transcription provider: {cfg['provider']}")
+        return t, lat, None, source
     except Exception as exc:
         logger.error(f"  ✗ [{model_key}] {audio_path.name} → {exc}")
         return "", 0.0, str(exc), "error"
@@ -379,7 +981,7 @@ def compute_mer(reference: str, hypothesis: str) -> Optional[float]:
         return None
 
 
-# PER-SAMPLE EVALUATION (GPT-5.4)
+# PER-SAMPLE EVALUATION
 
 _EVAL_SYSTEM = """\
 You are an expert automatic speech recognition (ASR) evaluator.
@@ -458,7 +1060,7 @@ def evaluate_one(
     hypothesis: str,
     wer: Optional[float],
 ) -> dict:
-    """Call GPT-5.4 to evaluate a single (reference, hypothesis) pair."""
+    """Call the evaluator model to evaluate a single (reference, hypothesis) pair."""
     if not hypothesis.strip():
         return _EMPTY_EVAL.copy()
 
@@ -477,7 +1079,7 @@ MODEL HYPOTHESIS:
 Evaluate the model's transcription quality against the reference."""
 
     try:
-        resp = openai_client.chat.completions.create(
+        resp = get_openai_client().chat.completions.create(
             model=EVALUATOR_MODEL,
             messages=[
                 {"role": "system", "content": _EVAL_SYSTEM},
@@ -495,7 +1097,7 @@ Evaluate the model's transcription quality against the reference."""
         return {"error": str(exc)}
 
 
-# GLOBAL SUMMARY (GPT-5.4)
+# GLOBAL SUMMARY
 
 _SUMMARY_SYSTEM = """\
 You are a senior ML research engineer specialising in speech recognition evaluation.
@@ -539,7 +1141,7 @@ _SUMMARY_SCHEMA = """\
 
 
 def generate_summary(all_results: list[dict]) -> dict:
-    """Ask GPT-5.4 to produce the final benchmark summary."""
+    """Ask the evaluator model to produce the final benchmark summary."""
 
     # Build a condensed payload (no base64 audio)
     condensed = []
@@ -575,14 +1177,14 @@ def generate_summary(all_results: list[dict]) -> dict:
 
     user_msg = (
         f"Here are transcription benchmark results for {len(all_results)} audio samples "
-        f"(5 variations × 2 files) across 4 models.\n\n"
+        f"(5 variations × 2 files) across {len(TRANSCRIPTION_MODELS)} models.\n\n"
         f"Model keys: {list(TRANSCRIPTION_MODELS.keys())}\n\n"
         f"Results:\n{json.dumps(condensed, indent=2)}\n\n"
         f"Produce a comprehensive summary following this exact JSON schema:\n{_SUMMARY_SCHEMA}"
     )
 
     try:
-        resp = openai_client.chat.completions.create(
+        resp = get_openai_client().chat.completions.create(
             model=EVALUATOR_MODEL,
             messages=[
                 {"role": "system", "content": _SUMMARY_SYSTEM},
@@ -669,14 +1271,63 @@ def load_manifest() -> list[dict]:
 def run_benchmark(
     google_manual_mode: bool = False,
     openai_manual_mode: bool = False,
+    local_manual_mode: bool = False,
     manual_transcript_dir: pathlib.Path = DEFAULT_MANUAL_TRANSCRIPT_DIR,
+    local_model_specs: Optional[list[str]] = None,
+    local_command_model_specs: Optional[list[str]] = None,
+    local_openai_base_url: str = DEFAULT_LOCAL_OPENAI_BASE_URL,
+    local_openai_api_key: str = DEFAULT_LOCAL_OPENAI_API_KEY,
+    local_audio_mode: str = DEFAULT_LOCAL_AUDIO_MODE,
+    local_command_timeout_seconds: float = DEFAULT_LOCAL_COMMAND_TIMEOUT_SECONDS,
+    model_filter: Optional[list[str]] = None,
 ) -> None:
+    if local_model_specs or local_command_model_specs:
+        register_local_models(
+            local_model_specs=local_model_specs,
+            local_command_model_specs=local_command_model_specs,
+            default_base_url=local_openai_base_url,
+            default_api_key=local_openai_api_key,
+            default_audio_mode=local_audio_mode,
+            default_command_timeout_seconds=local_command_timeout_seconds,
+        )
+
+    if model_filter:
+        missing_models = [key for key in model_filter if key not in TRANSCRIPTION_MODELS]
+        if missing_models:
+            raise ValueError(
+                "Unknown model key(s) in --models: "
+                + ", ".join(missing_models)
+                + ". Available: "
+                + ", ".join(TRANSCRIPTION_MODELS)
+            )
+        selected_models = {key: TRANSCRIPTION_MODELS[key] for key in model_filter}
+        TRANSCRIPTION_MODELS.clear()
+        TRANSCRIPTION_MODELS.update(selected_models)
+
     manual_transcript_dir = pathlib.Path(manual_transcript_dir)
     manifest = load_manifest()
     logger.info(f"Loaded {len(manifest)} audio samples from manifest.json")
+    if model_filter:
+        logger.info("Model filter enabled: %s", ", ".join(TRANSCRIPTION_MODELS))
     if google_manual_mode:
         logger.info(
             "Google manual mode enabled. Reading manual transcripts from: %s",
+            manual_transcript_dir.resolve(),
+        )
+    if local_model_specs or local_command_model_specs:
+        local_keys = [
+            key
+            for key, cfg in TRANSCRIPTION_MODELS.items()
+            if cfg["provider"] in {"local_openai_chat", "local_command"}
+        ]
+        logger.info(
+            "Local models enabled (%s): %s",
+            len(local_keys),
+            ", ".join(local_keys),
+        )
+    if local_manual_mode:
+        logger.info(
+            "Local manual mode enabled. Reading manual transcripts from: %s",
             manual_transcript_dir.resolve(),
         )
     if openai_manual_mode:
@@ -708,18 +1359,23 @@ def run_benchmark(
         logger.info(f"\n{'─'*65}")
         logger.info(f"▶ [{audio_id}]  {entry['dataset']}  ({entry['variation_label']})")
 
-        # Step 1: Transcribe with all 4 models
+        # Step 1: Transcribe with all configured models
         model_outputs: dict[str, dict] = {}
 
         for model_key in TRANSCRIPTION_MODELS:
+            provider = TRANSCRIPTION_MODELS[model_key]["provider"]
             if (
                 (
                     google_manual_mode
-                    and TRANSCRIPTION_MODELS[model_key]["provider"] == "google"
+                    and provider == "google"
                 )
                 or (
                     openai_manual_mode
-                    and TRANSCRIPTION_MODELS[model_key]["provider"] == "openai"
+                    and provider == "openai"
+                )
+                or (
+                    local_manual_mode
+                    and provider in {"local_openai_chat", "local_command"}
                 )
             ):
                 logger.info(
@@ -737,6 +1393,7 @@ def run_benchmark(
                 variation=variation,
                 google_manual_mode=google_manual_mode,
                 openai_manual_mode=openai_manual_mode,
+                local_manual_mode=local_manual_mode,
                 manual_transcript_dir=manual_transcript_dir,
             )
 
@@ -820,9 +1477,18 @@ def run_benchmark(
             "evaluator_model": EVALUATOR_MODEL,
             "google_manual_mode": google_manual_mode,
             "openai_manual_mode": openai_manual_mode,
+            "local_manual_mode": local_manual_mode,
             "manual_transcript_dir": str(manual_transcript_dir),
             "transcription_models": {
                 mk: cfg["display"] for mk, cfg in TRANSCRIPTION_MODELS.items()
+            },
+            "transcription_model_details": {
+                mk: {
+                    key: value
+                    for key, value in cfg.items()
+                    if key not in {"api_key"}
+                }
+                for mk, cfg in TRANSCRIPTION_MODELS.items()
             },
             "total_audio_samples": len(all_results),
             "dataset_variations": [
@@ -833,10 +1499,15 @@ def run_benchmark(
                 "multilingual",
             ],
             "samples_per_variation": 2,
-            "metrics_used": ["WER", "CER", "MER", "GPT-5.4 eval score (1-10)"],
+            "metrics_used": [
+                "WER",
+                "CER",
+                "MER",
+                f"{EVALUATOR_MODEL} eval score (1-10)",
+            ],
             "note_on_multilingual": (
                 "WER is omitted for non-English samples; CER is reported instead. "
-                "GPT-5.4 evaluation judges quality holistically for all languages."
+                f"{EVALUATOR_MODEL} evaluation judges quality holistically for all languages."
             ),
         },
         "aggregate_metrics": aggregates,
@@ -879,5 +1550,13 @@ if __name__ == "__main__":
     run_benchmark(
         google_manual_mode=args.google_manual_mode,
         openai_manual_mode=args.openai_manual_mode,
+        local_manual_mode=args.local_manual_mode,
         manual_transcript_dir=args.manual_transcript_dir,
+        local_model_specs=args.local_model,
+        local_command_model_specs=args.local_command_model,
+        local_openai_base_url=args.local_openai_base_url,
+        local_openai_api_key=args.local_openai_api_key,
+        local_audio_mode=args.local_audio_mode,
+        local_command_timeout_seconds=args.local_command_timeout_seconds,
+        model_filter=_split_csv(args.models),
     )
