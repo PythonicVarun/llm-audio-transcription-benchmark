@@ -956,7 +956,7 @@ _wer_transform = jiwer.Compose(
 
 
 def compute_wer(reference: str, hypothesis: str) -> Optional[float]:
-    if not reference.strip() or not hypothesis.strip():
+    if not reference.strip():
         return None
     try:
         return round(
@@ -973,7 +973,7 @@ def compute_wer(reference: str, hypothesis: str) -> Optional[float]:
 
 
 def compute_cer(reference: str, hypothesis: str) -> Optional[float]:
-    if not reference.strip() or not hypothesis.strip():
+    if not reference.strip():
         return None
     try:
         return round(jiwer.cer(reference, hypothesis), 4)
@@ -983,7 +983,7 @@ def compute_cer(reference: str, hypothesis: str) -> Optional[float]:
 
 def compute_mer(reference: str, hypothesis: str) -> Optional[float]:
     """Match Error Rate — useful for multi-speaker / noisy audio."""
-    if not reference.strip() or not hypothesis.strip():
+    if not reference.strip():
         return None
     try:
         return round(
@@ -1259,7 +1259,7 @@ def generate_summary(
         f"Here are transcription benchmark results for {len(all_results)} audio samples "
         f"(5 variations × 2 files) across {len(model_keys)} models.\n\n"
         f"Model keys: {model_keys}\n\n"
-        f"Results:\n{json.dumps(condensed, indent=2)}\n\n"
+        f"Results:\n{json.dumps(condensed)}\n\n"
         f"Produce a comprehensive summary following this exact JSON schema:\n{_SUMMARY_SCHEMA}"
     )
 
@@ -1343,6 +1343,36 @@ def compute_aggregates(
             },
         }
     return aggregate
+
+
+def sync_summary_metrics(summary: dict, aggregate_metrics: dict) -> None:
+    if not isinstance(summary, dict):
+        return
+
+    ranking = summary.get("overall_ranking")
+    if isinstance(ranking, list):
+        for item in ranking:
+            if not isinstance(item, dict):
+                continue
+            model_key = item.get("model")
+            agg = aggregate_metrics.get(model_key)
+            if not isinstance(agg, dict):
+                continue
+            item["avg_wer"] = agg.get("avg_wer")
+            item["avg_score"] = agg.get("avg_eval_score")
+
+    model_analysis = summary.get("model_analysis")
+    if isinstance(model_analysis, dict):
+        for model_key, analysis in model_analysis.items():
+            if not isinstance(analysis, dict):
+                continue
+            agg = aggregate_metrics.get(model_key)
+            if not isinstance(agg, dict):
+                continue
+            analysis["avg_wer"] = agg.get("avg_wer")
+            analysis["avg_cer"] = agg.get("avg_cer")
+            analysis["avg_overall_score"] = agg.get("avg_eval_score")
+            analysis["avg_latency_ms"] = agg.get("avg_latency_ms")
 
 
 # MAIN RUNNER
@@ -1523,12 +1553,14 @@ def recompute_report_metrics(report_path: pathlib.Path = OUTPUT_PATH) -> None:
         metadata["transcription_models"] = transcription_models
 
     model_keys = collect_model_keys(results, list(transcription_models))
-    report["aggregate_metrics"] = compute_aggregates(results, model_keys=model_keys)
+    aggregate_metrics = compute_aggregates(results, model_keys=model_keys)
+    report["aggregate_metrics"] = aggregate_metrics
+    sync_summary_metrics(report.get("summary", {}), aggregate_metrics)
     metadata["total_audio_samples"] = len(results)
     metadata["metrics_recomputed_at"] = datetime.now(timezone.utc).isoformat()
 
     with report_path.open("w", encoding="utf-8") as f:
-        json.dump(report, f, indent=2, ensure_ascii=False)
+        json.dump(report, f, ensure_ascii=False)
 
     logger.info("Recomputed metrics in %s", report_path.resolve())
 
@@ -1767,8 +1799,9 @@ def run_benchmark(
 
     logger.info(f"\n{'─'*65}")
     logger.info(f"▶ Generating benchmark summary with {EVALUATOR_MODEL} ...")
-    summary = generate_summary(all_results, model_keys=model_keys)
     aggregates = compute_aggregates(all_results, model_keys=model_keys)
+    summary = generate_summary(all_results, model_keys=model_keys)
+    sync_summary_metrics(summary, aggregates)
 
     report = build_report(
         all_results=all_results,
