@@ -576,6 +576,15 @@ def parse_args() -> argparse.Namespace:
             "registered. Example: --models parakeet,gemma-4-local"
         ),
     )
+    parser.add_argument(
+        "--append-report",
+        action="store_true",
+        help=(
+            "If benchmark_report.json already exists, merge this run into it "
+            "instead of replacing it. Existing audio rows are matched by audio_id; "
+            "new model outputs/evaluations are added or updated."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -1140,8 +1149,37 @@ _SUMMARY_SCHEMA = """\
 """
 
 
-def generate_summary(all_results: list[dict]) -> dict:
+def collect_model_keys(
+    all_results: list[dict],
+    preferred_model_keys: Optional[list[str]] = None,
+) -> list[str]:
+    keys: list[str] = []
+    seen: set[str] = set()
+
+    for model_key in preferred_model_keys or []:
+        if model_key not in seen:
+            keys.append(model_key)
+            seen.add(model_key)
+
+    for result in all_results:
+        for section in ("model_outputs", "evaluations"):
+            for model_key in result.get(section, {}):
+                if model_key not in seen:
+                    keys.append(model_key)
+                    seen.add(model_key)
+
+    return keys
+
+
+def generate_summary(
+    all_results: list[dict],
+    model_keys: Optional[list[str]] = None,
+) -> dict:
     """Ask the evaluator model to produce the final benchmark summary."""
+    model_keys = model_keys or collect_model_keys(
+        all_results,
+        list(TRANSCRIPTION_MODELS.keys()),
+    )
 
     # Build a condensed payload (no base64 audio)
     condensed = []
@@ -1170,15 +1208,15 @@ def generate_summary(all_results: list[dict]) -> dict:
                         .get(mk, {})
                         .get("error_categories"),
                     }
-                    for mk in TRANSCRIPTION_MODELS
+                    for mk in model_keys
                 },
             }
         )
 
     user_msg = (
         f"Here are transcription benchmark results for {len(all_results)} audio samples "
-        f"(5 variations × 2 files) across {len(TRANSCRIPTION_MODELS)} models.\n\n"
-        f"Model keys: {list(TRANSCRIPTION_MODELS.keys())}\n\n"
+        f"(5 variations × 2 files) across {len(model_keys)} models.\n\n"
+        f"Model keys: {model_keys}\n\n"
         f"Results:\n{json.dumps(condensed, indent=2)}\n\n"
         f"Produce a comprehensive summary following this exact JSON schema:\n{_SUMMARY_SCHEMA}"
     )
@@ -1207,7 +1245,14 @@ def _safe_avg(values: list) -> Optional[float]:
     return round(sum(vals) / len(vals), 4) if vals else None
 
 
-def compute_aggregates(all_results: list[dict]) -> dict:
+def compute_aggregates(
+    all_results: list[dict],
+    model_keys: Optional[list[str]] = None,
+) -> dict:
+    model_keys = model_keys or collect_model_keys(
+        all_results,
+        list(TRANSCRIPTION_MODELS.keys()),
+    )
     stats: dict[str, dict] = {
         mk: {
             "wers": [],
@@ -1216,7 +1261,7 @@ def compute_aggregates(all_results: list[dict]) -> dict:
             "latencies": [],
             "scores": [],
         }
-        for mk in TRANSCRIPTION_MODELS
+        for mk in model_keys
     }
 
     variation_wers: dict[str, dict[str, list]] = {}
@@ -1224,9 +1269,9 @@ def compute_aggregates(all_results: list[dict]) -> dict:
     for r in all_results:
         var = r["variation"]
         if var not in variation_wers:
-            variation_wers[var] = {mk: [] for mk in TRANSCRIPTION_MODELS}
+            variation_wers[var] = {mk: [] for mk in model_keys}
 
-        for mk in TRANSCRIPTION_MODELS:
+        for mk in model_keys:
             out = r["model_outputs"].get(mk, {})
             evl = r["evaluations"].get(mk, {})
 
@@ -1268,6 +1313,158 @@ def load_manifest() -> list[dict]:
         return json.load(f)
 
 
+def load_existing_report(report_path: pathlib.Path) -> Optional[dict]:
+    if not report_path.exists():
+        return None
+    with report_path.open(encoding="utf-8") as f:
+        report = json.load(f)
+    if not isinstance(report, dict) or not isinstance(report.get("results"), list):
+        raise ValueError(f"Existing report has an invalid structure: {report_path}")
+    return report
+
+
+def merge_results(
+    existing_results: list[dict],
+    new_results: list[dict],
+) -> tuple[list[dict], dict[str, int]]:
+    merged_results = [dict(result) for result in existing_results]
+    index_by_audio_id: dict[str, int] = {}
+    stats = {
+        "audio_rows_added": 0,
+        "audio_rows_updated": 0,
+        "model_outputs_added": 0,
+        "model_outputs_updated": 0,
+        "evaluations_added": 0,
+        "evaluations_updated": 0,
+    }
+
+    for idx, result in enumerate(merged_results):
+        audio_id = str(result.get("audio_id", "")).strip()
+        if audio_id and audio_id not in index_by_audio_id:
+            index_by_audio_id[audio_id] = idx
+
+    for new_result in new_results:
+        audio_id = str(new_result.get("audio_id", "")).strip()
+        if not audio_id or audio_id not in index_by_audio_id:
+            merged_results.append(new_result)
+            if audio_id:
+                index_by_audio_id[audio_id] = len(merged_results) - 1
+            stats["audio_rows_added"] += 1
+            stats["model_outputs_added"] += len(new_result.get("model_outputs", {}))
+            stats["evaluations_added"] += len(new_result.get("evaluations", {}))
+            continue
+
+        target = merged_results[index_by_audio_id[audio_id]]
+        stats["audio_rows_updated"] += 1
+
+        for key, value in new_result.items():
+            if key not in {"model_outputs", "evaluations"}:
+                target[key] = value
+
+        target_outputs = target.setdefault("model_outputs", {})
+        for model_key, output in new_result.get("model_outputs", {}).items():
+            if model_key in target_outputs:
+                stats["model_outputs_updated"] += 1
+            else:
+                stats["model_outputs_added"] += 1
+            target_outputs[model_key] = output
+
+        target_evaluations = target.setdefault("evaluations", {})
+        for model_key, evaluation in new_result.get("evaluations", {}).items():
+            if model_key in target_evaluations:
+                stats["evaluations_updated"] += 1
+            else:
+                stats["evaluations_added"] += 1
+            target_evaluations[model_key] = evaluation
+
+    return merged_results, stats
+
+
+def merge_transcription_model_metadata(existing_report: Optional[dict]) -> tuple[dict, dict]:
+    existing_metadata = (existing_report or {}).get("benchmark_metadata", {})
+    existing_models = existing_metadata.get("transcription_models", {})
+    existing_details = existing_metadata.get("transcription_model_details", {})
+
+    transcription_models: dict[str, str] = {}
+    transcription_model_details: dict[str, dict] = {}
+    if isinstance(existing_models, dict):
+        transcription_models.update(existing_models)
+    if isinstance(existing_details, dict):
+        transcription_model_details.update(existing_details)
+
+    transcription_models.update(
+        {mk: cfg["display"] for mk, cfg in TRANSCRIPTION_MODELS.items()}
+    )
+    transcription_model_details.update(
+        {
+            mk: {
+                key: value
+                for key, value in cfg.items()
+                if key not in {"api_key"}
+            }
+            for mk, cfg in TRANSCRIPTION_MODELS.items()
+        }
+    )
+    return transcription_models, transcription_model_details
+
+
+def build_report(
+    all_results: list[dict],
+    summary: dict,
+    aggregates: dict,
+    transcription_models: dict[str, str],
+    transcription_model_details: dict[str, dict],
+    google_manual_mode: bool,
+    openai_manual_mode: bool,
+    local_manual_mode: bool,
+    manual_transcript_dir: pathlib.Path,
+    append_report: bool,
+    merge_stats: Optional[dict[str, int]] = None,
+    previous_report_timestamp: Optional[str] = None,
+) -> dict:
+    metadata = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "evaluator_model": EVALUATOR_MODEL,
+        "google_manual_mode": google_manual_mode,
+        "openai_manual_mode": openai_manual_mode,
+        "local_manual_mode": local_manual_mode,
+        "manual_transcript_dir": str(manual_transcript_dir),
+        "report_update_mode": "append" if append_report else "overwrite",
+        "transcription_models": transcription_models,
+        "transcription_model_details": transcription_model_details,
+        "total_audio_samples": len(all_results),
+        "dataset_variations": [
+            "clean",
+            "background_noise",
+            "multiple_speakers",
+            "accents",
+            "multilingual",
+        ],
+        "samples_per_variation": 2,
+        "metrics_used": [
+            "WER",
+            "CER",
+            "MER",
+            f"{EVALUATOR_MODEL} eval score (1-10)",
+        ],
+        "note_on_multilingual": (
+            "WER is omitted for non-English samples; CER is reported instead. "
+            f"{EVALUATOR_MODEL} evaluation judges quality holistically for all languages."
+        ),
+    }
+    if merge_stats:
+        metadata["append_merge_stats"] = merge_stats
+    if previous_report_timestamp:
+        metadata["previous_report_timestamp"] = previous_report_timestamp
+
+    return {
+        "benchmark_metadata": metadata,
+        "aggregate_metrics": aggregates,
+        "results": all_results,
+        "summary": summary,
+    }
+
+
 def run_benchmark(
     google_manual_mode: bool = False,
     openai_manual_mode: bool = False,
@@ -1280,6 +1477,7 @@ def run_benchmark(
     local_audio_mode: str = DEFAULT_LOCAL_AUDIO_MODE,
     local_command_timeout_seconds: float = DEFAULT_LOCAL_COMMAND_TIMEOUT_SECONDS,
     model_filter: Optional[list[str]] = None,
+    append_report: bool = False,
 ) -> None:
     if local_model_specs or local_command_model_specs:
         register_local_models(
@@ -1305,8 +1503,17 @@ def run_benchmark(
         TRANSCRIPTION_MODELS.update(selected_models)
 
     manual_transcript_dir = pathlib.Path(manual_transcript_dir)
+    existing_report = load_existing_report(OUTPUT_PATH) if append_report else None
     manifest = load_manifest()
     logger.info(f"Loaded {len(manifest)} audio samples from manifest.json")
+    if append_report:
+        if existing_report:
+            logger.info("Append report enabled. Merging into: %s", OUTPUT_PATH.resolve())
+        else:
+            logger.info(
+                "Append report enabled, but no existing report was found at: %s",
+                OUTPUT_PATH.resolve(),
+            )
     if model_filter:
         logger.info("Model filter enabled: %s", ", ".join(TRANSCRIPTION_MODELS))
     if google_manual_mode:
@@ -1464,56 +1671,51 @@ def run_benchmark(
 
         all_results.append(result)
 
-    # Step 3: Global summary
+    # Step 3: Merge with existing report if requested, then build global summary
+    merge_stats = None
+    previous_report_timestamp = None
+    if append_report and existing_report:
+        previous_report_timestamp = existing_report.get("benchmark_metadata", {}).get(
+            "timestamp"
+        )
+        all_results, merge_stats = merge_results(
+            existing_report.get("results", []),
+            all_results,
+        )
+        logger.info(
+            "Merged report rows: %s added, %s updated; model outputs: %s added, %s updated",
+            merge_stats["audio_rows_added"],
+            merge_stats["audio_rows_updated"],
+            merge_stats["model_outputs_added"],
+            merge_stats["model_outputs_updated"],
+        )
+
+    transcription_models, transcription_model_details = merge_transcription_model_metadata(
+        existing_report if append_report else None
+    )
+    model_keys = collect_model_keys(all_results, list(transcription_models))
+    for model_key in model_keys:
+        transcription_models.setdefault(model_key, model_key)
+
     logger.info(f"\n{'─'*65}")
     logger.info(f"▶ Generating benchmark summary with {EVALUATOR_MODEL} ...")
-    summary = generate_summary(all_results)
-    aggregates = compute_aggregates(all_results)
+    summary = generate_summary(all_results, model_keys=model_keys)
+    aggregates = compute_aggregates(all_results, model_keys=model_keys)
 
-    # Assemble final report
-    report = {
-        "benchmark_metadata": {
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-            "evaluator_model": EVALUATOR_MODEL,
-            "google_manual_mode": google_manual_mode,
-            "openai_manual_mode": openai_manual_mode,
-            "local_manual_mode": local_manual_mode,
-            "manual_transcript_dir": str(manual_transcript_dir),
-            "transcription_models": {
-                mk: cfg["display"] for mk, cfg in TRANSCRIPTION_MODELS.items()
-            },
-            "transcription_model_details": {
-                mk: {
-                    key: value
-                    for key, value in cfg.items()
-                    if key not in {"api_key"}
-                }
-                for mk, cfg in TRANSCRIPTION_MODELS.items()
-            },
-            "total_audio_samples": len(all_results),
-            "dataset_variations": [
-                "clean",
-                "background_noise",
-                "multiple_speakers",
-                "accents",
-                "multilingual",
-            ],
-            "samples_per_variation": 2,
-            "metrics_used": [
-                "WER",
-                "CER",
-                "MER",
-                f"{EVALUATOR_MODEL} eval score (1-10)",
-            ],
-            "note_on_multilingual": (
-                "WER is omitted for non-English samples; CER is reported instead. "
-                f"{EVALUATOR_MODEL} evaluation judges quality holistically for all languages."
-            ),
-        },
-        "aggregate_metrics": aggregates,
-        "results": all_results,
-        "summary": summary,
-    }
+    report = build_report(
+        all_results=all_results,
+        summary=summary,
+        aggregates=aggregates,
+        transcription_models=transcription_models,
+        transcription_model_details=transcription_model_details,
+        google_manual_mode=google_manual_mode,
+        openai_manual_mode=openai_manual_mode,
+        local_manual_mode=local_manual_mode,
+        manual_transcript_dir=manual_transcript_dir,
+        append_report=append_report,
+        merge_stats=merge_stats,
+        previous_report_timestamp=previous_report_timestamp,
+    )
 
     # Write JSON
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
@@ -1526,6 +1728,7 @@ def run_benchmark(
     logger.info(f"    {'Model':<35} {'Avg WER':>9}  {'Avg Score':>10}  {'Avg Lat':>10}")
     logger.info(f"    {'─'*35} {'─'*9}  {'─'*10}  {'─'*10}")
     for mk, agg in aggregates.items():
+        display_name = transcription_models.get(mk, mk)
         wer_s = f"{agg['avg_wer']:.1%}" if agg["avg_wer"] is not None else "N/A"
         score_s = (
             f"{agg['avg_eval_score']:.1f}/10"
@@ -1538,7 +1741,7 @@ def run_benchmark(
             else "N/A"
         )
         logger.info(
-            f"    {TRANSCRIPTION_MODELS[mk]['display']:<35} {wer_s:>9}  {score_s:>10}  {lat_s:>10}"
+            f"    {display_name:<35} {wer_s:>9}  {score_s:>10}  {lat_s:>10}"
         )
     logger.info(f"{'═'*65}\n")
 
@@ -1559,4 +1762,5 @@ if __name__ == "__main__":
         local_audio_mode=args.local_audio_mode,
         local_command_timeout_seconds=args.local_command_timeout_seconds,
         model_filter=_split_csv(args.models),
+        append_report=args.append_report,
     )
