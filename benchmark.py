@@ -585,6 +585,14 @@ def parse_args() -> argparse.Namespace:
             "new model outputs/evaluations are added or updated."
         ),
     )
+    parser.add_argument(
+        "--recompute-report-metrics",
+        action="store_true",
+        help=(
+            "Recompute WER/CER/MER and aggregate metrics in the existing "
+            "benchmark_report.json from stored references and transcripts, then exit."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -942,6 +950,7 @@ _wer_transform = jiwer.Compose(
         jiwer.RemovePunctuation(),
         jiwer.Strip(),
         jiwer.RemoveMultipleSpaces(),
+        jiwer.ReduceToListOfListOfWords(),
     ]
 )
 
@@ -988,6 +997,39 @@ def compute_mer(reference: str, hypothesis: str) -> Optional[float]:
         )
     except Exception:
         return None
+
+
+def compute_metrics_for_output(
+    reference: str,
+    transcript: str,
+    language: str,
+) -> tuple[Optional[float], Optional[float], Optional[float]]:
+    if language == "en":
+        return (
+            compute_wer(reference, transcript),
+            compute_cer(reference, transcript),
+            compute_mer(reference, transcript),
+        )
+
+    return (
+        None,
+        compute_cer(reference, transcript) if transcript else None,
+        None,
+    )
+
+
+def recompute_result_metrics(result: dict) -> None:
+    reference = str(result.get("reference_transcript") or result.get("reference") or "")
+    language = str(result.get("language") or "en")
+    if not reference.strip():
+        return
+
+    for output in result.get("model_outputs", {}).values():
+        transcript = str(output.get("transcript") or "")
+        wer, cer, mer = compute_metrics_for_output(reference, transcript, language)
+        output["wer"] = wer
+        output["cer"] = cer
+        output["mer"] = mer
 
 
 # PER-SAMPLE EVALUATION
@@ -1465,6 +1507,32 @@ def build_report(
     }
 
 
+def recompute_report_metrics(report_path: pathlib.Path = OUTPUT_PATH) -> None:
+    report = load_existing_report(report_path)
+    if not report:
+        raise FileNotFoundError(f"Report not found: {report_path}")
+
+    results = report.get("results", [])
+    for result in results:
+        recompute_result_metrics(result)
+
+    metadata = report.setdefault("benchmark_metadata", {})
+    transcription_models = metadata.get("transcription_models", {})
+    if not isinstance(transcription_models, dict):
+        transcription_models = {}
+        metadata["transcription_models"] = transcription_models
+
+    model_keys = collect_model_keys(results, list(transcription_models))
+    report["aggregate_metrics"] = compute_aggregates(results, model_keys=model_keys)
+    metadata["total_audio_samples"] = len(results)
+    metadata["metrics_recomputed_at"] = datetime.now(timezone.utc).isoformat()
+
+    with report_path.open("w", encoding="utf-8") as f:
+        json.dump(report, f, indent=2, ensure_ascii=False)
+
+    logger.info("Recomputed metrics in %s", report_path.resolve())
+
+
 def run_benchmark(
     google_manual_mode: bool = False,
     openai_manual_mode: bool = False,
@@ -1604,16 +1672,13 @@ def run_benchmark(
                 manual_transcript_dir=manual_transcript_dir,
             )
 
-            # Compute metrics only for English (WER is language-dependent)
-            if language == "en":
-                wer = compute_wer(reference, transcript)
-                cer = compute_cer(reference, transcript)
-                mer = compute_mer(reference, transcript)
-            else:
-                # For non-English: CER is still meaningful; WER less so without tokenizer
-                wer = None
-                cer = compute_cer(reference, transcript) if transcript else None
-                mer = None
+            # WER/MER are word-token metrics, so they are only reported for English.
+            # CER is still useful for multilingual samples.
+            wer, cer, mer = compute_metrics_for_output(
+                reference,
+                transcript,
+                language,
+            )
 
             model_outputs[model_key] = {
                 "transcript": transcript,
@@ -1669,6 +1734,7 @@ def run_benchmark(
         if "accent_origin" in entry:
             result["accent_origin"] = entry["accent_origin"]
 
+        recompute_result_metrics(result)
         all_results.append(result)
 
     # Step 3: Merge with existing report if requested, then build global summary
@@ -1682,6 +1748,8 @@ def run_benchmark(
             existing_report.get("results", []),
             all_results,
         )
+        for result in all_results:
+            recompute_result_metrics(result)
         logger.info(
             "Merged report rows: %s added, %s updated; model outputs: %s added, %s updated",
             merge_stats["audio_rows_added"],
@@ -1719,7 +1787,7 @@ def run_benchmark(
 
     # Write JSON
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-        json.dump(report, f, indent=2, ensure_ascii=False)
+        json.dump(report, f, ensure_ascii=False)
 
     # Console summary
     logger.info(f"\n{'═'*65}")
@@ -1750,6 +1818,10 @@ def run_benchmark(
 
 if __name__ == "__main__":
     args = parse_args()
+    if args.recompute_report_metrics:
+        recompute_report_metrics()
+        raise SystemExit(0)
+
     run_benchmark(
         google_manual_mode=args.google_manual_mode,
         openai_manual_mode=args.openai_manual_mode,
