@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASR Benchmark Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #070b14;
+    --bg2: #0d1424;
+    --bg3: #111827;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --cyan: #22d3ee;
+    --cyan-dim: rgba(34,211,238,0.12);
+    --amber: #f59e0b;
+    --amber-dim: rgba(245,158,11,0.12);
+    --green: #34d399;
+    --green-dim: rgba(52,211,153,0.12);
+    --red: #f87171;
+    --red-dim: rgba(248,113,113,0.12);
+    --violet: #a78bfa;
+    --violet-dim: rgba(167,139,250,0.12);
+    --rank1: #f59e0b;
+    --rank2: #94a3b8;
+    --rank3: #cd7f32;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ─── Layout ─── */
+  .page { max-width: 1280px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* ─── Hero ─── */
+  .hero {
+    padding: 60px 0 40px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -120px; left: -80px;
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse at center, rgba(34,211,238,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--cyan); }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; gap: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 20px;
+  }
+  .hero-meta-item { display: flex; align-items: center; gap: 6px; }
+  .hero-meta-item .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); }
+
+  /* ─── Stats Row ─── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    margin: 32px 0;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .stat-card {
+    background: var(--bg2);
+    padding: 20px 24px;
+  }
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .stat-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+  }
+  .stat-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* ─── Section ─── */
+  .section { margin-top: 48px; }
+  .section-header {
+    display: flex; align-items: baseline; gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .section-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* ─── Aggregate Table ─── */
+  .agg-table-wrap {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .agg-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .agg-table thead tr {
+    background: var(--bg3);
+  }
+  .agg-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 14px 16px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border);
+  }
+  .agg-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .agg-table tbody tr:last-child td { border-bottom: none; }
+  .agg-table tbody tr {
+    background: var(--bg2);
+    transition: background 0.15s;
+  }
+  .agg-table tbody tr:hover { background: var(--bg3); }
+
+  .rank-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .rank-1 { background: rgba(245,158,11,0.15); color: var(--rank1); border: 1px solid rgba(245,158,11,0.3); }
+  .rank-2 { background: rgba(148,163,184,0.1); color: var(--rank2); border: 1px solid rgba(148,163,184,0.25); }
+  .rank-3 { background: rgba(205,127,50,0.1); color: var(--rank3); border: 1px solid rgba(205,127,50,0.25); }
+  .rank-4, .rank-5 { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+
+  .model-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    color: #fff;
+    font-size: 13px;
+  }
+  .model-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .score-bar-wrap { display: flex; align-items: center; gap: 10px; }
+  .score-bar-track {
+    flex: 1; height: 4px; background: var(--bg3);
+    border-radius: 2px; min-width: 80px;
+  }
+  .score-bar-fill {
+    height: 100%; border-radius: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--green));
+    transition: width 0.8s cubic-bezier(.4,0,.2,1);
+  }
+  .score-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    min-width: 30px;
+    text-align: right;
+  }
+
+  .metric-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+  }
+  .metric-good { color: var(--green); }
+  .metric-mid  { color: var(--amber); }
+  .metric-bad  { color: var(--red);   }
+  .metric-null { color: var(--muted); }
+
+  .latency-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .latency-fast { background: var(--green-dim); color: var(--green); }
+  .latency-mid  { background: var(--amber-dim); color: var(--amber); }
+  .latency-slow { background: var(--red-dim);   color: var(--red);   }
+
+  .verdict-text { font-size: 12px; color: var(--muted); max-width: 280px; }
+
+  /* ─── Variation Filter ─── */
+  .filter-row {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .filter-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    background: var(--bg2);
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+  .filter-btn.active { background: var(--cyan-dim); border-color: var(--cyan); color: var(--cyan); }
+
+  /* ─── Results Table ─── */
+  .results-table-wrap {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .results-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .results-table thead tr { background: var(--bg3); }
+  .results-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .results-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .results-table tbody tr:last-child td { border-bottom: none; }
+  .results-table tbody tr {
+    background: var(--bg2);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .results-table tbody tr:hover { background: #1a2035; }
+  .results-table tbody tr:hover .view-btn { opacity: 1; }
+
+  .audio-id {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--cyan);
+  }
+  .variation-chip {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+  .var-clean         { background: var(--green-dim);  color: var(--green);  }
+  .var-background_noise { background: var(--amber-dim); color: var(--amber); }
+  .var-multiple_speakers { background: var(--red-dim); color: var(--red);   }
+  .var-accents       { background: var(--violet-dim); color: var(--violet); }
+  .var-multilingual  { background: var(--cyan-dim);   color: var(--cyan);   }
+
+  .score-dot {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .sdot-10 { background: var(--green-dim); color: var(--green); }
+  .sdot-high { background: rgba(34,211,238,0.1); color: var(--cyan); }
+  .sdot-mid  { background: var(--amber-dim); color: var(--amber); }
+  .sdot-low  { background: var(--red-dim);   color: var(--red);   }
+  .sdot-zero { background: rgba(100,116,139,0.1); color: var(--muted); }
+
+  .snippet { font-size: 12px; color: var(--muted); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+
+  .view-btn {
+    opacity: 0;
+    padding: 4px 10px;
+    border: 1px solid var(--cyan);
+    border-radius: 4px;
+    background: var(--cyan-dim);
+    color: var(--cyan);
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+
+  /* ─── Modal ─── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(7,11,20,0.88);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 16px;
+    overflow-y: auto;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 900px;
+    position: relative;
+    animation: modalIn 0.2s ease-out;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  }
+  .modal-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .modal-close {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    background: none;
+    color: var(--muted);
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .modal-close:hover { border-color: var(--red); color: var(--red); }
+
+  .modal-body { padding: 24px 28px; }
+
+  /* Ground Truth */
+  .ground-truth-block {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-left: 3px solid var(--cyan);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+  .gt-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 8px;
+  }
+  .gt-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  /* Model cards */
+  .model-cards { display: flex; flex-direction: column; gap: 16px; }
+  .model-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .model-card:hover { border-color: var(--border2); }
+
+  .mc-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+  .mc-header:hover { background: rgba(255,255,255,0.02); }
+  .mc-model-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .mc-scores {
+    display: flex; gap: 12px; align-items: center;
+  }
+  .mc-score-item {
+    display: flex; flex-direction: column; align-items: flex-end;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .mc-score-lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .mc-score-val { font-size: 14px; font-weight: 600; }
+  .mc-chevron { color: var(--muted); font-size: 12px; transition: transform 0.2s; }
+  .mc-chevron.open { transform: rotate(180deg); }
+
+  .mc-body { display: none; padding: 16px 18px; }
+  .mc-body.open { display: block; }
+
+  .transcript-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 640px) { .transcript-compare { grid-template-columns: 1fr; } }
+
+  .transcript-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+  .transcript-box-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .transcript-box-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .transcript-box-text.error-text { color: var(--red); font-style: italic; }
+
+  .eval-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 640px) { .eval-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .eval-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .eval-item-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 4px; }
+  .eval-item-val { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; }
+
+  .eval-notes { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 8px; }
+  .eval-notes strong { color: var(--text); }
+  .eval-errors {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 8px;
+  }
+  .error-tag {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    background: var(--red-dim);
+    color: var(--red);
+    border: 1px solid rgba(248,113,113,0.2);
+  }
+  .error-tag.ok { background: var(--green-dim); color: var(--green); border-color: rgba(52,211,153,0.2); }
+
+  /* Insights + Recommendations */
+  .insight-list { display: flex; flex-direction: column; gap: 10px; }
+  .insight-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 12px 16px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .insight-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--cyan);
+    flex-shrink: 0;
+    margin-top: 1px;
+    min-width: 20px;
+  }
+
+  .rec-list { display: flex; flex-direction: column; gap: 10px; }
+  .rec-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 12px 16px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--amber);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  /* Difficulty Ranking */
+  .difficulty-track {
+    display: flex; gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 12px;
+  }
+  .difficulty-seg {
+    flex: 1;
+    padding: 14px 10px;
+    text-align: center;
+    font-size: 11px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .difficulty-seg:last-child { border-right: none; }
+  .difficulty-seg-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .difficulty-seg-sub { font-size: 10px; color: var(--muted); }
+
+  /* Loading */
+  .loading-state {
+    display: flex; align-items: center; justify-content: center;
+    padding: 80px 0;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--muted);
+    gap: 12px;
+  }
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border2);
+    border-top-color: var(--cyan);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-state {
+    padding: 60px;
+    text-align: center;
+    color: var(--red);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+  }
+
+  /* ─── Audio Player ─── */
+  .audio-player-block {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+  }
+  .audio-icon {
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--cyan-dim);
+    border: 1px solid rgba(34,211,238,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .audio-info { flex: 1; min-width: 0; }
+  .audio-info-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 3px;
+  }
+  .audio-info-meta { font-size: 11px; color: var(--muted); }
+  .audio-player-block audio {
+    flex: 2;
+    min-width: 0;
+    height: 32px;
+    border-radius: 6px;
+    accent-color: var(--cyan);
+    filter: invert(0);
+  }
+  /* Style the native audio control to fit dark theme as best we can */
+  audio::-webkit-media-controls-panel { background: var(--bg); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero { padding: 40px 0 24px; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .agg-table th:nth-child(5), .agg-table td:nth-child(5) { display: none; }
+    .results-table th:nth-child(4), .results-table td:nth-child(4) { display: none; }
+    .view-btn { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── Hero ── -->
+  <header class="hero">
+    <div class="hero-label">◈ Automatic Speech Recognition · Benchmark Report</div>
+    <h1>Model <span>Performance</span> Analysis</h1>
+    <div id="hero-meta" class="hero-meta">
+      <div class="loading-state" style="padding:10px 0;"><div class="spinner"></div> Loading…</div>
+    </div>
+  </header>
+
+  <!-- ── Stats Row ── -->
+  <div id="stats-row" class="stats-row" style="display:none;">
+    <div class="stat-card">
+      <div class="stat-label">Audio Samples</div>
+      <div class="stat-value" id="stat-samples">—</div>
+      <div class="stat-sub">total evaluated</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Models Tested</div>
+      <div class="stat-value" id="stat-models">—</div>
+      <div class="stat-sub">transcription systems</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Top Score</div>
+      <div class="stat-value" id="stat-top-score">—</div>
+      <div class="stat-sub" id="stat-top-model">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Best Latency</div>
+      <div class="stat-value" id="stat-latency">—</div>
+      <div class="stat-sub" id="stat-latency-model">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Evaluator</div>
+      <div class="stat-value" style="font-size:18px;" id="stat-evaluator">—</div>
+      <div class="stat-sub">LLM judge</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Variations</div>
+      <div class="stat-value" id="stat-variations">—</div>
+      <div class="stat-sub">test conditions</div>
+    </div>
+  </div>
+
+  <!-- ── Aggregate Comparison ── -->
+  <section class="section" id="section-agg">
+    <div class="section-header">
+      <div class="section-title">Model Comparison</div>
+      <div class="section-badge">aggregate metrics</div>
+    </div>
+    <div id="agg-table-container">
+      <div class="loading-state"><div class="spinner"></div> Loading…</div>
+    </div>
+  </section>
+
+  <!-- ── Per-Sample Results ── -->
+  <section class="section" id="section-results">
+    <div class="section-header">
+      <div class="section-title">Sample-Level Results</div>
+      <div class="section-badge">click any row to inspect</div>
+    </div>
+    <div class="filter-row" id="filter-row"></div>
+    <div class="results-table-wrap" id="results-table-container">
+      <div class="loading-state"><div class="spinner"></div> Loading…</div>
+    </div>
+  </section>
+
+  <!-- ── Difficulty Ranking ── -->
+  <section class="section" id="section-difficulty" style="display:none;">
+    <div class="section-header">
+      <div class="section-title">Dataset Difficulty</div>
+      <div class="section-badge">easiest → hardest</div>
+    </div>
+    <div class="difficulty-track" id="difficulty-track"></div>
+  </section>
+
+  <!-- ── Insights ── -->
+  <section class="section" id="section-insights" style="display:none;">
+    <div class="section-header">
+      <div class="section-title">Benchmark Insights</div>
+      <div class="section-badge" id="insights-count">—</div>
+    </div>
+    <div class="insight-list" id="insights-list"></div>
+  </section>
+
+  <!-- ── Recommendations ── -->
+  <section class="section" id="section-recs" style="display:none;">
+    <div class="section-header">
+      <div class="section-title">Recommendations</div>
+      <div class="section-badge" id="recs-count">—</div>
+    </div>
+    <div class="rec-list" id="recs-list"></div>
+  </section>
+
+</div>
+
+<!-- ── Modal ── -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">—</div>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ─── Helpers ───────────────────────────────────────────────────────────────
+
+const $ = id => document.getElementById(id);
+
+function fmt(v, digits=2) {
+  if (v === null || v === undefined) return null;
+  return typeof v === 'number' ? v.toFixed(digits) : v;
+}
+
+function scoreColor(s) {
+  if (s === null || s === 0) return 'var(--muted)';
+  if (s >= 9)  return 'var(--green)';
+  if (s >= 7)  return 'var(--cyan)';
+  if (s >= 5)  return 'var(--amber)';
+  return 'var(--red)';
+}
+
+function scoreDotClass(s) {
+  if (s === null || s === 0) return 'sdot-zero';
+  if (s === 10) return 'sdot-10';
+  if (s >= 8)  return 'sdot-high';
+  if (s >= 5)  return 'sdot-mid';
+  return 'sdot-low';
+}
+
+function cerClass(c) {
+  if (c === null) return 'metric-null';
+  if (c < 0.2) return 'metric-good';
+  if (c < 0.5) return 'metric-mid';
+  return 'metric-bad';
+}
+
+function msToSec(ms) {
+  if (!ms) return null;
+  return (ms / 1000).toFixed(1) + 's';
+}
+
+function latencyClass(ms) {
+  if (!ms) return '';
+  if (ms < 25000) return 'latency-fast';
+  if (ms < 35000) return 'latency-mid';
+  return 'latency-slow';
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function escHtmlMultiline(str) {
+if (!str) return '';
+const normalized = String(str)
+.replace(/\r\n|\n|\r/g, '\n')
+.replace(/\r\n|\r/g, '\n');
+return escHtml(normalized).replace(/\n/g, '<br>');
+}
+
+function varChipClass(v) {
+  const map = {
+    clean: 'var-clean',
+    background_noise: 'var-background_noise',
+    multiple_speakers: 'var-multiple_speakers',
+    accents: 'var-accents',
+    multilingual: 'var-multilingual',
+  };
+  return map[v] || '';
+}
+
+function rankBadge(r) {
+  const cls = r <= 3 ? `rank-${r}` : 'rank-4';
+  return `<span class="rank-badge ${cls}">${r}</span>`;
+}
+
+// ─── Main ──────────────────────────────────────────────────────────────────
+
+let DATA = null;
+let activeFilter = 'all';
+let allModels = [];
+
+async function loadData() {
+  try {
+    const resp = await fetch('./benchmark_report.json');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    DATA = await resp.json();
+    render();
+  } catch(e) {
+    $('hero-meta').innerHTML = `<div class="error-state">⚠ Failed to load benchmark_report.json: ${e.message}</div>`;
+    $('agg-table-container').innerHTML = '';
+    $('results-table-container').innerHTML = '';
+  }
+}
+
+function render() {
+  const meta = DATA.benchmark_metadata;
+  const agg  = DATA.aggregate_metrics;
+  const results = DATA.results;
+  const summary = DATA.summary || {};
+
+  allModels = Object.keys(meta.transcription_models);
+
+  // ── Hero meta ──
+  $('hero-meta').innerHTML = `
+    <div class="hero-meta-item"><span class="dot"></span> ${meta.timestamp.split('T')[0]}</div>
+    <div class="hero-meta-item"><span class="dot"></span> Evaluator: ${meta.evaluator_model}</div>
+    <div class="hero-meta-item"><span class="dot"></span> ${meta.total_audio_samples} samples · ${meta.dataset_variations.length} variations</div>
+    <div class="hero-meta-item"><span class="dot"></span> Metrics: ${meta.metrics_used.join(', ')}</div>
+  `;
+
+  // ── Stats ──
+  const ranking = summary.overall_ranking || [];
+  const ranked = ranking.filter(r => r.avg_score > 0);
+  const best = ranked[0];
+  const fastestModel = allModels.reduce((acc, m) => {
+    const lat = agg[m]?.avg_latency_ms;
+    if (!lat) return acc;
+    if (!acc || lat < agg[acc].avg_latency_ms) return m;
+    return acc;
+  }, null);
+
+  $('stat-samples').textContent = meta.total_audio_samples;
+  $('stat-models').textContent = allModels.length;
+  $('stat-top-score').textContent = best ? best.avg_score.toFixed(1) + '/10' : '—';
+  $('stat-top-model').textContent = best ? meta.transcription_models[best.model] || best.model : '—';
+  $('stat-latency').textContent = fastestModel ? msToSec(agg[fastestModel].avg_latency_ms) : '—';
+  $('stat-latency-model').textContent = fastestModel ? meta.transcription_models[fastestModel] || fastestModel : '—';
+  $('stat-evaluator').textContent = meta.evaluator_model;
+  $('stat-variations').textContent = meta.dataset_variations.length;
+  $('stats-row').style.display = '';
+
+  // ── Aggregate Table ──
+  renderAggTable(agg, meta, ranking, summary);
+
+  // ── Filter buttons ──
+  const filterRow = $('filter-row');
+  filterRow.innerHTML = '';
+  ['all', ...meta.dataset_variations].forEach(v => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (v === 'all' ? ' active' : '');
+    btn.textContent = v === 'all' ? 'All Samples' : v.replace('_', ' ');
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = v;
+      renderResultsTable(results, meta, agg);
+    });
+    filterRow.appendChild(btn);
+  });
+
+  // ── Results Table ──
+  renderResultsTable(results, meta, agg);
+
+  // ── Difficulty ──
+  const difficulty = summary.dataset_difficulty_ranking || [];
+  if (difficulty.length) {
+    $('section-difficulty').style.display = '';
+    const colors = ['var(--green)', 'var(--cyan)', 'var(--violet)', 'var(--amber)', 'var(--red)'];
+    $('difficulty-track').innerHTML = difficulty.map((d, i) => {
+      const parts = d.split('(');
+      const label = parts[0].trim();
+      const sub = parts[1] ? parts[1].replace(')', '').trim() : '';
+      return `<div class="difficulty-seg">
+        <div class="difficulty-seg-label" style="color:${colors[i]}">${escHtml(label)}</div>
+        ${sub ? `<div class="difficulty-seg-sub">${escHtml(sub)}</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  // ── Insights ──
+  const insights = summary.benchmark_insights || [];
+  if (insights.length) {
+    $('section-insights').style.display = '';
+    $('insights-count').textContent = insights.length + ' findings';
+    $('insights-list').innerHTML = insights.map((ins, i) =>
+      `<div class="insight-item"><span class="insight-num">${String(i+1).padStart(2,'0')}</span><span>${escHtml(ins)}</span></div>`
+    ).join('');
+  }
+
+  // ── Recommendations ──
+  const recs = summary.recommendations || [];
+  if (recs.length) {
+    $('section-recs').style.display = '';
+    $('recs-count').textContent = recs.length + ' actions';
+    $('recs-list').innerHTML = recs.map((r, i) =>
+      `<div class="rec-item"><span class="insight-num" style="color:var(--amber)">${String(i+1).padStart(2,'0')}</span><span>${escHtml(r)}</span></div>`
+    ).join('');
+  }
+}
+
+function renderAggTable(agg, meta, ranking, summary) {
+  const modelAnalysis = summary.model_analysis || {};
+  const rankMap = {};
+  (ranking || []).forEach(r => { rankMap[r.model] = r; });
+
+  // Sort models: by rank first, then by key
+  const sortedModels = allModels.slice().sort((a, b) => {
+    const ra = rankMap[a]?.rank ?? 99;
+    const rb = rankMap[b]?.rank ?? 99;
+    return ra - rb;
+  });
+
+  const maxScore = 10;
+
+  let html = `
+  <div class="agg-table-wrap">
+  <table class="agg-table">
+    <thead>
+      <tr>
+        <th style="width:40px">Rank</th>
+        <th>Model</th>
+        <th>Avg Score</th>
+        <th>Avg CER</th>
+        <th>Avg Latency</th>
+        <th>Verdict</th>
+      </tr>
+    </thead>
+    <tbody>
+  `;
+
+  sortedModels.forEach(modelId => {
+    const info = agg[modelId] || {};
+    const rInfo = rankMap[modelId] || {};
+    const mAnal = modelAnalysis[modelId] || {};
+    const label = meta.transcription_models[modelId] || modelId;
+    const rank  = rInfo.rank ?? '—';
+    const score = info.avg_eval_score ?? null;
+    const cer   = info.avg_cer ?? null;
+    const lat   = info.avg_latency_ms ?? null;
+    const verdict = rInfo.verdict || mAnal.overall_verdict || '—';
+
+    const scoreBarPct = score ? (score / maxScore * 100).toFixed(1) : 0;
+    const cerStr = cer !== null ? cer.toFixed(4) : '—';
+    const latStr = lat ? msToSec(lat) : '—';
+    const rankNum = typeof rank === 'number' ? rank : 99;
+
+    html += `<tr>
+      <td>${rankBadge(rankNum)}</td>
+      <td>
+        <div class="model-name">${escHtml(label)}</div>
+        <div class="model-sub">${escHtml(modelId)}</div>
+      </td>
+      <td>
+        <div class="score-bar-wrap">
+          <div class="score-bar-track">
+            <div class="score-bar-fill" style="width:${scoreBarPct}%"></div>
+          </div>
+          <span class="score-val" style="color:${scoreColor(score)}">${score !== null ? score.toFixed(1) : '—'}</span>
+        </div>
+      </td>
+      <td><span class="metric-val ${cerClass(cer)}">${cerStr}</span></td>
+      <td>${lat ? `<span class="latency-pill ${latencyClass(lat)}">${latStr}</span>` : '<span class="metric-null metric-val">—</span>'}</td>
+      <td><div class="verdict-text">${escHtml(verdict)}</div></td>
+    </tr>`;
+  });
+
+  html += '</tbody></table></div>';
+  $('agg-table-container').innerHTML = html;
+}
+
+function renderResultsTable(results, meta, agg) {
+  const filtered = activeFilter === 'all' ? results : results.filter(r => r.variation === activeFilter);
+
+  if (!filtered.length) {
+    $('results-table-container').innerHTML = `<div class="loading-state">No results for this filter.</div>`;
+    return;
+  }
+
+  // Score columns = active models (non-gemma if no outputs)
+  const displayModels = allModels;
+
+  let html = `
+  <div class="results-table-wrap">
+  <table class="results-table">
+    <thead>
+      <tr>
+        <th>Sample</th>
+        <th>Variation</th>
+        <th>Dataset</th>
+        <th>Reference Snippet</th>
+        ${displayModels.map(m => `<th>${escHtml(meta.transcription_models[m] || m).split(' ')[0]}</th>`).join('')}
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+  `;
+
+  filtered.forEach(r => {
+    const snippet = r.reference_transcript ? r.reference_transcript.slice(0, 60) + '…' : '—';
+
+    const scoreCells = displayModels.map(m => {
+      const ev = r.evaluations?.[m];
+      const score = ev?.overall_score ?? null;
+      return `<td><span class="score-dot ${scoreDotClass(score)}" title="${m}: ${score ?? 'N/A'}">${score !== null && score > 0 ? score : (score === 0 ? '✗' : '—')}</span></td>`;
+    }).join('');
+
+    html += `<tr data-audio-id="${escHtml(r.audio_id)}" onclick="openModal('${escHtml(r.audio_id)}')">
+      <td><div class="audio-id">${escHtml(r.audio_id)}</div><div class="model-sub">${escHtml(r.language?.toUpperCase() || '')}</div></td>
+      <td><span class="variation-chip ${varChipClass(r.variation)}">${escHtml(r.variation?.replace('_',' ') || '')}</span></td>
+      <td style="font-size:12px;color:var(--muted);">${escHtml(r.dataset || '')}</td>
+      <td><div class="snippet">${escHtml(snippet)}</div></td>
+      ${scoreCells}
+      <td><span class="view-btn">View ↗</span></td>
+    </tr>`;
+  });
+
+  html += '</tbody></table></div>';
+  $('results-table-container').innerHTML = html;
+}
+
+// ─── Modal ─────────────────────────────────────────────────────────────────
+
+function openModal(audioId) {
+  const r = DATA.results.find(x => x.audio_id === audioId);
+  if (!r) return;
+
+  const meta = DATA.benchmark_metadata;
+
+  $('modal-title').innerHTML = `
+    <span class="audio-id">${escHtml(audioId)}</span>
+    <span class="variation-chip ${varChipClass(r.variation)}">${escHtml(r.variation_label || r.variation)}</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted)">${escHtml(r.dataset || '')}</span>
+  `;
+
+  // Build audio src — use audio_base64 from the result
+  const audioSrc = r.audio_base64
+    ? `data:${r.audio_mime_type || 'audio/wav'};base64,${r.audio_base64}`
+    : null;
+
+  let body = `
+    ${audioSrc ? `
+    <div class="audio-player-block">
+      <div class="audio-icon">🔊</div>
+      <div class="audio-info">
+        <div class="audio-info-label">Audio Sample</div>
+        <div class="audio-info-meta">${escHtml(r.audio_file?.split(/[\\/]/).pop() || r.audio_id)} · ${escHtml(r.audio_mime_type || '')}</div>
+      </div>
+      <audio controls src="${audioSrc}" preload="metadata" style="flex:2;min-width:0;height:32px;border-radius:6px;accent-color:var(--cyan)"></audio>
+    </div>` : ''}
+    <div class="ground-truth-block">
+      <div class="gt-label">◈ Ground Truth — Reference Transcript</div>
+      <div class="gt-text">${escHtmlMultiline(r.reference_transcript || 'N/A')}</div>
+    </div>
+    <div class="model-cards">
+  `;
+
+  const displayModels = allModels;
+
+  displayModels.forEach((modelId, idx) => {
+    const label = meta.transcription_models[modelId] || modelId;
+    const output = r.model_outputs?.[modelId] || {};
+    const ev     = r.evaluations?.[modelId] || {};
+    const score  = ev.overall_score ?? null;
+    const cer    = output.cer ?? null;
+    const lat    = output.latency_ms ?? null;
+    const transcript = output.transcript || '';
+    const hasError = !!output.error || !transcript;
+
+    const scoreColorVal = scoreColor(score);
+    const bodyId = `mc-body-${idx}`;
+
+    body += `
+    <div class="model-card">
+      <div class="mc-header" onclick="toggleCard('${bodyId}', this)">
+        <div class="mc-model-name">
+          ${rankBadge(score !== null && score > 0 ? (score >= 9 ? 1 : score >= 7 ? 2 : 3) : 99)}
+          ${escHtml(label)}
+          <span style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace">${escHtml(modelId)}</span>
+        </div>
+        <div class="mc-scores">
+          <div class="mc-score-item">
+            <div class="mc-score-lbl">Score</div>
+            <div class="mc-score-val" style="color:${scoreColorVal}">${score !== null ? score + '/10' : '—'}</div>
+          </div>
+          ${cer !== null ? `<div class="mc-score-item"><div class="mc-score-lbl">CER</div><div class="mc-score-val" style="color:${scoreColor(cer < 0.3 ? 9 : 5)}">${cer.toFixed(4)}</div></div>` : ''}
+          ${lat ? `<div class="mc-score-item"><div class="mc-score-lbl">Latency</div><div class="mc-score-val" style="color:var(--muted)">${msToSec(lat)}</div></div>` : ''}
+          <div class="mc-chevron" id="chevron-${idx}">▼</div>
+        </div>
+      </div>
+      <div class="mc-body" id="${bodyId}">
+        <div class="transcript-compare">
+          <div class="transcript-box">
+            <div class="transcript-box-label">Reference (Ground Truth)</div>
+            <div class="transcript-box-text">${escHtmlMultiline(r.reference_transcript || 'N/A')}</div>
+          </div>
+          <div class="transcript-box">
+            <div class="transcript-box-label">Model Output</div>
+            <div class="transcript-box-text ${hasError ? 'error-text' : ''}">
+              ${hasError
+                ? (output.error ? escHtmlMultiline('⚠ Error: ' + output.error.substring(0,200)) : '⚠ No output produced')
+                : escHtmlMultiline(transcript)}
+            </div>
+          </div>
+        </div>
+
+        <div class="eval-grid">
+          <div class="eval-item">
+            <div class="eval-item-lbl">Accuracy</div>
+            <div class="eval-item-val" style="color:${scoreColor(ev.accuracy_score)}">${ev.accuracy_score ?? '—'}</div>
+          </div>
+          <div class="eval-item">
+            <div class="eval-item-lbl">Fluency</div>
+            <div class="eval-item-val" style="color:${scoreColor(ev.fluency_score)}">${ev.fluency_score ?? '—'}</div>
+          </div>
+          <div class="eval-item">
+            <div class="eval-item-lbl">Completeness</div>
+            <div class="eval-item-val" style="color:${scoreColor(ev.completeness_score)}">${ev.completeness_score ?? '—'}</div>
+          </div>
+          <div class="eval-item">
+            <div class="eval-item-lbl">Overall</div>
+            <div class="eval-item-val" style="color:${scoreColor(ev.overall_score)}">${ev.overall_score ?? '—'}</div>
+          </div>
+        </div>
+
+        ${ev.failure_summary ? `<p class="eval-notes"><strong>Evaluation:</strong> ${escHtml(ev.failure_summary)}</p>` : ''}
+        ${ev.improvement_suggestions ? `<p class="eval-notes"><strong>Suggestions:</strong> ${escHtml(ev.improvement_suggestions)}</p>` : ''}
+
+        ${ev.error_categories?.length ? `
+          <div class="eval-errors">
+            ${ev.error_categories.map(e => `<span class="error-tag ${e === 'none' ? 'ok' : ''}">${escHtml(e)}</span>`).join('')}
+          </div>` : ''}
+
+        ${ev.notable_errors?.length ? `
+          <p class="eval-notes" style="margin-top:8px"><strong>Notable errors:</strong> ${escHtml(ev.notable_errors.join(' · '))}</p>` : ''}
+      </div>
+    </div>`;
+  });
+
+  body += '</div>';
+  $('modal-body').innerHTML = body;
+  $('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function toggleCard(bodyId, headerEl) {
+  const body = document.getElementById(bodyId);
+  const chevron = headerEl.querySelector('.mc-chevron');
+  if (!body) return;
+  body.classList.toggle('open');
+  chevron?.classList.toggle('open');
+}
+
+$('modal-close').addEventListener('click', closeModal);
+$('modal-overlay').addEventListener('click', e => { if (e.target === $('modal-overlay')) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function closeModal() {
+  $('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ─── Boot ──────────────────────────────────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>
