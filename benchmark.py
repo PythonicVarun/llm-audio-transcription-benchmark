@@ -593,6 +593,16 @@ def parse_args() -> argparse.Namespace:
             "benchmark_report.json from stored references and transcripts, then exit."
         ),
     )
+    parser.add_argument(
+        "--skip-evaluation",
+        action="store_true",
+        default=False,
+        help=(
+            "Skip the per-sample LLM evaluation and global summary generation. "
+            "Transcripts and WER/CER/MER metrics are still written. "
+            "Useful when the evaluator model token is unavailable."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -1578,6 +1588,7 @@ def run_benchmark(
     local_command_timeout_seconds: float = DEFAULT_LOCAL_COMMAND_TIMEOUT_SECONDS,
     model_filter: Optional[list[str]] = None,
     append_report: bool = False,
+    skip_evaluation: bool = False,
 ) -> None:
     if local_model_specs or local_command_model_specs:
         register_local_models(
@@ -1729,25 +1740,27 @@ def run_benchmark(
                 else f"    {wer_str}  latency={latency_ms:.0f}ms"
             )
 
-        # Step 2: Evaluate with GPT-5.4
-        logger.info(f"  ▷ Evaluating all outputs with {EVALUATOR_MODEL} ...")
+        # Step 2: Evaluate with evaluator model (skippable)
         evaluations: dict[str, dict] = {}
-
-        for model_key in TRANSCRIPTION_MODELS:
-            out = model_outputs[model_key]
-            evaluations[model_key] = evaluate_one(
-                audio_id=audio_id,
-                variation=variation,
-                language=language,
-                model_key=model_key,
-                reference=reference,
-                hypothesis=out["transcript"],
-                wer=out["wer"],
-            )
-            score = evaluations[model_key].get("overall_score", "?")
-            logger.info(
-                f"    {TRANSCRIPTION_MODELS[model_key]['display']:30s} → score={score}/10"
-            )
+        if skip_evaluation:
+            logger.info(f"  ▷ Skipping evaluation (--skip-evaluation)")
+        else:
+            logger.info(f"  ▷ Evaluating all outputs with {EVALUATOR_MODEL} ...")
+            for model_key in TRANSCRIPTION_MODELS:
+                out = model_outputs[model_key]
+                evaluations[model_key] = evaluate_one(
+                    audio_id=audio_id,
+                    variation=variation,
+                    language=language,
+                    model_key=model_key,
+                    reference=reference,
+                    hypothesis=out["transcript"],
+                    wer=out["wer"],
+                )
+                score = evaluations[model_key].get("overall_score", "?")
+                logger.info(
+                    f"    {TRANSCRIPTION_MODELS[model_key]['display']:30s} → score={score}/10"
+                )
 
         # Build result record
         result = {
@@ -1798,10 +1811,14 @@ def run_benchmark(
         transcription_models.setdefault(model_key, model_key)
 
     logger.info(f"\n{'─'*65}")
-    logger.info(f"▶ Generating benchmark summary with {EVALUATOR_MODEL} ...")
     aggregates = compute_aggregates(all_results, model_keys=model_keys)
-    summary = generate_summary(all_results, model_keys=model_keys)
-    sync_summary_metrics(summary, aggregates)
+    if skip_evaluation:
+        logger.info("▶ Skipping summary generation (--skip-evaluation)")
+        summary = {}
+    else:
+        logger.info(f"▶ Generating benchmark summary with {EVALUATOR_MODEL} ...")
+        summary = generate_summary(all_results, model_keys=model_keys)
+        sync_summary_metrics(summary, aggregates)
 
     report = build_report(
         all_results=all_results,
@@ -1868,4 +1885,5 @@ if __name__ == "__main__":
         local_command_timeout_seconds=args.local_command_timeout_seconds,
         model_filter=_split_csv(args.models),
         append_report=args.append_report,
+        skip_evaluation=args.skip_evaluation,
     )
