@@ -982,11 +982,28 @@ def compute_wer(reference: str, hypothesis: str) -> Optional[float]:
         return None
 
 
+_cer_transform = jiwer.Compose(
+    [
+        jiwer.ToLowerCase(),
+        jiwer.RemovePunctuation(),
+        jiwer.Strip(),
+        jiwer.RemoveMultipleSpaces(),
+    ]
+)
+
 def compute_cer(reference: str, hypothesis: str) -> Optional[float]:
     if not reference.strip():
         return None
     try:
-        return round(jiwer.cer(reference, hypothesis), 4)
+        return round(
+            jiwer.cer(
+                reference,
+                hypothesis,
+                reference_transform=_cer_transform,
+                hypothesis_transform=_cer_transform,
+            ),
+            4,
+        )
     except Exception:
         return None
 
@@ -1000,8 +1017,8 @@ def compute_mer(reference: str, hypothesis: str) -> Optional[float]:
             jiwer.mer(
                 reference,
                 hypothesis,
-                reference_transform=_wer_transform,
-                hypothesis_transform=_wer_transform,
+                reference_transform=_cer_transform,
+                hypothesis_transform=_cer_transform,
             ),
             4,
         )
@@ -1024,7 +1041,7 @@ def compute_metrics_for_output(
     return (
         None,
         compute_cer(reference, transcript) if transcript else None,
-        None,
+        compute_mer(reference, transcript) if transcript else None,
     )
 
 
@@ -1061,10 +1078,9 @@ fluent or plausible text if it does not match the reference.
 
 Scoring rules:
 - Start from 10 and reduce scores based on concrete transcript errors.
-- Perfect or near-perfect transcripts only: 9-10.
-- Minor wording, punctuation, casing, or formatting differences only: 8.
-- Noticeable word substitutions/deletions/insertions that preserve most meaning: 6-7.
-- Repeated errors, missed phrases, wrong names/numbers, or partial hallucination: 4-5.
+- Perfect or near-perfect semantics and entities: 9-10. Do not penalize for casing/punctuation.
+- Noticeable word substitutions/deletions/insertions that preserve most meaning: 7-8.
+- Repeated errors, missed phrases, wrong names/numbers, or partial hallucination: 4-6.
 - Large omissions, frequent hallucinations, wrong language, or mostly wrong transcript: 1-3.
 - Empty output is always 0 and should be handled as complete failure.
 
@@ -1120,6 +1136,8 @@ def evaluate_one(
     reference: str,
     hypothesis: str,
     wer: Optional[float],
+    cer: Optional[float],
+    mer: Optional[float],
 ) -> dict:
     """Call the evaluator model to evaluate a single (reference, hypothesis) pair."""
     if not hypothesis.strip():
@@ -1130,6 +1148,10 @@ def evaluate_one(
 Variation type  : {variation}
 Language        : {language}
 WER             : {wer_str}
+CER             : {cer:.1%} if cer is not None else "N/A"
+MER             : {mer:.1%} if mer is not None else "N/A"
+
+The programmatic Word Error Rate (WER) ignoring capitalization and punctuation for this transcript is {wer_str}. Keeping this alignment score in mind, provide a final holistic AI score focused on semantic retention, recognizing entity names, and overall readability. Do not overly penalize minor formatting or capitalization errors.
 
 REFERENCE TRANSCRIPT:
 {reference}
@@ -1756,6 +1778,8 @@ def run_benchmark(
                     reference=reference,
                     hypothesis=out["transcript"],
                     wer=out["wer"],
+                    cer=out["cer"],
+                    mer=out["mer"],
                 )
                 score = evaluations[model_key].get("overall_score", "?")
                 logger.info(
