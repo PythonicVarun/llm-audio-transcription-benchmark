@@ -48,6 +48,7 @@ os.environ["PYTORCH_ALLOC_CONF"] = "expandable_segments:True"
 
 import json, time, pathlib
 import librosa, torch
+from kaggle_secrets import UserSecretsClient
 
 # Verify the new transformers actually has Gemma-4. If this import fails,
 # Cell 1 didn't take effect — re-run Cell 1 and kernel-restart again.
@@ -57,8 +58,10 @@ from transformers.models.gemma4 import (
     Gemma4Processor,
 )
 
+kaggle_sec = UserSecretsClient()
+
 # ── config ───────────────────────────────────────────────────────────────────
-HF_TOKEN     = "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"
+HF_TOKEN= kaggle_sec.get_secret("HF_TOKEN", "")
 MODEL_ID     = "google/gemma-4-E4B-it"
 INPUT_ROOT   = pathlib.Path("/kaggle/input")    # searched recursively
 STATE_FILE   = pathlib.Path("/kaggle/working/gemma4_results_partial.json")
