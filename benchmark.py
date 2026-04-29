@@ -76,11 +76,11 @@ LOCAL_AUDIO_MODES = {"input_audio", "audio_url"}
 # MODEL REGISTRY
 
 TRANSCRIPTION_MODELS: dict[str, dict] = {
-    "gemma-4": {
-        "provider": "google",
-        "model_id": "gemma-4-31b-it",
-        "display": "Gemma-4",
-    },
+    # "gemma-4": {
+    #     "provider": "google",
+    #     "model_id": "gemma-4-31b-it",
+    #     "display": "Gemma-4",
+    # },
     "gemini-3.1-pro-preview": {
         "provider": "google",
         "model_id": "gemini-3.1-pro-preview",
@@ -647,7 +647,7 @@ def transcribe_google(
 
     t0 = time.monotonic()
 
-    if len(audio_bytes) <= 20 * 1024 * 1024:
+    if len(audio_bytes) <= 300 * 1024 * 1024:
         # Inline audio (small files)
         response = client.models.generate_content(
             model=model_id,
@@ -663,7 +663,7 @@ def transcribe_google(
     else:
         # Files API (large files)
         uploaded = client.files.upload(
-            path=audio_path,
+            file=audio_path,
             config=genai_types.UploadFileConfig(mime_type=mime),
         )
         # Poll until file is active
@@ -1693,7 +1693,17 @@ def run_benchmark(
 
         audio_id = entry["id"]
         variation = entry["variation"]
-        reference = entry["reference"]
+        reference = entry.get("reference")
+        reference_path = entry.get("reference_path")
+        if reference_path:
+            ref_path = pathlib.Path(reference_path)
+            if ref_path.exists():
+                reference = ref_path.read_text(encoding="utf-8").strip()
+            else:
+                logger.warning(
+                    f"Reference path not found for {audio_id}: {ref_path} (using inline reference if available)"
+                )
+
         language = entry.get("language", "en")
 
         logger.info(f"\n{'─'*65}")
