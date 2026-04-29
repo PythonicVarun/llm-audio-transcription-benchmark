@@ -21,6 +21,7 @@ import time
 from datetime import datetime, timezone
 from typing import Any, Optional
 
+import traceback
 import jiwer
 from tqdm import tqdm
 
@@ -647,7 +648,7 @@ def transcribe_google(
 
     t0 = time.monotonic()
 
-    if len(audio_bytes) <= 300 * 1024 * 1024:
+    if len(audio_bytes) <= 20 * 1024 * 1024:
         # Inline audio (small files)
         response = client.models.generate_content(
             model=model_id,
@@ -667,11 +668,13 @@ def transcribe_google(
             config=genai_types.UploadFileConfig(mime_type=mime),
         )
         # Poll until file is active
-        for _ in range(30):
-            status = client.files.get(name=uploaded.name)
-            if status.state.name == "ACTIVE":
-                break
-            time.sleep(2)
+        while uploaded.state == "PROCESSING":
+            print(".", end="", flush=True)
+            time.sleep(5)
+            uploaded = client.files.get(name=uploaded.name)
+
+        if uploaded.state == "FAILED":
+            raise RuntimeError(f"Audio file upload failed: {uploaded}")
 
         response = client.models.generate_content(
             model=model_id,
@@ -948,6 +951,7 @@ def transcribe(
             raise ValueError(f"Unsupported transcription provider: {cfg['provider']}")
         return t, lat, None, source
     except Exception as exc:
+        traceback.print_exc()
         logger.error(f"  ✗ [{model_key}] {audio_path.name} → {exc}")
         return "", 0.0, str(exc), "error"
 
