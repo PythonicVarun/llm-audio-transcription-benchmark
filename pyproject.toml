@@ -4,4 +4,9 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "google-genai==1.73.1",
+    "jiwer==4.0.0",
+    "openai==2.33.0",
+    "tqdm==4.67.3",
+]
