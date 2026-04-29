@@ -61,7 +61,7 @@ from transformers.models.gemma4 import (
 kaggle_sec = UserSecretsClient()
 
 # ── config ───────────────────────────────────────────────────────────────────
-HF_TOKEN= kaggle_sec.get_secret("HF_TOKEN", "")
+HF_TOKEN     = kaggle_sec.get_secret("HF_TOKEN", "")
 MODEL_ID     = "google/gemma-4-E4B-it"
 INPUT_ROOT   = pathlib.Path("/kaggle/input")    # searched recursively
 STATE_FILE   = pathlib.Path("/kaggle/working/gemma4_results_partial.json")
