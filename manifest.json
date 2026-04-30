@@ -72,5 +72,23 @@
         "file": "dataset/fleurs/multilingual_2.wav",
         "language": "fr",
         "reference_path": "dataset/fleurs/multilingual_2.trans.txt"
+    },
+    {
+        "id": "noise_1",
+        "variation": "background_noise",
+        "variation_label": "Background Noise",
+        "dataset": "Librivox",
+        "file": "dataset/librivox/cattlebrands_01_adams.mp3",
+        "language": "en",
+        "reference_path": "dataset/librivox/cattlebrands_01_adams.trans.txt"
+    },
+    {
+        "id": "noise_2",
+        "variation": "background_noise",
+        "variation_label": "Background Noise",
+        "dataset": "Librivox",
+        "file": "dataset/librivox/cattlebrands_02_adams.mp3",
+        "language": "en",
+        "reference_path": "dataset/librivox/cattlebrands_02_adams.trans.txt"
     }
 ]
