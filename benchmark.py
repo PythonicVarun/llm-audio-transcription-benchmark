@@ -18,6 +18,7 @@ import re
 import shlex
 import subprocess
 import time
+import soundfile as sf
 from datetime import datetime, timezone
 from typing import Any, Optional
 
@@ -40,21 +41,6 @@ GOOGLE_API_KEY = os.getenv("CODEX_STRAIVE_OPENAI_TOKEN", "YOUR_GOOGLE_API_KEY") 
 OPENAI_API_KEY = os.getenv("CODEX_STRAIVE_OPENAI_TOKEN", "YOUR_OPENAI_API_KEY")  # openai key
 OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://llmfoundry.straivedemo.com/openai/v1").strip() or None  # e.g. https://api.openai.com/v1
 
-DEFAULT_MANUAL_TRANSCRIPT_DIR = pathlib.Path(
-    os.getenv("BENCHMARK_MANUAL_TRANSCRIPT_DIR", "manual_ai_studio_transcripts")
-)
-DEFAULT_GOOGLE_MANUAL_MODE = (
-    os.getenv("BENCHMARK_GOOGLE_MANUAL_MODE", "false").strip().lower()
-    in {"1", "true", "yes", "on"}
-)
-DEFAULT_OPENAI_MANUAL_MODE = (
-    os.getenv("BENCHMARK_OPENAI_MANUAL_MODE", "false").strip().lower()
-    in {"1", "true", "yes", "on"}
-)
-DEFAULT_LOCAL_MANUAL_MODE = (
-    os.getenv("BENCHMARK_LOCAL_MANUAL_MODE", "false").strip().lower()
-    in {"1", "true", "yes", "on"}
-)
 DEFAULT_LOCAL_OPENAI_BASE_URL = (
     os.getenv("BENCHMARK_LOCAL_OPENAI_BASE_URL")
     or os.getenv("LOCAL_OPENAI_BASE_URL")
@@ -415,7 +401,7 @@ def get_google_client() -> Any:
     if google_client is None:
         if not GOOGLE_API_KEY or GOOGLE_API_KEY.startswith("YOUR_"):
             raise RuntimeError(
-                "GOOGLE_API_KEY is not configured. Set it or run with --google-manual-mode."
+                "GOOGLE_API_KEY is not configured. Set it before running the benchmark."
             )
         from google import genai
         from google.genai import types as google_types
@@ -475,39 +461,16 @@ def transcription_prompt_for_variation(variation: str) -> str:
     return TRANSCRIPTION_PROMPT
 
 
+def get_audio_duration(audio_path: pathlib.Path) -> Optional[float]:
+    info = sf.info(str(audio_path))
+    return info.duration
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Run ASR benchmark. Supports cloud APIs, manual transcripts, "
+            "Run ASR benchmark. Supports cloud APIs, "
             "local OpenAI-compatible audio chat models, and local ASR commands."
         )
-    )
-    parser.add_argument(
-        "--google-manual-mode",
-        action=argparse.BooleanOptionalAction,
-        default=DEFAULT_GOOGLE_MANUAL_MODE,
-        help=(
-            "Enable or disable manual mode for Google models. When enabled, "
-            "transcripts are read from files instead of Google API calls."
-        ),
-    )
-    parser.add_argument(
-        "--openai-manual-mode",
-        action=argparse.BooleanOptionalAction,
-        default=DEFAULT_OPENAI_MANUAL_MODE,
-        help=(
-            "Enable or disable manual mode for OpenAI models. Use this if the "
-            "OpenAI-compatible endpoint does not expose audio transcription."
-        ),
-    )
-    parser.add_argument(
-        "--manual-transcript-dir",
-        type=pathlib.Path,
-        default=DEFAULT_MANUAL_TRANSCRIPT_DIR,
-        help=(
-            "Directory containing manual transcripts. Expected files: "
-            "<dir>/<model_key>/<audio_id>.txt"
-        ),
     )
     parser.add_argument(
         "--local-model",
@@ -561,15 +524,6 @@ def parse_args() -> argparse.Namespace:
         help="Default timeout for local command models.",
     )
     parser.add_argument(
-        "--local-manual-mode",
-        action=argparse.BooleanOptionalAction,
-        default=DEFAULT_LOCAL_MANUAL_MODE,
-        help=(
-            "Enable or disable manual mode for local models. When enabled, "
-            "transcripts are read from files instead of local model calls."
-        ),
-    )
-    parser.add_argument(
         "--models",
         default=DEFAULT_MODEL_FILTER_RAW,
         help=(
@@ -605,30 +559,6 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     return parser.parse_args()
-
-
-def load_manual_transcript(
-    model_key: str,
-    audio_id: str,
-    audio_path: pathlib.Path,
-    manual_transcript_dir: pathlib.Path,
-) -> tuple[str, pathlib.Path]:
-    candidates = [
-        manual_transcript_dir / model_key / f"{audio_id}.txt",
-        manual_transcript_dir / model_key / f"{audio_path.stem}.txt",
-    ]
-
-    for candidate in candidates:
-        if candidate.exists():
-            transcript = candidate.read_text(encoding="utf-8").strip()
-            if transcript:
-                return transcript, candidate
-            raise ValueError(f"Manual transcript file is empty: {candidate}")
-
-    expected = "\n  ".join(str(p) for p in candidates)
-    raise FileNotFoundError(
-        f"Manual transcript not found for {model_key}/{audio_id}. Expected one of:\n  {expected}"
-    )
 
 
 def transcribe_google(
@@ -895,30 +825,20 @@ def transcribe(
     audio_id: str,
     audio_path: pathlib.Path,
     variation: str = "",
-    google_manual_mode: bool = False,
-    openai_manual_mode: bool = False,
-    local_manual_mode: bool = False,
-    manual_transcript_dir: pathlib.Path = DEFAULT_MANUAL_TRANSCRIPT_DIR,
 ) -> tuple[str, float, Optional[str], str]:
     """
     Dispatch to the correct provider and return (transcript, latency_ms, error, source).
     """
     cfg = TRANSCRIPTION_MODELS[model_key]
     prompt = transcription_prompt_for_variation(variation)
-    try:
-        if (
-            (cfg["provider"] == "google" and google_manual_mode)
-            or (cfg["provider"] == "openai" and openai_manual_mode)
-            or (cfg["provider"] in {"local_openai_chat", "local_command"} and local_manual_mode)
-        ):
-            transcript, source_file = load_manual_transcript(
-                model_key=model_key,
-                audio_id=audio_id,
-                audio_path=audio_path,
-                manual_transcript_dir=manual_transcript_dir,
-            )
-            return transcript, 0.0, None, f"manual_file:{source_file}"
 
+    if "gpt-4o" in model_key.lower():
+        duration = get_audio_duration(audio_path)
+        if duration is not None and duration > 1400:
+            logger.warning(f"  ✗ [{model_key}] Audio duration ({duration:.0f}s) exceeds 1400s limit for GPT-4o")
+            return "", 0.0, f"Audio duration {duration:.0f}s exceeds GPT-4o 1400s limit", "skipped"
+
+    try:
         if cfg["provider"] == "google":
             t, lat = transcribe_google(cfg["model_id"], audio_path, prompt)
             source = "api"
@@ -1522,10 +1442,6 @@ def build_report(
     aggregates: dict,
     transcription_models: dict[str, str],
     transcription_model_details: dict[str, dict],
-    google_manual_mode: bool,
-    openai_manual_mode: bool,
-    local_manual_mode: bool,
-    manual_transcript_dir: pathlib.Path,
     append_report: bool,
     merge_stats: Optional[dict[str, int]] = None,
     previous_report_timestamp: Optional[str] = None,
@@ -1533,10 +1449,6 @@ def build_report(
     metadata = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "evaluator_model": EVALUATOR_MODEL,
-        "google_manual_mode": google_manual_mode,
-        "openai_manual_mode": openai_manual_mode,
-        "local_manual_mode": local_manual_mode,
-        "manual_transcript_dir": str(manual_transcript_dir),
         "report_update_mode": "append" if append_report else "overwrite",
         "transcription_models": transcription_models,
         "transcription_model_details": transcription_model_details,
@@ -1602,10 +1514,6 @@ def recompute_report_metrics(report_path: pathlib.Path = OUTPUT_PATH) -> None:
 
 
 def run_benchmark(
-    google_manual_mode: bool = False,
-    openai_manual_mode: bool = False,
-    local_manual_mode: bool = False,
-    manual_transcript_dir: pathlib.Path = DEFAULT_MANUAL_TRANSCRIPT_DIR,
     local_model_specs: Optional[list[str]] = None,
     local_command_model_specs: Optional[list[str]] = None,
     local_openai_base_url: str = DEFAULT_LOCAL_OPENAI_BASE_URL,
@@ -1639,7 +1547,6 @@ def run_benchmark(
         TRANSCRIPTION_MODELS.clear()
         TRANSCRIPTION_MODELS.update(selected_models)
 
-    manual_transcript_dir = pathlib.Path(manual_transcript_dir)
     existing_report = load_existing_report(OUTPUT_PATH) if append_report else None
     manifest = load_manifest()
     logger.info(f"Loaded {len(manifest)} audio samples from manifest.json")
@@ -1653,11 +1560,6 @@ def run_benchmark(
             )
     if model_filter:
         logger.info("Model filter enabled: %s", ", ".join(TRANSCRIPTION_MODELS))
-    if google_manual_mode:
-        logger.info(
-            "Google manual mode enabled. Reading manual transcripts from: %s",
-            manual_transcript_dir.resolve(),
-        )
     if local_model_specs or local_command_model_specs:
         local_keys = [
             key
@@ -1669,17 +1571,6 @@ def run_benchmark(
             len(local_keys),
             ", ".join(local_keys),
         )
-    if local_manual_mode:
-        logger.info(
-            "Local manual mode enabled. Reading manual transcripts from: %s",
-            manual_transcript_dir.resolve(),
-        )
-    if openai_manual_mode:
-        logger.info(
-            "OpenAI manual mode enabled. Reading manual transcripts from: %s",
-            manual_transcript_dir.resolve(),
-        )
-
     # Verify all audio files exist before starting
     missing = [e["file"] for e in manifest if not pathlib.Path(e["file"]).exists()]
     if missing:
@@ -1717,38 +1608,15 @@ def run_benchmark(
         model_outputs: dict[str, dict] = {}
 
         for model_key in TRANSCRIPTION_MODELS:
-            provider = TRANSCRIPTION_MODELS[model_key]["provider"]
-            if (
-                (
-                    google_manual_mode
-                    and provider == "google"
-                )
-                or (
-                    openai_manual_mode
-                    and provider == "openai"
-                )
-                or (
-                    local_manual_mode
-                    and provider in {"local_openai_chat", "local_command"}
-                )
-            ):
-                logger.info(
-                    f"  ▷ Loading manual transcript for {TRANSCRIPTION_MODELS[model_key]['display']} ..."
-                )
-            else:
-                logger.info(
-                    f"  ▷ Transcribing with {TRANSCRIPTION_MODELS[model_key]['display']} ..."
-                )
+            logger.info(
+                f"  ▷ Transcribing with {TRANSCRIPTION_MODELS[model_key]['display']} ..."
+            )
 
             transcript, latency_ms, error, source = transcribe(
                 model_key=model_key,
                 audio_id=audio_id,
                 audio_path=audio_path,
                 variation=variation,
-                google_manual_mode=google_manual_mode,
-                openai_manual_mode=openai_manual_mode,
-                local_manual_mode=local_manual_mode,
-                manual_transcript_dir=manual_transcript_dir,
             )
 
             # WER/MER are word-token metrics, so they are only reported for English.
@@ -1864,10 +1732,6 @@ def run_benchmark(
         aggregates=aggregates,
         transcription_models=transcription_models,
         transcription_model_details=transcription_model_details,
-        google_manual_mode=google_manual_mode,
-        openai_manual_mode=openai_manual_mode,
-        local_manual_mode=local_manual_mode,
-        manual_transcript_dir=manual_transcript_dir,
         append_report=append_report,
         merge_stats=merge_stats,
         previous_report_timestamp=previous_report_timestamp,
@@ -1911,10 +1775,6 @@ if __name__ == "__main__":
         raise SystemExit(0)
 
     run_benchmark(
-        google_manual_mode=args.google_manual_mode,
-        openai_manual_mode=args.openai_manual_mode,
-        local_manual_mode=args.local_manual_mode,
-        manual_transcript_dir=args.manual_transcript_dir,
         local_model_specs=args.local_model,
         local_command_model_specs=args.local_command_model,
         local_openai_base_url=args.local_openai_base_url,
