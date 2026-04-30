@@ -1,0 +1,339 @@
+so hello good afternoon sorry i'm a little late no problem got stuck in the traffic okay
+it's possible this time of day starts at three o'clock
+let me see yeah our fourth and last meeting there he is yes okay this is our last meeting
+in this meeting we will discuss our final design and we will do some evaluation about the
+not only the product but also the project
+and then we're going to close the project today as well so after that you'll be free to go and
+spend all your money and this design detailed design meeting we will discuss
+a feel of the design the usability interface design and we will do the product evaluation
+in order to do that we have this agenda we will have the prototype presentation first
+then we will set up some evaluation criteria then we will look at the finance
+we have to see if everything we want to do is also possible within our budget
+because everything costs money and the more functions you want to have the more money it
+will cost so we have to see if it fits within the 12 and a half euro per remote because we
+will see that later then we will do the project evaluation and the closing after that we've got
+40 minutes so we will be finished at half past three but first we will do the this prototype
+evaluation so if some yeah somebody wants to forward okay well this is what me and richard
+came up with the default spot for the on off button the mute button just below that
+then there's the volume and channel selectors simple plus minus button
+we thought of a help button if you hold it and you press another button
+the help
+screen then there's the zero to one to zero buttons a button for
+teletext a button for the subtitles and the company logo so it's rather simple prototype
+and we'll have to see from testing uh how the users take it okay um
+is this the moment where we ask where can i ask questions about the functionality sure uh just pop
+in at any time yeah yeah um
+when you're in teletext there usually are buttons where you just you just press it and you go to the
+next teletext page uh it's just uh the normal uh as the normal uh remote controls so um you push it
+you came in page 100 you can use the normal one to zero buttons and but you can also use the
+button for uh changing the channel so uh the shifting uh button okay uh for uh yeah shifting
+up in uh on teletext and shifting down so okay um yeah okay uh but um
+i thought in a few meetings earlier we uh tried to keep it simple yeah just a few buttons and large
+buttons but uh i think these are all together quite a quite a few buttons i'm wondering if we
+if we nearly really need all of those buttons i think if you look at most controls they've got
+more buttons than this that's right and well the on off button it's it's a necessity you can't drop
+that one yeah the volume and channel buttons you need you obviously needs those those yeah the mute
+button could be replaced
+by pressing the volume down button twice so we could cancel that one i think the help button
+really is necessary because there's no other way to know when someone wants to know what a button
+does or you can build in when you press one button uh yeah long time yeah if you put yeah
+we just discussed it already but we think
+all people don't know that uh option so uh they just put in uh press the button and yeah okay
+well you can't leave out the number buttons i guess yeah and uh text and subtitles or yeah
+yeah yeah okay so it's rather basic already yeah i think so that's what i pointed out earlier if you
+just make a control for just the tv there's just not much to gain here yeah
+okay so you had somebody about something about the design of the buttons there
+yeah they're it's rather hard to draw on the whiteboard
+just normal plain buttons but they're supposed to be equal sized round with a
+with a little logo on it for them for the volume the the triangle and stuff yeah
+just to recognize it so okay just for recognition
+and we don't need a led or no some remote controls do have so but
+because we use the little display we don't have to use it
+so yeah okay so and for the materials we've just chosen for rubber buttons
+with a different color than the case yeah so they jump out okay and that's about it that's nice then
+i think we're almost done with the sounds we only have 30 minutes left
+i will move on to the finance part which is pretty exciting to see if it's all possible what we want
+to do and i can tell you that we're going to have a pretty hard time producing this for 12 and a
+half euros if we see i don't know if i filled in correctly so just correct me if you see uh
+something wrong i counted two batteries but maybe we can also use the battery and we can do some more
+also use one I don't know if it's possible since it rechargeable it's
+rechargeable that's right okay it's two euros off we need the advanced chip so
+there's not much to to save there here we have two single curves we can see
+that the difference between and curved and the single curve is one euro I don't
+know but I think the single curve is good for the design and also for the
+display to have a prominent place on the remote control yes I think we have to
+keep it then we have the case material supplements it's plastic it's the
+cheapest one we need so that's not much to save either but then the biggest
+costs are the buttons so maybe we really should try to
+you
+you
+, discard some buttons to keep our cost though okay because we will have to we
+will have to get the twelve and a half euros at the end so if we let's first
+count the buttons we have now because I 16 16 now that will be even more than 18
+euros so 17 17
+ok so let's break it down with the help button okay including the
+help yeah 17 I think we can discard the help and the mute button by pressing
+down volume long or pressing down a number yeah long that saves us one euro
+already it's than we have got 15 I think yeah yeah 15 let Oans and this is I assume you can't
+buttons each right no those are one i think yeah i think actually there are two buttons
+it's just one better bit
+two for one big button but they are uh more expensive than the small ones i
+yeah but it's not stated in this files so it's just uh so maybe we can we can even make
+one button with the volume and the channel in one by pressing well i was thinking maybe you could
+just integrate three of those numbers to one button that's a possibility as well that would
+cut the cost so and it's good for the design as well so you can make uh let's see if you make this
+looks a bit like a cross
+but i don't don't know
+if it's cheaper yeah so uh you still got four buttons but just um so yeah yeah i think they
+count the the materials you got uh not not a better better itself but um on the um yeah on
+the chip there yeah on the chip you got still uh four uh four buttons yeah yeah that's right
+that's right so yeah but i think because we have
+advanced chip we can just count this as one button yeah but no but i think but i think
+this really is four buttons anyhow yes yeah maybe it is but then it seems to me that it's
+impossible to get to 12 and a half euros also the lc display i think it's i think it's too
+expensive for the display we use yes and that's that's a big cost i think they
+uh try if we leave out the display we can also save money on the chip that's right but what's the
+big advantage of our remote then only the docking station i guess yeah which isn't
+the docking station isn't even in this schematic no so it's not even taken into the prize it's
+extra that's extra that's right maybe we should move to a different supplier
+that's not
+option poland something yeah polish player don't you think we can if we can
+count this as one button and integrate these buttons in three
+then we save a lot of money as well we could save money on it but would it make the remote
+more usable for elderly people yeah that's what i'm wondering my mother can't even send
+send send an sms message so yeah that's the point um we kind of buy a remote control uh when you
+can use it so um yeah we uh you must uh stay below the uh below um 12 50 or you can't uh
+yeah well since the market research indicated that other people spend their money easier more easy
+feasible to just put the price of the remote up a little especially since we have those nice
+features yeah but uh we have to stick to the 12 and a half years we don't have any more budget
+to develop it the margin will get too small is it possible to yeah
+but it is possible to make one uh for 1250. i don't think so it is if you leave out the lc display
+it will be a pretty rigged one and if you use less buttons yeah say
+oh you can take the single chip 10 but you can't use uh there it is
+yeah we want to make uh so uh fancy and uh good uh yeah but then good looking with
+uh with uh yeah attractive options so uh you can stay uh below 1250 so i think it's difficult as
+well we're basically becoming a choice between like either a good remote and a higher production
+cost or just any other remote control no remote or we can leave out the 10 buttons
+and take one scroll wheel for the program numbers
+this one that's because then we save 10 buttons and we have five and one yeah and let's see if
+we have this one and we've got the advanced we're getting close we're getting closer yeah
+but how would the scroll wheel work here then you will maybe you can uh scroll if you scroll
+you will see the numbers on the LCD display until you've got the right number then you push it yeah
+that would bring up the price of the scroll wheel also all right integrated scroll wheel push button
+okay let's go to scroll and push okay but then you you can push uh some other business as well
+but yeah you could just not scroll for a half a second yeah so you won't need a button that's
+right so if you scroll to a number and then you wait a half second then it turns to that channel
+I think that would be like the end of her usability but it would definitely drop cost a lot
+yeah yeah but and we need the battery and the regular chip is not possible it has to be advanced
+if you want to use an LCD screen you you need an advanced chip yes you have to be advanced yeah okay
+and we can save a Euro by
+a flat design that's an option we can
+then we're almost there yeah yeah if you could just leave out one more button yeah
+or we have to skip the subtitle uh button yeah yeah but I think that's that is a big
+advantage so yeah yeah it's a big advantage but um it's but can we use can we integrate the target
+Subtitles in one button. I think so. Yeah. Yeah, I think it's pretty much the teletext subtitles are right now
+you just push the teletext button go to page 888 and
+Teletext disappears if you push it three times. Yeah. Yeah
+But the subtitle stay there, but if you push the teletext button twice, I think that's the case almost
+What if you have to scroll to page 88
+888
+One but a few better. Yeah, that's not really nice
+Well, that could be just like the scroll to 8 click scroll to 8 click scroll to 8 click. Yeah, okay
+But then again, that would be just pretty much normal option for other people who don't even know what a scroll wheel is
+holding a remote
+Which they expect to have like ten buttons for the numbers one to zero with only five buttons on it and a scroll wheel
+I think if you make
+good advertisement
+on
+television and in the
+in the guide
+You can explain to the people how to use the scroll wheel
+You just make it real simple because it saves it saves a lot of money and we can keep our LCD screen
+Which can provide extra information how to use the scroll wheel how to use the other buttons as subtitles
+and it's good for the
+innovative design as well
+If you would erase these
+I would put the looks a bit odd, maybe
+That's a pretty big scroll wheel
+Something like that
+Then yeah, we've got the scroll wheel one two, three, four five buttons if we
+Erase this one and these are two buttons then we could wake
+two buttons out of that and
+just
+If you press the volume button
+You can control the volume with the scroll wheel and that would save two buttons if you do the same for the channel
+Yeah, that's really a good good idea. I think and that will make the use of the scroll wheel
+More obvious indeed more obvious. So we make one for the volume one for the channel plus scroll
+So if we that's right, so we've got one two three
+Yeah, we can leave the teletext
+in if we want. Yeah
+That's one that's better. So
+if we
+Leave out all those buttons. Perhaps you can go with the flat
+Flat case and make it smaller overall
+So if you put the the volume and channel buttons on the same height as the on-off button
+Screen right below under that then the scroll button. Yeah, yeah, yeah
+they can you get a much smaller remote, that's right, and it's
+decrease this one to four buttons right now we have five but you can make a quite a big
+remodel control for uh just the same price as a small one yeah just you only have to pay for the
+double curved or single curve that's no problem yeah it's a bit uh yeah yeah it's uh it's more
+the moles in which they are being made i think single curves is really easy to just fill in
+and cases come right out of the machine and single curves you have to have a different
+different machine than a flat one i think this is a really easy one
+what does everybody think about a flat or a single curved design
+what do you think well i still think we should go for the single curve design yeah but then again i
+mean richard's argument was very good all these changes are not really
+okay
+with me yeah yeah but since we have to cut costs we just have to yeah yeah i mean i'd
+rather just go to the board and ask for more money get us to spend 18 a remote yeah yeah
+i'm agreeing with the usability or do some market research and see what the options are yeah but
+i think we can then keep the single curved one just to express our lcd screen a bit more
+yeah yeah so people will use it more and especially for the help functions it will be good
+if we have scroll bar scroll button it will be necessary to have a good help function as well so
+this is scroll i think it was better to have this price just a bit earlier before we went on to the
+to the whole design yes definitely but i'm glad we could make a bit yeah it's pretty different if you
+saw the last one and this one
+it's pretty different but this is not really like for the group we were making a remote
+this will really require a lot of marketing yeah to get this to sell yeah because if
+older people like familiar forms and familiar stuff this is not familiar for them no but i
+think so we're going to have to do a lot of convincing them i think the most but they know
+the scroll buttons from uh old radios uh they could also uh buttons and stuff like Pixie...
+like that for changing yeah that's right so maybe it's we can let we can stick it
+out a bit like a old old buttons yeah yeah maybe that's recognizable for them
+as well yeah that's a good one so I'm afraid we have to move on and it's it's
+less frightening I think if they see this design you think oh there are only
+five buttons and but we will see that's true but it might be confusing too yeah
+that's definitely right they'd be like what yeah that's very special so I would
+buy yeah but you're not 60 that's right I would buy it if I was six no I don't
+know
+cost under twelve and a half euros no yes they are no no but we can go on with
+the project evaluation let's see I can sit down I think we still have 15
+minutes left so nice on schedule the project process so I like set up all
+these criteria and evaluation of the evaluation criteria that's right that
+was the point
+I forgot thingy there we are evaluation criteria thank you go ahead you've got
+five minutes I think for this criteria five more minutes no we've got 15
+minutes but okay yes okay so I did some literature study study analysis of the
+requirements we set up earlier translated it into criteria which would
+be these
+fancy the shape look and feel innovative what new functions are there easy to use
+learn ability is a very important factor here is it functional are there not too
+many functions amount of functions and are those functions that are there are
+they useful and the cost the target group is the remote really for the group
+we're making it for and great cognitive ability if our company is if it is
+easily recognizable that our company made it so we're supposed to evaluate it
+right now okay let's see oh I have to say this was a little hard because the
+minutes of our last meeting we're not here yeah that's because my pen failed
+to upload his data okay I try to but it's
+it's given up
+giving errors by downloading the software so
+okay is the design fancy on a scale of one to seven I think it's fancy six yeah six we'll go
+for six yeah six good um is the design Innovative very
+I think so with our LCD screen docking station scroll buttons subtitles buttons yeah
+yeah
+um seven yeah so we've got 20 cents for our docking station
+should we dual yeah that's right it's the design easy to use not really that's a bit
+toi chi well would be for us but for all the people I I I would say for four or five feet
+four or five between yes four between four
+for it too yeah is it functional is the design functional um do we have all functions that we
+want to include yes yeah i think we do do we have too many functions no no no i don't think so it's
+pretty slim i think it's seven seven oh and do we um take care of the biggest frustrations of the
+remote control like it getting lost and rsi influences we haven't thought of that one it was
+we do i had them worked out they're ugly not very functional and getting lost are the production
+costs within the preset limits yeah well they are now does the design fit the group of focus
+i think that's a three yeah yeah no i think with our new radio button i think it's uh i think it
+doesn't yeah i think it's better we have to test it but i don't know i still i think it's too
+too fancy i think i think it too too flashy i think a radio button is not exactly what
+older people expect of a remote control yeah true i would give it a four i'm not sure i think i'd go
+for two i go for three so then we have to do the three it's there okay is the company company
+recognizable yes it is yeah well we have the logo there yeah so and they want to put fashion in their
+in the slogan of the company and we have the removable front cases so i think it's very
+recognizable yeah yeah so that would be this i was also supposed to calculate the score but
+thought we would have another private thingy after this we've got to calculate
+is this like after this are we done or we've gonna we're going to evaluate it we're gonna
+go to our other room again well anyhow these are seven factors times seven
+is 40 something two now nine 49 49 uh minus one minus three minus four
+minus four so that would be minus eight forty one out of forty nine forty one that's around eighty
+percent okay i guess i'll just type that in on the bottom here that's eighty four percent i think
+that's a pretty nice score yeah okay so that will be the evaluation okay
+thank you so that brings us to the project evaluation yeah thank you project process
+did we move through the right phases you think along the process yes yeah i think we should have
+a should have had the finance thing a lot earlier yeah that's right in the design phase so lack of
+information about prices yeah yeah yeah that's true definitely okay okay satisfaction was there room for
+creativity no no not too much no it's because of the finance sheet yeah yeah there wasn't enough
+room but the finance yeah true but the room was yeah and i would have liked to go for the younger
+users also and just to be able to access internet and get something of your own restrictions internet
+access okay leadership was it clear what everybody had to do uh according to their roles and
+functions yes yeah teamwork did it work out working together also you two of you with the
+last phase yeah it was okay nice the tasks are very structured so you can just do step by step
+and it's very easy search your tasks okay were the means sufficient for the tasks that we had to do
+or were they too much well the smart board the the drawing is just a pain in the ass but smart board
+the digital the digital pen is very nice if it wants to download this data yeah
+yes
+smartboard was irritating so you rather wanted to have a flip over
+or something else a flip over or a more precise flip is easier so yeah yeah faster as well i think
+yes yeah
+if you want to share uh of when you make a
+picture like this on the presentation it's easier to share it with other people so you can save it
+and put it on the internet or in shared folder or shared directory yeah i tried to open the file
+on my laptop but yeah no no didn't work
+possible you need the smart board application i think yeah can you export it like uh yeah but i
+think you can yeah it should be possible i don't know yeah you can export this image must yeah it
+must be i should have done that man so the sharing of the information was uh was okay yes network
+yeah pen is here on the table
+yeah
+yeah yeah
+yeah
+yeah
+yeah
+jpeg
+jpeg bmp
+jpeg bmp
+jpeg bmp
+jpeg bmp
+jpeg bmp
+jpeg bmp
+it's possible it's possible yeah okay okay that's nice
+have we found new ideas for having this kind of meetings or um yeah maybe um
+when we just gave the numbers of uh one of our out of services
+it's easier to uh to do things like that on the computer
+and uh just
+yeah yeah
+just like
+like
+the university so yeah so so everybody puts his own score and then
+it mediates the score and you can get one yeah yeah yeah yeah yeah that's better
+so it's uh how do we call creation criteria okay any more ideas or questions about the project or
+okay
+about the product
+or about the product
+because i think then that we get to our last sheet articles within the budget yeah they are
+considering we are not going to make a docking station do we docking station that's a good point
+but maybe because of the docking station the price of the remote can also be a little bit higher yeah
+and i think you can compensate that as well perhaps so i think that shouldn't be the biggest
+problem because it's very cheap to make as well do we think we're gonna get the 12 and a half
+million or what was it 50 grand 15 15 million i think we will if we're gonna export this product
+it's innovative yeah especially in america people are pretty take it in sometimes yeah still i think
+i mean if we're gonna make a scroll button anyway it would be more for the younger people
+for the older people yeah you can do more yeah so maybe we should just refocus just put it on
+the market for everybody you can you can change markets where by changing the front covers or
+specifically for younger people that's one thing you can change it with that's true so you can also
+try to uh reach the younger people by putting fancy covers on on the market just as a test
+see how it works that's i think a good advantage yeah i think then it would be way more
+popular with younger people than it is that would be with older people
+yeah even if it were their covers then i think we can have our little celebration right now
+party party that's it i think we still have to fill in one more questionnaire
+okay i think i don't know i didn't get a message from the from ending of the
+oh i think i have one yeah i believe uh are you doing five more minutes oh that's nice okay then
+we still have some questions if somebody has some questions they can ask them now
+we can put these in the project folder as well export this picture i think yeah yeah
+this is another network i guess somebody see the project folder
+i don't my documents uh maybe they will save it so yeah i'll just put it in my documents and
+that's okay yeah probably okay i think i'm going to make our
+final presentation now oh yeah you're supposed to make
+the final and then i will be back in about 10 minutes
+you the final presentation okay okay summary of the project are we supposed
+to go into our own rooms again maybe we have to fill another questionnaire yeah
+questionnaire I think you will get the questionnaire in in your room and then
+I'll meet you in I think about 10 minutes something okay okay okay thank
+you hopefully my pen will download this software yeah or data don't be nice
