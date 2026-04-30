@@ -5,3 +5,6 @@ __pycache__/
 
 # Venv
 .venv/
+
+# Bash scripts
+*.sh

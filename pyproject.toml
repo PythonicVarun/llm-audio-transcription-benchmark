@@ -8,5 +8,12 @@ dependencies = [
     "google-genai==1.73.1",
     "jiwer==4.0.0",
     "openai==2.33.0",
+    "soundfile>=0.13.1",
     "tqdm==4.67.3",
+]
+
+[dependency-groups]
+dev = [
+    "black>=26.3.1",
+    "isort>=8.0.1",
 ]
