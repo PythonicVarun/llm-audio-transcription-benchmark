@@ -8,6 +8,7 @@ dependencies = [
     "google-genai==1.73.1",
     "jiwer==4.0.0",
     "openai==2.33.0",
+    "pydub>=0.25.1",
     "soundfile>=0.13.1",
     "tqdm==4.67.3",
 ]
