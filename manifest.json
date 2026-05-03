@@ -86,9 +86,9 @@
         "id": "noise_2",
         "variation": "background_noise",
         "variation_label": "Background Noise",
-        "dataset": "Librivox",
-        "file": "dataset/librivox/cattlebrands_02_adams.mp3",
+        "dataset": "FLEURS (en_us)",
+        "file": "dataset/fleurs-noise/en_us.wav",
         "language": "en",
-        "reference_path": "dataset/librivox/cattlebrands_02_adams.trans.txt"
+        "reference_path": "dataset/fleurs-noise/en_us.trans.txt"
     }
 ]
