@@ -38,9 +38,13 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 MANUAL_TRANSCRIPTION_MODELS: dict[str, dict[str, str]] = {
+    "openai-whisper-20250625-turbo": {
+        "display": "OpenAI Whisper (Turbo)",
+        "suffix": ".whisper_turbo.txt",
+    },
     "openai-whisper-20250625-large": {
         "display": "OpenAI Whisper (Large)",
-        "suffix": ".whisper.txt",
+        "suffix": ".whisper_large.txt",
     },
     "gemini-3.1-pro-preview": {
         "display": "Gemini 3.1 Pro Preview",
@@ -57,7 +61,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "Run benchmark from manual transcript files only. "
-            "Expected transcript suffixes: .whisper.txt, .gem_3_1_pro.txt, .gem_3_flash_pre.txt"
+            "Expected transcript suffixes: .whisper_large.txt, .whisper_turbo.txt, .gem_3_1_pro.txt, .gem_3_flash_pre.txt"
         )
     )
     parser.add_argument(

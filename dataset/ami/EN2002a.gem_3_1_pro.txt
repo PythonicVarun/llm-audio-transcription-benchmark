@@ -1,0 +1,772 @@
+SPEAKER_1: Funky stuff.
+SPEAKER_2: Wonder how much of the meetings is talking about the stuff at the meetings.
+SPEAKER_3: Yeah exactly, yeah, yeah, yeah.
+SPEAKER_1: Yeah, look at all this stuff man. Okay.
+SPEAKER_3: So, what do we need to talk about?
+SPEAKER_1: Has anybody-
+SPEAKER_3: Well shall we just go around and everyone says what they've, what they've been doing? How far they've got.
+SPEAKER_1: Has anybody done anything?
+SPEAKER_2: Not a lot.
+SPEAKER_1: I'll save you.
+SPEAKER_3: Yeah, okay, sounds like you've done some stuff.
+SPEAKER_1: You start.
+SPEAKER_3: Okay, um.
+SPEAKER_1: Tell me all about the stuff.
+SPEAKER_3: Well I've got a browser now, which, whoops. I already got.
+SPEAKER_1: It's a good start.
+SPEAKER_3: Oh I dropped mine as well.
+SPEAKER_1: Get at this.
+SPEAKER_3: This wasn't a good start. Okay. Sorry, yeah. So yeah, we've got a browser with, um, which comes up automatically with a transcription box and the topics. And then when you go on the menu, you can select the summarization box, which pops up, and an audio player. Um, and I think the search works as well. So you can pop up a search and it loads up, um, just the background window is empty and, um, so when you start you have to either open open a particular observation or do a search and open a through that. That makes sense. Um, the transcription box has got a summarize button, which doesn't do anything yet. Um, now I wonder how we want to do you know we want to pop up a window with the speaker characterization? Um either we could do that, you know, when does it pop up come up? Either we can when you click on the the ID, any sort of ID in the transcription box. Or we can put an extra button, extra few buttons next to the summarize button so that you, actually in the transcription box but, so that you click on a button and then it opens whatever that speaker characterization is. The problem is the the left click is already used because it highlights that, um, that part of speech or whatever that what he's been saying, you know the the left click highlights it.
+SPEAKER_1: Did the left click or right click? Right.
+SPEAKER_2: Can you use double click or-
+SPEAKER_3: So that you can... I don't know what happens when you double click actually. But that would be a bit annoying if you have left click for one thing and double click for something else. I don't know. Um, I think so, yeah, when you left click it you can for example set set a marker there so that the the audio goes from there I think. Um, so we can't put it on a left click, we could put it on a right click. We could for example have a little menu that pops up.
+SPEAKER_1: Yeah that might be quite good, that's right.
+SPEAKER_3: So right click on a menu, you know, and you can click on speaker characterization or pops over window.
+SPEAKER_1: What else can we have in the menu?
+SPEAKER_3: That's a good point. I don't know.
+SPEAKER_1: So otherwise we just have a right click to do-
+SPEAKER_2: To do everything.
+SPEAKER_3: Yeah, yeah, but um, I don't know about you but usually in Windows right click doesn't do anything does it?
+SPEAKER_1: It's a Windows.
+SPEAKER_3: It opens a menu.
+SPEAKER_1: A menu, yeah, yeah.
+SPEAKER_3: Yeah, so... yeah.
+SPEAKER_1: That's why everybody does it. So it might be a bit weird for it to just start bringing up stuff wouldn't it?
+SPEAKER_3: So that'd be yeah.
+SPEAKER_2: If it just, yeah.
+SPEAKER_1: To just have a sort of me- same sort of idiom throughout kind of.
+SPEAKER_3: Yeah.
+SPEAKER_1: Yeah.
+SPEAKER_3: Um or just you know or just a button.
+SPEAKER_2: I guess a button button makes a bit more sense 'cause otherwise you don't really know that oh what if I right click now, what happens then? It's like more if it it's visual.
+SPEAKER_3: Well no, no, you'd still have the menu the menu pop up that...
+SPEAKER_1: Yeah, yeah.
+SPEAKER_2: Yeah.
+SPEAKER_1: It's more...
+SPEAKER_3: Well oh yeah, it's more obvious isn't it what you can do. Do you see what I mean?
+SPEAKER_1: It's more idiot proof isn't it if it's got a button.
+SPEAKER_3: That's true, yeah. But well...
+SPEAKER_2: Yeah.
+SPEAKER_1: Yeah, that's right.
+SPEAKER_2: Yeah.
+SPEAKER_3: That's true, yeah, it's more intuitive really, isn't it?
+SPEAKER_2: But then it's not as extensible. Like if we want to add more things in the future, then we have new buttons.
+SPEAKER_3: Maybe, maybe.
+SPEAKER_1: Add more buttons.
+SPEAKER_2: I don't know, whereas a menu type thing is more flexible that way, but we're probably not gonna be adding too many things so.
+SPEAKER_1: Well in in I guess in in meeting browser 1.1...
+SPEAKER_2: Exactly.
+SPEAKER_1: You can have a menu instead of a button. For this one we'll do the button.
+SPEAKER_3: Actually what we could do is-
+SPEAKER_2: I know, I know. True, true.
+SPEAKER_3: In the beta version. Um but actually what we could do is on in that menu as well, we could have an option that pops up a window with all the all the meetings that that user has been in. Like a search for that user.
+SPEAKER_1: Yeah.
+SPEAKER_3: Is that gonna be useful or too much or?
+SPEAKER_1: I guess so, so what 'd you part of the the menu that comes down is says give me all your meetings or something?
+SPEAKER_3: Yeah, so when you right click on it, one one option will be give me all your meetings, characterize the speaker.
+SPEAKER_1: Yep.
+SPEAKER_3: Was that too much, I mean?
+SPEAKER_2: Um, I don't know. I mean, it's more like part of the-
+SPEAKER_1: I guess so, it's an idea. Can I use my pen?
+SPEAKER_2: Browsing sort of thingy, more than the speaker characterization as Steve mentioned, yeah.
+SPEAKER_3: Yeah, that's true, yeah. Um I don't really know how to involve the speaker characterization into the browsing.
+SPEAKER_1: Yeah.
+SPEAKER_2: Yeah, that's true.
+SPEAKER_3: It would be nice to have it interconnect- interconnected like that.
+SPEAKER_2: Yeah. Like maybe tie that in with dialogue acts or something, as well. I mean speaker characterization tied into I don't know. Just some way to sort of leverage that information like we have it, we're doing it, but what how does it help the browsing or what can it give us in the browsing.
+SPEAKER_3: What you mean the the speaker characterization?
+SPEAKER_2: Yeah.
+SPEAKER_3: Oh, well, yeah, I mean, I don't know about that. I mean, it's the speaker characterization is a bit like you said, I mean, it's like a nice thing, we don't we're not actually sure what the user wants with it, but it's interesting, so why not give it to him.
+SPEAKER_1: Yeah, yeah. Right.
+SPEAKER_3: I I think we should do it, I mean.
+SPEAKER_2: Yeah. I mean I guess maybe we could have that as another thing, well if you look at the speaker characterization that someone talked a lot in a certain topic, and then if you I don't know, click on that topic you get everything that's in that topic or whatever.
+SPEAKER_3: Yeah, I mean, that's that's still another level further. And in that way, but I don't know.
+SPEAKER_1: I mean, we're not even there yet, you know, it doesn't even doesn't even pop up the speaker characterization yet.
+SPEAKER_3: No, no, no, yeah.
+SPEAKER_1: Yeah. We have to first define what what happens when you click on a user.
+SPEAKER_1: We have to have the speaker characterization first before we cross any of the other bridges.
+SPEAKER_3: Yeah.
+SPEAKER_2: Yeah.
+SPEAKER_3: Yes.
+SPEAKER_1: Tell me I think.
+SPEAKER_3: So should we try try to do a right-click menu then?
+SPEAKER_1: Yeah. All right, why not.
+SPEAKER_2: Is that just from the main main window?
+SPEAKER_1: Even if only one thing comes up.
+SPEAKER_2: 'Cause is that is that from any particular window? Like if we wanna sort of get like if we're on the user's versus like a topic or something, you have right click for for these various things to yeah.
+SPEAKER_3: Yeah. Yes. Wait, yeah, there's a second thing about the topics, the topic window. We want to somehow click be able to click on a topic and it pops up with all the meetings that contain that.
+SPEAKER_2: Right, yeah.
+SPEAKER_3: Yeah?
+SPEAKER_2: Yeah.
+SPEAKER_3: So we could do that in a similar way, do it right click as well.
+SPEAKER_1: In a similar way, do it right. So so this lot is for um-
+SPEAKER_2: Okay. Yeah.
+SPEAKER_3: And have a different menu for that.
+SPEAKER_2: Now it's consistent throughout so yeah.
+SPEAKER_3: Yeah.
+SPEAKER_1: On the speaker.
+SPEAKER_3: So yeah. And then this thought is on um-
+SPEAKER_3: So we have basically two options of of browsing the the meetings is by either searching and opening individual observations, and then we have the interlinking by a right click basically.
+SPEAKER_2: Right. Actually, yeah, like um another common thing, like if we have it so it's set up that um if you double click and it goes to a default thing on the menu, I mean that's kind of a typical kind of action that would happen. If you double click-
+SPEAKER_3: If you double click on a particular topic or something, then it goes to sort of like a default view. Oh, so it'll be like all the um cases of that topic, either whatever we decide to be the default to be, whether it's in all meetings or just in one meeting and just drop the particular instances of that topic in the meeting. Like and just thinking to have the default there so if somebody knows exactly what they want to do and we know that that's the most common thing that's gonna happen. So the double click will do that and just save 'em the trouble of right clicking and choosing the item on the menu.
+SPEAKER_3: Yeah. I don't see there's anything obvious that was that would be you know, that would be-
+SPEAKER_2: Yeah. Well, it might come to us start playing with it.
+SPEAKER_3: Yeah.
+SPEAKER_1: What was that? I didn't quite understand. You mean-
+SPEAKER_2: Um like we have the the right-click menu, but instead of-
+SPEAKER_1: Yeah.
+SPEAKER_2: Have a default double-click. So if there's a so it'll be a choice from the menu, but-
+SPEAKER_1: Oh, see. And it it figures out what's the most common use to double click.
+SPEAKER_3: Yeah. Yeah.
+SPEAKER_2: Like I don't know, show the speaker characterization for instance.
+SPEAKER_3: Yeah.
+SPEAKER_3: Yeah, but then then there's the problem with a lot of windows popping up again.
+SPEAKER_2: Yeah. Or just I don't know.
+SPEAKER_3: And they pop up without you even being quite sure what it is, you know what I mean.
+SPEAKER_2: Yeah. But if you do a double click on something don't you expect something to happen then?
+SPEAKER_1: Yeah, maybe.
+SPEAKER_3: Sort of well, I don't know.
+SPEAKER_1: Sometimes you do it by accidentally going, I'll go away.
+SPEAKER_3: Yeah.
+SPEAKER_1: Especially if you have a touchpad.
+SPEAKER_2: Yeah, exactly. Stuff coming up.
+SPEAKER_2: Well, then they close it, yeah. Yeah, it's not it's not the end of the world.
+SPEAKER_1: Yeah.
+SPEAKER_3: No. And she goes oh.
+SPEAKER_1: Yeah, yeah, oh yeah.
+SPEAKER_2: Yeah right.
+SPEAKER_1: Throw it, stop throwing out the window.
+SPEAKER_3: Well I'll I'll check what it does on on double click at the moment.
+SPEAKER_2: Yeah. Okay.
+SPEAKER_3: 'Cause I think it might do something.
+SPEAKER_2: Yeah.
+SPEAKER_1: Okay, we've got something started.
+SPEAKER_3: But... But yeah, but I don't, I don't, I really don't see anything obvious that that...
+SPEAKER_1: Yeah. I mean, if you can think of something, but-
+SPEAKER_2: I don't know. So I guess it depends on the yeah, what you're clicking up obviously.
+SPEAKER_3: So, um, yeah, another thing... single audio files. Do we want to use 'em or not?
+SPEAKER_1: We don't know yet, do we? I don't think. You mean single channel?
+SPEAKER_3: Yeah, single channel, the single channel files.
+SPEAKER_2: Single channel? Hmm.
+SPEAKER_1: So we want 'em? I mean-
+SPEAKER_1: Probably not, but we might need 'em for the disfluencies if we try to do in audio.
+SPEAKER_2: I know.
+SPEAKER_1: Well.
+SPEAKER_3: Yeah, okay, yeah, yeah, I mean we might use them while to work with them, but do we wanna integrate them in so that when you browse you can hear it.
+SPEAKER_1: But, uh, at the moment, no, but...
+SPEAKER_3: Yeah.
+SPEAKER_1: You might want to be able to say oh just give me what that person's saying.
+SPEAKER_3: Do you though? I mean it's not gonna make much sense if you listen to it on its end, do ya?
+SPEAKER_2: No.
+SPEAKER_1: Unless um you can't hear it properly or something. Somebody's talking over somebody else or something but-
+SPEAKER_1: We'll just say no for now, and put it in later if we're some.
+SPEAKER_3: No. Hmm. Okay, yeah.
+SPEAKER_1: Yeah.
+SPEAKER_1: Yeah, 'cause otherwise it'll the it'll increase the amount of data we need by a lot won't it?
+SPEAKER_3: Yeah, the footprint will be bigger.
+SPEAKER_2: Mm-hmm.
+SPEAKER_3: Um, yeah, what what do people think in general about the window cluttering that he mentioned? Do you think do you think it's really that bad?
+SPEAKER_2: I think we probably need that though to have to have the full flexibility, we need to have that there. But um-
+SPEAKER_3: That's what I feel as well. I mean I'm I'm very much I I want to have everything customizable.
+SPEAKER_2: Um, well the the thing is typically though is someone gonna have five windows open at the same time. Probably not. Probably just two or two or three of whatever whatever they're looking at like dialogue acts, whatever characterization stuff.
+SPEAKER_3: Probably not, no. Yeah, two or three maybe, but yeah, but yeah, it depends I mean I I really want to put the summary in somewhere, you know? And the summary for example is typically you read through it, you might click on, you know, close it again straight away.
+SPEAKER_1: Yeah.
+SPEAKER_3: But it'd be good to have it there.
+SPEAKER_2: Yeah, true.
+SPEAKER_1: Yeah, I think it's I think it's fine.
+SPEAKER_2: But, well, couldn't we, I mean, you probably I don't know if you want to have like the the full transcription and the summary at the same time.
+SPEAKER_1: Yeah, I think we probably think it's fine.
+SPEAKER_2: So maybe you can just like choose the same window for transcription and summary.
+SPEAKER_1: So like have a tab there.
+SPEAKER_3: I was just thinking of tabs.
+SPEAKER_2: For something like that choose choose one.
+SPEAKER_1: Yeah.
+SPEAKER_2: Yeah. Tabs are nice.
+SPEAKER_1: Yeah, tabs are good.
+SPEAKER_2: I like tabs.
+SPEAKER_1: Mozilla style.
+SPEAKER_3: That's true.
+SPEAKER_2: Yeah.
+SPEAKER_1: Yeah, yeah, yeah.
+SPEAKER_2: That's right. I'm not sure, yeah. I don't know. He hid his.
+SPEAKER_1: Does anybody know how to do that?
+SPEAKER_3: But I don't know, but.
+SPEAKER_1: Can you do that in Java?
+SPEAKER_3: No.
+SPEAKER_1: I I don't think Java knows how to do that really.
+SPEAKER_2: Oh you should be able to.
+SPEAKER_3: I don't know. D'you reckon?
+SPEAKER_1: Maybe, you probably can. But-
+SPEAKER_3: I'm sure.
+SPEAKER_1: I'm sure.
+SPEAKER_2: Yeah.
+SPEAKER_1: I'm sure you could do anything. If you really knew what you were doing.
+SPEAKER_2: Yeah.
+SPEAKER_1: But I don't know. It's a bit of a cripple, Java's windowing tool kit, the A. As sometimes, it's a bit of a cripple.
+SPEAKER_3: Yeah. I can have a look.
+SPEAKER_1: Yeah.
+SPEAKER_2: Yeah, or just I don't know.
+SPEAKER_3: But yeah, that that might be an idea, yeah.
+SPEAKER_2: Yeah. Change the the contents of the same window like from transcription to summary.
+SPEAKER_1: Yeah, yeah, yeah.
+SPEAKER_2: Or wherever.
+SPEAKER_1: Yeah, or even just have a, you know, buttons on it, toggle buttons or something on a tool bar for that window. To switch up, switch something.
+SPEAKER_2: Yeah, yeah.
+SPEAKER_1: A lot of different ways we can do it, it doesn't doesn't have to be a tab or whatever.
+SPEAKER_2: That could well, probably. Just could be...
+SPEAKER_1: Yeah.
+SPEAKER_2: No, no, it could be like transcription summary. Like two buttons and you just press on whatever you want.
+SPEAKER_1: Yeah, exactly. Yeah. Or check marks, even have two of them checked if they.
+SPEAKER_1: Yeah. That'll reduce the number of um windows we need, wouldn't it?
+SPEAKER_3: Yeah.
+SPEAKER_2: Yeah.
+SPEAKER_1: Which is quite good, 'cause otherwise Photoshop has a lot of windows, if you've ever used Photoshop it's got loads and you're always forever going oh get out the way.
+SPEAKER_1: Like there's always stuff in the way, isn't there?
+SPEAKER_2: Yeah, exactly.
+SPEAKER_3: Yeah. I don't like pop-ups.
+SPEAKER_1: But I mean people get used to it, I mean when you use Windows or Linux for that matter, you have a lot of windows open.
+SPEAKER_1: You do, yeah.
+SPEAKER_2: Mm-hmm.
+SPEAKER_3: Can you manage them?
+SPEAKER_1: Yeah.
+SPEAKER_2: Yeah, true.
+SPEAKER_1: Yeah. Unless can you I don't 'cause you can minimize them and stuff like that.
+SPEAKER_3: Yeah you can.
+SPEAKER_1: Can you can you do that?
+SPEAKER_2: I guess that yeah.
+SPEAKER_3: Yeah you can minimize them.
+SPEAKER_1: Yeah, yeah. Okay, well that's all right then.
+SPEAKER_1: Yeah, of course you can actually, yeah, it's very obvious.
+SPEAKER_2: Yeah. Like a lot of this can be like once we get the disfluencies out then we can, yeah, like have a full script without the disfluency, transcript with the disfluency.
+SPEAKER_3: Yeah, that's true, there are there are definitely-
+SPEAKER_2: Have all these yeah. Have all these sort of using the same window and so we can put a lot of... and probably mutually um well the... distinct, yeah.
+SPEAKER_3: Yeah they're definitely gonna be in the same window, yeah. Exclusive.
+SPEAKER_2: Exclusive.
+SPEAKER_3: Yeah, that that was the plan for the disfluencies anyway.
+SPEAKER_2: Yeah.
+SPEAKER_3: So, yeah, do you want to do that with summaries then? Put the summaries in in the same window, mutually exclusive with-
+SPEAKER_2: Yeah, um well could I don't know, with transcripts, it sounds reasonable to have like transcripts, like maybe three alternators then. Like full meeting, meeting without disfluencies, and summarize.
+SPEAKER_2: Right. Summary. Yeah. You wanna do that?
+SPEAKER_1: Yeah.
+SPEAKER_2: That kind of makes sense.
+SPEAKER_3: Yeah.
+SPEAKER_1: Yeah, sounds good.
+SPEAKER_3: Um... yeah. And finally the prototype he spoke about. What kind of prototype could we produce?
+SPEAKER_1: By the end of February?
+SPEAKER_3: 'Cause I'm, I'm just, you know, I go into the lab and I say, right, what am I going to change today? You know? And it kind of just it just develops. I'm not aiming for anything. Do we want to aim for something?
+SPEAKER_1: Um...
+SPEAKER_3: I'm I'm pretty much getting there anyway to be honest. It's not it's not gonna be a lot more work.
+SPEAKER_2: I guess it is, I mean, just try and, I mean, for us to to be able to do something that we can include with your thing. So so we...
+SPEAKER_1: Yeah.
+SPEAKER_1: Yeah, that's what we need, yeah.
+SPEAKER_2: Mm-hmm. Yeah.
+SPEAKER_3: Yeah.
+SPEAKER_1: Something just slightly more than just that on its own.
+SPEAKER_3: Mm.
+SPEAKER_2: Yeah, so we can plug it in and.
+SPEAKER_3: Yeah.
+SPEAKER_1: Yep.
+SPEAKER_2: Yeah. Just so see the integration works sort of between the different components.
+SPEAKER_3: Hmm, true.
+SPEAKER_1: Yeah, definitely. Um.
+SPEAKER_3: So I guess that's what we need aiming for.
+SPEAKER_1: I think that's kind of what you meant as well isn't it really, seeing it seeing it sort of start to do stuff rather than just be-
+SPEAKER_3: Oh, I see, hmm. A prototype of the GUI.
+SPEAKER_2: Yeah. Well I guess I mean that was probably our intention, but we might not have written it down, so I guess I don't know.
+SPEAKER_1: Yeah, yeah. Yeah.
+SPEAKER_2: Yeah. Actually, is the the code accessible? Like the the GUI, stuff that you've done? Like can we just like copy like the latest stuff out of your directory somewhere or? Like if we're gonna just try and like take a look or something, try and just plug some stuff in. I think you can if...
+SPEAKER_3: Um probably not. I don't know, can you access other people's stuff?
+SPEAKER_1: You can make it if you make it world-readable then anybody can access it.
+SPEAKER_2: Well if you just tell us the directory and just make the file readable then we know the directory to get in then. And just grab-
+SPEAKER_3: Yeah. Sure. That might be a maybe an idea. I don't know if it's readable at the moment, but you can sure have have a look.
+SPEAKER_1: No, I- no, they're not world readable.
+SPEAKER_2: I think by default they are. I think. Really?
+SPEAKER_3: Yeah.
+SPEAKER_1: Oh, did not doubt to be felt. They're only to felt. Then only you can read them by default.
+SPEAKER_2: Oh.
+SPEAKER_1: All right.
+SPEAKER_3: All right.
+SPEAKER_2: Okay. You can see them, but you can't read them.
+SPEAKER_3: Oh. Okay. All right. Right, well I'll make that readable then.
+SPEAKER_2: Okay.
+SPEAKER_1: Yeah.
+SPEAKER_3: Um, so the directory is my number.
+SPEAKER_2: Or you could just email to... Okay, yeah. Yeah, okay right.
+SPEAKER_3: Well it's it's not difficult.
+SPEAKER_2: Yeah. Right, okay.
+SPEAKER_1: What's your number?
+SPEAKER_2: Okay.
+SPEAKER_3: It's in all the emails.
+SPEAKER_2: Yeah.
+SPEAKER_3: O four-
+SPEAKER_1: Okay, your number.
+SPEAKER_2: Yes.
+SPEAKER_3: Oh four. O four five five five.
+SPEAKER_1: Okay.
+SPEAKER_3: Six o.
+SPEAKER_2: Say that again, oh four...
+SPEAKER_3: O four five five five six o.
+SPEAKER_1: And then it's-
+SPEAKER_3: And then um, there's a folder um NLS SD.
+SPEAKER_1: NLS SD.
+SPEAKER_3: And it's called the m browser.
+SPEAKER_1: The m browser. For meeting.
+SPEAKER_3: Yes. M for meeting.
+SPEAKER_2: Lowercase?
+SPEAKER_3: M... Yeah.
+SPEAKER_1: I hope I hope you never have to look in my directory, 'cause it's just pure chaos the whole thing. Mine is serious chaos.
+SPEAKER_3: Do you really? No, I'm I'm extremely organized you see. I've got folders for everything, I love folders.
+SPEAKER_1: Files everywhere.
+SPEAKER_3: Mm. Okay. Yeah, so that's me done. Someone else want to talk about their stuff?
+SPEAKER_1: Do a novel jump at once.
+SPEAKER_3: I can tell you what I've done in SP two.
+SPEAKER_1: Hehehehe.
+SPEAKER_2: Right. Oh, um I don't know. I basically started like browsing a bit, just like trying to see if there's anything out there to use sort of um. Just-
+SPEAKER_3: Mm-hmm. What were you doing again?
+SPEAKER_2: Um, yeah, searching. Yeah. Oh yeah. All this searching stuff.
+SPEAKER_1: Yeah, what's all that?
+SPEAKER_2: Like the the inverted file stuff and the then the next search query and all that, all that.
+SPEAKER_3: For the search. Okay. Where do you the search, right.
+SPEAKER_2: Yeah. Yeah. So if I just found a tutorial but inverted search indexing, but I haven't read it yet.
+SPEAKER_3: Okay.
+SPEAKER_2: So you could probably just use that code, like that was behind the question she asked earlier. Actually, for the indexing? But...
+SPEAKER_3: Yeah, with-
+SPEAKER_2: Yeah, the reusing code and stuff, it's just like, okay, good.
+SPEAKER_3: Oh.
+SPEAKER_2: Yeah.
+SPEAKER_3: Oh right.
+SPEAKER_2: Yeah.
+SPEAKER_3: Oh that's pretty much there, is it?
+SPEAKER_1: They found some code for it? For the index.
+SPEAKER_2: Yeah, well, I don't know if it's usable.
+SPEAKER_1: Apparently I haven't look at it yet.
+SPEAKER_2: Yeah.
+SPEAKER_1: Okay.
+SPEAKER_2: But but I found some code for like from a tutorial about indexing out.
+SPEAKER_1: Yeah.
+SPEAKER_3: Of making-
+SPEAKER_1: Oh right.
+SPEAKER_3: Oh great. Whatever.
+SPEAKER_1: Cool, cool.
+SPEAKER_2: Yeah.
+SPEAKER_1: So even if it doesn't work you can jiggery poke it around and make it work.
+SPEAKER_2: Yeah, probably.
+SPEAKER_3: Yeah. Yeah.
+SPEAKER_2: We'll probably still have to do some other file management, file, I don't know, creation and.
+SPEAKER_1: Yeah, yeah. Messing around still, but.
+SPEAKER_2: Lots of nonsense, but yeah, basic is it okay, that's good.
+SPEAKER_3: Yeah, yeah. Yeah.
+SPEAKER_2: Yeah, that's handy.
+SPEAKER_1: Yeah.
+SPEAKER_3: Hmm.
+SPEAKER_2: Yeah, I guess that's it.
+SPEAKER_3: So you think it shouldn't be too difficult?
+SPEAKER_2: I don't know, I'm I was a bit worried about when well, when you talked about this with the file, messing around with files, I mean how much do we actually need to do, like extracting things from the XML files and stuff to be able to do the indexing.
+SPEAKER_3: Oh, I see. Yeah.
+SPEAKER_1: Yeah.
+SPEAKER_3: You have to convert it to some sort of format I suppose.
+SPEAKER_2: Yeah.
+SPEAKER_1: I've been trying to write something to read the XML and get rid of it. And I can get rid of it, but I'm having trouble putting it anywhere else. So it'll come up on the screen, for the moment I haven't managed to put it into a vector or whatever in Java to play with it but-
+SPEAKER_2: It comes to this group. Okay. Okay. Right.
+SPEAKER_3: Okay.
+SPEAKER_1: But I guess it's not very difficult.
+SPEAKER_3: What, are you writing in Java or? Yeah. Okay.
+SPEAKER_1: Yeah in Java, yeah.
+SPEAKER_3: Yeah. I don't really know much about file things.
+SPEAKER_2: I mean, you should look at look have a look at the the browser code then because um you know, they already extract for example transcripts.
+SPEAKER_1: Yeah, yeah. I'm sure they do.
+SPEAKER_3: Put it into a window at least.
+SPEAKER_1: Yeah. It's a good idea. Yeah. Oh yeah, I will. I'm sure it's not very difficult. I'm sure I'm making a meal out of it at the moment actually. Um, yeah, I guess I mean.
+SPEAKER_2: It was a good point he had that like collaborating with foul things, you...
+SPEAKER_3: Yeah.
+SPEAKER_2: I mean if you already started on on doing stuff, I guess we can-
+SPEAKER_1: Yeah, yeah, absolutely yeah, share as much as possible.
+SPEAKER_2: Yeah.
+SPEAKER_3: Mm-hmm. Libraries.
+SPEAKER_1: Yeah.
+SPEAKER_2: Yeah. Should we I don't know, meet up and see what we can do? I mean, I don't know, see what you've done and see what we need when we know more what we need maybe.
+SPEAKER_1: Yeah. Next week sometime.
+SPEAKER_2: Yeah.
+SPEAKER_3: Right, but what have you done?
+SPEAKER_1: Yeah. Yeah.
+SPEAKER_2: Yeah, exactly. Exactly.
+SPEAKER_1: I actually haven't done anything this week 'cause this week's been manic.
+SPEAKER_3: So you're still working? Yes.
+SPEAKER_2: Yep.
+SPEAKER_1: But...
+SPEAKER_3: What?
+SPEAKER_1: Well, whatever it was last week then.
+SPEAKER_2: Yes, exactly. So yeah.
+SPEAKER_3: What do you mean?
+SPEAKER_2: Um, it's...
+SPEAKER_1: Well. This week's only two days old.
+SPEAKER_3: Well... I last think.
+SPEAKER_1: The the the week as as is rather than the proper week you know what I mean like it's been a little bit manic the last last few
+SPEAKER_2: Right.
+SPEAKER_1: Well, you're in SPNLP and SP2, right?
+SPEAKER_2: That's right, yeah.
+SPEAKER_1: So yeah.
+SPEAKER_2: Yeah, that's fair enough.
+SPEAKER_1: And then we had to do an IRP whatever it was last week as well, which was only a page long, but it was quite difficult to write a page.
+SPEAKER_2: Yeah.
+SPEAKER_3: Ah.
+SPEAKER_2: Yeah, oh yeah. That was completely wrong as well. Well it wasn't marked, but it was I had to sit there and think about it for a bit, which is a bit irritating. Yeah, but it SPNLP, hoo.
+SPEAKER_2: Yeah, that's fun.
+SPEAKER_3: Oh, okay.
+SPEAKER_2: Um... so yeah, I was thinking the weekend probably get start attacking this seriously and then just um.
+SPEAKER_3: Yeah, what are you gonna meet up?
+SPEAKER_1: Yeah, hopefully have something by next week that we can sort of try integrating it into the GUI.
+SPEAKER_3: Mm-hmm. Okay.
+SPEAKER_2: Yeah. I think that should be possible.
+SPEAKER_3: Well, the browser as I use it now or as, you know-
+SPEAKER_1: Since it now.
+SPEAKER_3: It was there when I took it. Um uses the um, the NXT search to get the data out of the out of the files.
+SPEAKER_2: Okay. Right.
+SPEAKER_3: Which I think is odd, but I'm not quite sure how it works, yeah I don't quite understand it.
+SPEAKER_1: So when it when it.
+SPEAKER_3: To get the data actually, for example, to get the summarization data you have to search for I think their IDs or something. Yeah.
+SPEAKER_1: That's fairly bizarre isn't it?
+SPEAKER_3: Yeah.
+SPEAKER_1: But I guess that's how it works, it's got to that is pretty bizarre.
+SPEAKER_3: So they don't, you know, they don't say look in that and that folder, but they say search everything.
+SPEAKER_1: Yeah. That is pretty bizarre.
+SPEAKER_2: Well, they didn't see it wasn't the most efficient.
+SPEAKER_3: Okay.
+SPEAKER_1: Okay.
+SPEAKER_3: I mean it does load up quite quickly.
+SPEAKER_2: Very clearly, yeah.
+SPEAKER_1: So, you know, it's not too bad.
+SPEAKER_3: Okay.
+SPEAKER_1: But, you know, you could have a look at it.
+SPEAKER_2: But, well, well, is it like a window where you have to re write a search query or is it just what's behind it so, or how does it work now?
+SPEAKER_3: No, this is not the actual search.
+SPEAKER_2: Okay.
+SPEAKER_3: This is just when you open, you know, to load the transcript, for example. To find the transcripts for a certain meeting, yeah it does does an NXT search for the string I don't know, transcript or text or whatever.
+SPEAKER_1: For and it what it just has an open variable transcript this whatever find everything that's got that and then load.
+SPEAKER_3: Yeah, yeah. So I don't know if you've looked at the search query language, but it's like a dollar a text, say.
+SPEAKER_1: Yeah.
+SPEAKER_3: Text, say.
+SPEAKER_2: Yeah.
+SPEAKER_1: Yeah, yeah, 'cause that's the how the guy declares a variable, doesn't he in it. Like you populates him with them. Okay, yeah. And then yeah, because every every all of these um these files have got an ID, and all the transcript files have got the string I don't know what it is, words or text or something in it. So it just searches for those files.
+SPEAKER_2: Right. vaguely. When you like, is there a open thingy or why do you like what did you do to like how did you figure out that it chooses NXT search? Like is it-
+SPEAKER_3: Um um well, it's in the code, just that it you know, you you define a search object and then you search on string, okay. Okay. I had to figure out how to how to do the same thing for the summary, that's how I...
+SPEAKER_1: Oh, see. OK.
+SPEAKER_3: I had to I had to understand how to do the trans- how they did the transcript to do the summary myself.
+SPEAKER_1: So did you have to write it in the way that they wrote it? Is that what you did?
+SPEAKER_3: Yeah. Just search for a specific string.
+SPEAKER_1: Right. Good luck.
+SPEAKER_3: So you could just, you know, you could use that when you if you wanna um take the data out and put it somewhere.
+SPEAKER_1: Fish the data out, I was just thinking that, yeah.
+SPEAKER_3: Yeah.
+SPEAKER_2: Yeah.
+SPEAKER_3: If you have a a question about what the the code means or where to find the code that you want to, you know, whatever you want to do then just send me an email. I can explain it.
+SPEAKER_2: Yeah. Have you annotated your code nicely?
+SPEAKER_1: Okay.
+SPEAKER_3: Oh, yeah.
+SPEAKER_1: Oh yeah.
+SPEAKER_3: Actually in the moment it's Actually in the moment it's got a load of rubbish because the um the browser that I use from this you know, that they gave us had a lot of extra stuff in and I haven't dared throw out- to throw out all the functions that haven't, you know, that I don't need.
+SPEAKER_1: Just in case, yeah.
+SPEAKER_2: Right.
+SPEAKER_3: Yeah, just in case.
+SPEAKER_1: Mission critical.
+SPEAKER_3: Exactly. Yes. So they're all in there yeah still.
+SPEAKER_1: Yeah.
+SPEAKER_3: A lot of rubbish, but it will be cut will be chucked out right at the end I think.
+SPEAKER_1: Comment comment seeing it out one bit at a time and running it. Does it work? Yes.
+SPEAKER_3: Yes. Exactly. Yes.
+SPEAKER_2: Yeah. Yeah.
+SPEAKER_1: Okay, get rid of that next.
+SPEAKER_3: Yeah. Precisely.
+SPEAKER_1: Good plan here.
+SPEAKER_2: Yeah.
+SPEAKER_3: Yeah.
+SPEAKER_1: So basically we got to get going this and work really hey, that's- the answer to that isn't it?
+SPEAKER_2: Yeah, seriously. On the weekend.
+SPEAKER_3: The weekend?
+SPEAKER_1: Long as short.
+SPEAKER_3: The weekend's still four days off.
+SPEAKER_2: Four days exactly, exactly. Yeah.
+SPEAKER_1: Yeah, poor. Still at the bottom of the mountain.
+SPEAKER_2: Um. Yeah. Yeah. How many hours is this?
+SPEAKER_3: Oh.
+SPEAKER_1: Yeah. I don't actually have that much to do at the moment. Well, she she finally you want to explore any other? How's the how's your um... uh, quantifier raising?
+SPEAKER_2: Yeah. Seriously.
+SPEAKER_1: Awesome.
+SPEAKER_3: Oh dear.
+SPEAKER_2: Yeah, yeah.
+SPEAKER_3: Well, mmm. I can't remember what I'm supposed to do by the way.
+SPEAKER_2: Yeah. Yeah, that's what I got working.
+SPEAKER_3: Am I supposed to do the the summarization thing pop up?
+SPEAKER_2: Um. I don't know. No, he was doing that. I thought. Oh really?
+SPEAKER_3: You do.
+SPEAKER_1: Oh.
+SPEAKER_3: Well, I'll do that then.
+SPEAKER_2: These can be changed, as well.
+SPEAKER_1: Okay, yeah.
+SPEAKER_3: Shall I do that then? I mean-
+SPEAKER_2: Um, I don't know, it doesn't matter.
+SPEAKER_3: Well, you know, if you wanted, I mean, let's just, you know, play around with some extra stuff you have some time. Why not?
+SPEAKER_1: It shouldn't be too difficult.
+SPEAKER_2: Yeah.
+SPEAKER_1: So what classes should I have picked I'm mean not doing anywhere near?
+SPEAKER_3: Yeah. Well I'm doing communication. Well I'm doing communications. which we had one exercise and I've done that like two weeks ago. What's that? And that's in in two weeks.
+SPEAKER_2: Is that informatics course or?
+SPEAKER_3: Yeah, it's a nine nine course zone or ten or something.
+SPEAKER_1: Yeah.
+SPEAKER_2: Oh like digital architecture. Okay. Okay.
+SPEAKER_3: Yeah.
+SPEAKER_1: Oh, see, that's it. Yeah.
+SPEAKER_3: And then I'm doing parallel programming languages and systems. Which we had one exercise as well and that's seeing like Friday. Well I'm not doing any background reading so, you know.
+SPEAKER_2: Right. Yeah. Sorry. I'm being lazy. Just to begin with, yeah. Right.
+SPEAKER_3: Mmm. Mmm.
+SPEAKER_1: Yeah, me too.
+SPEAKER_2: Yeah. I'll be happy when this week is over.
+SPEAKER_3: I'll be happy when this course is over. Okay.
+SPEAKER_2: Yeah.
+SPEAKER_3: Yeah.
+SPEAKER_2: Well, I don't know, is that about it then, or anything else we need to discuss?
+SPEAKER_3: No.
+SPEAKER_2: I don't know. Did we want to meet before we talk to Steve next week? Well, I don't know. We'll probably get some work done over the weekend, so I don't know if after GNLG or something or maybe just have a little quick little update and just-
+SPEAKER_3: Yeah, if you like.
+SPEAKER_1: Yeah. I don't know.
+SPEAKER_2: Yeah. We can always decide then, I mean.
+SPEAKER_1: We can decide then. Yeah, exactly, true.
+SPEAKER_2: Yeah.
+SPEAKER_1: Yeah.
+SPEAKER_3: Um so what what are you planning to do over the weekend then?
+SPEAKER_2: Search.
+SPEAKER_3: You're going to do the search? And-
+SPEAKER_2: Well sure why not.
+SPEAKER_3: Yeah.
+SPEAKER_1: You're going to implement the search. Everything?
+SPEAKER_2: Shouldn't be that hard.
+SPEAKER_3: Yeah.
+SPEAKER_2: Well, it'll be, you know, still limited version of you know, the NXT query search right. No no.
+SPEAKER_1: Won't be the whole thing then.
+SPEAKER_3: Yeah.
+SPEAKER_2: Um like we can just decide sort of the things that we do want to do. You know. Well actually, what was it, just dialogue acts, sum. What else was there?
+SPEAKER_3: Speaker. Summary topics, transcripts.
+SPEAKER_2: Yeah, yeah. Yeah.
+SPEAKER_3: It's just that I think we need to set ourselves some milestones. Because otherwise.
+SPEAKER_2: General. Yeah.
+SPEAKER_3: You know.
+SPEAKER_2: Yeah, it'll get behind schedule, yeah, pretty quick.
+SPEAKER_1: Weeks'll go by and.
+SPEAKER_2: Like you were saying. Yeah. Well actually do we want to set a date for interim prototypes specifically? A date. When was the
+SPEAKER_1: I'm not not doing much for that prototype to end of Feb.
+SPEAKER_2: Um. The progress report is June 23rd February. Oh of-
+SPEAKER_1: February. So so what's that two weeks essentially?
+SPEAKER_2: Um, yeah.
+SPEAKER_3: Well, how about we get it done by then? I mean.
+SPEAKER_1: Ish, yeah.
+SPEAKER_3: Then we can write about it in the in the interim report. And some, you know, and then we've got something to show.
+SPEAKER_2: Yeah.
+SPEAKER_1: Yeah. Okay. So.
+SPEAKER_2: Yeah. Just looking at my own deadlines. Let's see. Yeah. They're out a little further.
+SPEAKER_3: Um oh, when the the search interface. Maybe you should decide pretty pretty early what kind of things you want to be able to search for.
+SPEAKER_2: Yeah.
+SPEAKER_3: And then if you want, you can give that to me and I'll I'll build you a nice, you know, a few tick boxes and drop down menus.
+SPEAKER_2: Wasn't like what you had now, wasn't that pretty much what we agreed on?
+SPEAKER_3: No.
+SPEAKER_2: Or was it? Just like that one.
+SPEAKER_3: Oh that's that's that doesn't exist. That was completely cut and pasted.
+SPEAKER_2: Okay.
+SPEAKER_3: That was completely cut and pasted.
+SPEAKER_2: Oh okay.
+SPEAKER_3: That does not exist.
+SPEAKER_2: A lot of illusion over there. Nice done though, isn't it?
+SPEAKER_1: Semblance of re-
+SPEAKER_2: Semblance of reality.
+SPEAKER_1: Yeah, it looks quite impressive, actually.
+SPEAKER_3: It's actually all these all these um things are nicked from um you know these drop down menus and tick boxes are nicked from Google online.
+SPEAKER_2: Oh wait a- oh wait a-
+SPEAKER_3: It's just screenshot of Google.
+SPEAKER_2: Oh.
+SPEAKER_1: That's quite slightly mean.
+SPEAKER_2: Does Google even exist?
+SPEAKER_3: It's just so much fun.
+SPEAKER_2: Does exist there. Nice down. I am impressed.
+SPEAKER_1: Maybe you should make it exist then.
+SPEAKER_2: Yeah.
+SPEAKER_3: It's gonna be a little difficult, more difficult. Yeah, I mean, I was going to but you know, the whole drop down menus and stuff, what we want to search for is not quite agreed on, we've never agreed on what we want to be able to search for.
+SPEAKER_1: No, that's nice isn't it.
+SPEAKER_2: Right. True.
+SPEAKER_1: Yeah.
+SPEAKER_2: So decide on that on over the weekend.
+SPEAKER_3: Yeah, do you wanna, you know, just get together and think about the different types of search we could possibly do and then then we could discuss it next meeting, which options we really want to include.
+SPEAKER_2: Yeah. Right.
+SPEAKER_3: That that would probably involve researching the query language a bit as well to see what that can do.
+SPEAKER_2: Yeah. Totally, yeah. It would be nice to I don't know, meet up and you can sort of show us a bit what you know already so we don't sort of have to do all the work again, of just like figuring out stuff.
+SPEAKER_2: Um just like the basics.
+SPEAKER_3: Know what already, what?
+SPEAKER_2: True.
+SPEAKER_3: Know what already, what?
+SPEAKER_2: Just like accessing the corpus and stuff.
+SPEAKER_3: Oh.
+SPEAKER_2: Yeah. Just like all that and seeing the code and just sort of sound just see the basics of what you've done. Like just get a a quick look over and just the basics.
+SPEAKER_1: Can take us for a tutorial sometime.
+SPEAKER_2: You know the class paths all that kind of thing.
+SPEAKER_3: Yeah.
+SPEAKER_1: Yeah.
+SPEAKER_3: Yeah.
+SPEAKER_2: You know the class paths all that sort of thing. Or like, like, you know the class paths all that sort of thing, like just just say, okay, well here's, you know, everything's basic and set up and then just, you know, just jump right in.
+SPEAKER_3: Yeah. Yeah, I can do that. Yeah. Show you what bits the code.
+SPEAKER_2: Yeah, yeah.
+SPEAKER_1: Next week sometime.
+SPEAKER_3: Yeah.
+SPEAKER_2: That's cool. Yeah.
+SPEAKER_1: In the morning.
+SPEAKER_3: Oh yeah. Well this time I'm dictating the time cause if I'm not there, you can't do anything.
+SPEAKER_1: Yeah.
+SPEAKER_2: Yeah.
+SPEAKER_1: Yeah.
+SPEAKER_2: Yeah, I know. Well the thing is, yeah, something like that could happen anytime because uh yeah. Like my schedule's like a class, a break, a class, a break, a class, you know that sort of thing.
+SPEAKER_3: Yeah. Well it's not going to take an hour to explain it, you know?
+SPEAKER_2: So, so, yeah, I know exactly, exactly. That's what I'm thinking.
+SPEAKER_1: Yeah, yeah, yeah.
+SPEAKER_2: So something like that and then if I have a class I can run off and do whatever.
+SPEAKER_3: I mean-
+SPEAKER_1: Yeah. Pick a time.
+SPEAKER_2: Yeah.
+SPEAKER_3: I I, you know, let me know whenever.
+SPEAKER_2: Okay. Um, yeah. Is Monday Monday might be good? Um-
+SPEAKER_1: Yeah.
+SPEAKER_3: Well, Monday.
+SPEAKER_2: Yeah.
+SPEAKER_1: What did you say?
+SPEAKER_3: Next yeah, this Monday coming.
+SPEAKER_2: Anytime, um not at not at noon or two or four.
+SPEAKER_1: Monday afternoon.
+SPEAKER_2: No, in in between those, you know, like one or three or something.
+SPEAKER_1: Three's three's alright.
+SPEAKER_3: Three o'clock?
+SPEAKER_1: Actually yeah.
+SPEAKER_3: Threes right.
+SPEAKER_2: Possibly. When is when times DNLG is four isn't it?
+SPEAKER_1: It's four, yeah. Unless you wanna do it after um-
+SPEAKER_3: After d-
+SPEAKER_2: Yeah. Yeah, that's an option too. Yeah. After DNLG. Sure.
+SPEAKER_1: Three's good though.
+SPEAKER_2: True.
+SPEAKER_1: But yeah. whatever, whichever you prefer.
+SPEAKER_2: Or 3:30. Now just yeah. Well it doesn't matter for me. Could be necessarily necessarily short.
+SPEAKER_3: That's gonna be tight. I mean
+SPEAKER_1: Three, three or after, whatever.
+SPEAKER_2: Can just
+SPEAKER_1: 3:30 in the in the computer room in here and then we can just go straight to-
+SPEAKER_2: Actually we can't get in there though.
+SPEAKER_1: Maybe you can. Oh, haven't got a key do you?
+SPEAKER_2: We well, we can get in through the through the the card, the card door.
+SPEAKER_1: Can none of you get in there?
+SPEAKER_3: Yeah. What front door?
+SPEAKER_1: The the this computer rooms in here, the MSC computer lab in. It's in here.
+SPEAKER_3: In Forb?
+SPEAKER_1: Yeah. I've not found that yet.
+SPEAKER_2: How about if we take a tour around here.
+SPEAKER_1: Well, if you find me, I'll show you where I'll I'll let us all in there and we can all go in there.
+SPEAKER_3: We can go and look. We can look now afterwards.
+SPEAKER_2: Right. Yeah, yeah exactly.
+SPEAKER_1: Yeah, yeah.
+SPEAKER_3: Yeah.
+SPEAKER_1: You do need to have a key for it though, that's the thing. It's got a lock on it.
+SPEAKER_2: Okay.
+SPEAKER_3: Okay. Just sort of bang on it.
+SPEAKER_1: Yeah, somebody will answer it.
+SPEAKER_2: Actually I was asking Steve about that whether we can get in there, whether he's gonna get us access into that. Into what? Into the computer room.
+SPEAKER_3: Okay. Oh yeah.
+SPEAKER_1: Yeah. It's only got it's crap, it's only got about four or five computers in, but it would do quite good for our job. Because it can all sit around, there's not very not many many people in it very often.
+SPEAKER_3: Oh, right.
+SPEAKER_2: Is there a printer in there too?
+SPEAKER_1: Yeah, there's a printer in there. And there's a photocopier. with the code on it, yeah, yeah.
+SPEAKER_3: Really? Nice. Okay.
+SPEAKER_1: Yeah it's cool yeah.
+SPEAKER_3: Really?
+SPEAKER_2: That come in handy. Yeah.
+SPEAKER_3: Ha. Oh, is that the photocopier I heard a heard about?
+SPEAKER_3: Well, I'm just-
+SPEAKER_2: Hey, we could we could photocopy our um assignment, if we want to.
+SPEAKER_3: Yeah. Oh. I've got it on my computer.
+SPEAKER_1: Yeah.
+SPEAKER_3: Whatever's on my computer.
+SPEAKER_2: All the comments, I'm thinking.
+SPEAKER_3: Yeah. So what time do we say? I just think it's better to do it afterwards cause then we have all the time we need.
+SPEAKER_2: Yeah, that's true.
+SPEAKER_1: All right. So after DNLG.
+SPEAKER_3: Rather than have half an hour and then we'll surely run out.
+SPEAKER_1: Yeah.
+SPEAKER_2: Yeah.
+SPEAKER_1: Yeah, yep.
+SPEAKER_2: Yeah.
+SPEAKER_3: Yeah.
+SPEAKER_1: Yeah.
+SPEAKER_2: Yeah.
+SPEAKER_1: Yeah.
+SPEAKER_3: Okay.
+SPEAKER_2: As long as DNLG doesn't go late.
+SPEAKER_1: Hopefully it's not that man's, won't matter.
+SPEAKER_3: Actually, it's not even confirmed yet. What's g- she doesn't even know what she's talking about yet, I mean.
+SPEAKER_1: What?
+SPEAKER_3: Oh.
+SPEAKER_1: That is true.
+SPEAKER_3: Maybe it doesn't happen at all.
+SPEAKER_2: Yeah, you never know. Sounds like me.
+SPEAKER_3: It's reading week next week. Should be, shouldn't be any-
+SPEAKER_2: Well, it's supposed to be next week. Is it reading? Next week?
+SPEAKER_3: Next week's week six next week.
+SPEAKER_1: Really?
+SPEAKER_2: I don't think we have a reading week that-
+SPEAKER_3: I don't know. We have one class at least, one real, like speech perception. We don't have any extra, oh it's cancelled?
+SPEAKER_2: Oh really?
+SPEAKER_3: But I think it have in like all other classes, so there's not much point in having-
+SPEAKER_1: Yeah, I don't think there is an official one. I don't think there was an official one last semester. I think it was just a bank holiday wasn't it?
+SPEAKER_2: Um something like that.
+SPEAKER_3: No I think I think one a couple classes were canceled.
+SPEAKER_1: Some classes did and some classes didn't really.
+SPEAKER_2: Yeah.
+SPEAKER_3: Yeah. Which was a bit crap. Yeah.
+SPEAKER_2: Exactly.
+SPEAKER_1: Yeah.
+SPEAKER_3: It's all a bit bizarre really, they didn't really know what was going on.
+SPEAKER_2: I think the undergrads had, were off completely.
+SPEAKER_3: Oh.
+SPEAKER_2: Yeah, I think it was up to the professor whether they did it or not. Well, I don't feel like teaching, yeah okay.
+SPEAKER_1: Now make 'em work.
+SPEAKER_2: I think yeah. I think DIL will probably have one to make up for missing classes.
+SPEAKER_3: What? DIL. Will probably... yeah we-
+SPEAKER_1: Yeah, we will probably have it, yeah, yeah. Just because you haven't had it last week.
+SPEAKER_3: Okay.
+SPEAKER_2: Yeah. Let's meet Monday.
+SPEAKER_3: Yeah.
+SPEAKER_1: Done.
+SPEAKER_3: Yeah. Um, I guess that's it. Was there anything else? Do any one of you want to like, take care of this or should I take care of it?
+SPEAKER_1: Oh, we trust you.
+SPEAKER_3: You can have it.
+SPEAKER_2: Yeah.
+SPEAKER_1: Yeah.
+SPEAKER_3: I don't know if there was something... No, I think he basically said um the same things as-
+SPEAKER_3: In the comments. If I could read it. Can you read that?
+SPEAKER_2: Hm. Which one, the top one? No. Um "We really want multiple windows from a single app"?
+SPEAKER_3: "From a single application"? Maybe.
+SPEAKER_2: "But most will probably want to go with the defaults."
+SPEAKER_3: Yeah.
+SPEAKER_2: Yeah. Well, that was probably saved there I guess.
+SPEAKER_1: Yeah, I think it comments is the basic the same as what you said this place.
+SPEAKER_2: Yeah, exactly, and just the other comment about whether you wanna do both speaker characterization and topic segmentation.
+SPEAKER_3: So. Yeah, that's about it. Nothing terribly exciting.
+SPEAKER_1: Oh yeah.
+SPEAKER_3: Yeah. Okay. And now we have seven percent of the course already done.
+SPEAKER_1: Yeah.
+SPEAKER_2: Right.
+SPEAKER_3: Right.
+SPEAKER_1: It's quite good.
+SPEAKER_2: Okay. Right. So-
+SPEAKER_3: So we I think we need to tick the ok box, right? If you're ok with having-
+SPEAKER_1: Oof.
+SPEAKER_3: Oof, exciting.
+SPEAKER_1: But is-
+SPEAKER_2: Okay.
+SPEAKER_1: Signing off, isn't it?
+SPEAKER_3: Ooh.
+SPEAKER_2: Yeah.
+SPEAKER_1: Log off.
+SPEAKER_3: Shall we turn these off then, or what? We're done now. Ah yeah. Is she still here? Yes you are. Yeah.
