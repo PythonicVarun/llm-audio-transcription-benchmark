@@ -85,7 +85,7 @@ TRANSCRIPTION_MODELS: dict[str, dict] = {
     },
 }
 
-EVALUATOR_MODEL = "gpt-5.5"
+EVALUATOR_MODEL = "gpt-5.4"
 MANIFEST_PATH = pathlib.Path("manifest.json")
 OUTPUT_PATH = pathlib.Path("benchmark_report.json")
 AUDIO_DIR = pathlib.Path("audio_files")
