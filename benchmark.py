@@ -456,7 +456,7 @@ MULTI_SPEAKER_TRANSCRIPTION_PROMPT = (
 
 
 def transcription_prompt_for_variation(variation: str) -> str:
-    if variation == "multiple_speakers":
+    if variation.startswith("multiple_speakers"):
         return MULTI_SPEAKER_TRANSCRIPTION_PROMPT
     return TRANSCRIPTION_PROMPT
 
