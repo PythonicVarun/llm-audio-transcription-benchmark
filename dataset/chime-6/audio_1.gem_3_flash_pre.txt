@@ -1,0 +1,82 @@
+SPEAKER_1: All right, so let’s start cooking.
+SPEAKER_2: Yeah, I agree.
+SPEAKER_1: Okay, so we have this one pot or one frying pan. We have ground beef and we bought that super easy, the taco mix.
+SPEAKER_2: Oh, I love these.
+SPEAKER_3: We could probably put these on the pan too, if we wanted to warm up the…
+SPEAKER_1: Yeah, maybe we could do that after the beef. So maybe someone can help cook or cut tomatoes or something or like dice them. I don’t know who’s good at dicing.
+SPEAKER_4: Do we have the oven set up? I guess we don’t have an oven, so…
+SPEAKER_1: Yeah, this does have fire, so yeah, it’s going to work.
+SPEAKER_4: Do you want to heat the taco shells?
+SPEAKER_1: Yeah, keep the taco shells, but maybe we can heat them up at the end after we get all the beef and stuff.
+SPEAKER_4: Sure.
+SPEAKER_1: Oh, and we do have snacks. Maybe if you want to put them on the table, if people want to munch on stuff. Where’s the chips?
+SPEAKER_2: Oh, and a bowl.
+SPEAKER_1: Yeah. Oh, there’s salsa on there too.
+SPEAKER_2: There are these bowls.
+SPEAKER_4: Do you want the guacamole in here?
+SPEAKER_1: Oh, yeah, we can put small bowls for… and salsa is right there too.
+SPEAKER_2: Yep. And there are spoons. Is that someone’s bowl?
+SPEAKER_1: Oh, that’s the fridge. The fridge is under there. Oh, and here’s another one too.
+SPEAKER_2: We can make salad at the end.
+SPEAKER_1: Salad is easy. We can just toss it and cut this. If there’s not enough room here, we can also cut the beef and then put it back.
+SPEAKER_4: Okay.
+SPEAKER_1: I guess the beef will take the longest, so…
+SPEAKER_2: Can you pass me a fork?
+SPEAKER_4: Fork? Oh, wow. Do you want the guacamole in a bowl or just leave it in the…
+SPEAKER_1: I think we can just use the container, right? People can scoop out from there. I put the salsa in a bowl because it’s hard to just to get out.
+SPEAKER_4: Oh, okay. Yeah, thanks.
+SPEAKER_1: Okay, nice. Do you want to rinse these or you’re okay with…
+SPEAKER_2: Yeah, I know. I’ll wash them. Oh, please pass through. I’m gonna put this back in fridge.
+SPEAKER_1: Okay, sure.
+SPEAKER_5: All right, what’s the next instruction?
+SPEAKER_2: Oh, thank you. Do we have any detergent? For the… detergent for…
+SPEAKER_5: Oh, it’s under the sink.
+SPEAKER_1: Oh, that’s a washing machine. Oh, what did you use there? Did you get the fire on already? Awesome.
+SPEAKER_2: Do you want like a… oh, I guess the fork is okay, right? Do they not have… like a spatula? No, not a spatula, but like a wooden one?
+SPEAKER_5: Yeah, a wooden one, right?
+SPEAKER_2: Probably.
+SPEAKER_5: So, ah no, I think in the second drawer on the… the left.
+SPEAKER_1: Oh, okay. Perfect. Yeah, the second one. Let’s start cooking. Some seasoning today.
+SPEAKER_2: Do you use oil?
+SPEAKER_1: No, but I thought this was already going to be pretty greasy enough. I think…
+SPEAKER_2: Yeah, maybe we need oil.
+SPEAKER_5: Yeah, I think you can get that down.
+SPEAKER_1: Here, I think there’s a cupboard too. Oh, yeah, there’s olive oil.
+SPEAKER_5: Thank you.
+SPEAKER_1: Yeah, olive oil works.
+SPEAKER_2: Yeah, I always use olive oil.
+SPEAKER_1: Here, can just add a little bit. Should I pour a little bit? Oh, this one’s for cooking.
+SPEAKER_4: If anybody need help with anything, I’ve already laid up all the snacks.
+SPEAKER_1: Oh, we do need to cut lettuce.
+SPEAKER_4: Okay. Or do you want me to open this for… what is this for?
+SPEAKER_1: Yeah, we’re gonna like heat up the beans as well.
+SPEAKER_4: Oh, and mix them in with that and the sauce?
+SPEAKER_1: Probably not mix it because Sophie’s not going to eat or can’t eat meat.
+SPEAKER_4: Oh, okay.
+SPEAKER_1: But we can mix it in the sauce after we cook that up.
+SPEAKER_4: Okay. Yeah, we can just heat it up.
+SPEAKER_1: Sure. We can… do you want to make some of it now with the beef or no? Like once it’s…
+SPEAKER_4: Oh, if you know how much you want to eat then I can take out some of it.
+SPEAKER_1: Okay.
+SPEAKER_4: So are you vegetarian?
+SPEAKER_5: Not fully, but I’m trying to. I get this question a lot. It’s a temporary thing.
+SPEAKER_1: Oh, yeah, we do have salad, like our bean salad that we didn’t eat earlier.
+SPEAKER_5: Oh, yeah, that’s true.
+SPEAKER_1: Then we can eat that too, then you’ll have enough food. Okay, yeah, we can mix some of the beef… I mean, some of the beans up with the beef, yeah.
+SPEAKER_4: Okay, I’ll open this right now then.
+SPEAKER_1: Yeah, yeah, sure. Oh, yeah, I forgot you’re left-handed.
+SPEAKER_4: Yeah.
+SPEAKER_1: Oh, really? Okay, let’s see.
+SPEAKER_4: Is there a bowl I can put the beans in?
+SPEAKER_1: Yep. Yeah, that’s big enough. Yeah. Do you guys usually cook at home?
+SPEAKER_2: Sometimes.
+SPEAKER_4: You guys big cooks? Yeah, sometimes, not always. Try my best to, but sometimes I’m lazy, especially being in France, it’s really good.
+SPEAKER_1: Oh, yeah. Oh, you have roommates, right?
+SPEAKER_4: Me? Yeah.
+SPEAKER_1: Oh, okay. Olivia, do you live by yourself?
+SPEAKER_2: No, I live with my family.
+SPEAKER_1: Oh, with your family. Okay.
+SPEAKER_2: Now and then it’s like, oh okay, maybe I should drain this out more.
+SPEAKER_4: Okay. Just a bit. What kind of cook also?
+SPEAKER_1: I think it’s good to keep like a little bit of the broth. Oh, it says you have to add two-thirds, 150 milliliters of water with the seasoning mix.
+SPEAKER_4: Oh okay, does that bottle have a measure? Yeah, I think it’s right there. You can break this up into bigger pieces.
