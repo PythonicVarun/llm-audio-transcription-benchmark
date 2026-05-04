@@ -54,6 +54,10 @@ MANUAL_TRANSCRIPTION_MODELS: dict[str, dict[str, str]] = {
         "display": "Gemini 3 Flash Preview",
         "suffix": ".gem_3_flash_pre.txt",
     },
+    # "gemma-4": {
+    #     "display": "Gemma-4",
+    #     "suffix": ".gemma_4.txt",
+    # }
 }
 
 
@@ -222,7 +226,7 @@ def run_manual_benchmark(
             "language": language,
             "audio_file": str(audio_path),
             "audio_mime_type": MIME_MAP.get(audio_path.suffix.lower(), "audio/wav"),
-            "audio_base64": base64.b64encode(audio_path.read_bytes()).decode(),
+            "audio_base64": None, # base64.b64encode(audio_path.read_bytes()).decode()
             "reference_transcript": reference,
             "model_outputs": model_outputs,
             "evaluations": evaluations,

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 ╔══════════════════════════════════════════════════════════════════╗
 ║         Multi-Model ASR Transcription Benchmark                  ║
@@ -912,11 +912,12 @@ _cer_transform = jiwer.Compose(
         jiwer.RemovePunctuation(),
         jiwer.Strip(),
         jiwer.RemoveMultipleSpaces(),
+        jiwer.ReduceToListOfListOfChars(),
     ]
 )
 
 def compute_cer(reference: str, hypothesis: str) -> Optional[float]:
-    if not reference.strip():
+    if not reference.strip() or not str(hypothesis).strip():
         return None
     try:
         return round(
@@ -928,25 +929,26 @@ def compute_cer(reference: str, hypothesis: str) -> Optional[float]:
             ),
             4,
         )
-    except Exception:
+    except Exception as exc:
+        logger.exception("compute_cer failed: %s", exc)
         return None
 
-
 def compute_mer(reference: str, hypothesis: str) -> Optional[float]:
-    """Match Error Rate — useful for multi-speaker / noisy audio."""
-    if not reference.strip():
+    """Match Error Rate - useful for multi-speaker / noisy audio."""
+    if not reference.strip() or not str(hypothesis).strip():
         return None
     try:
         return round(
             jiwer.mer(
                 reference,
                 hypothesis,
-                reference_transform=_cer_transform,
-                hypothesis_transform=_cer_transform,
+                reference_transform=_wer_transform,
+                hypothesis_transform=_wer_transform,
             ),
             4,
         )
-    except Exception:
+    except Exception as exc:
+        logger.exception("compute_mer failed: %s", exc)
         return None
 
 
@@ -1018,7 +1020,7 @@ Hard caps:
 - For multiple_speakers samples, missing speaker labels, inconsistent speaker labels, or wrong speaker turns must be penalized under speaker_overlap_confusion; severe speaker-format failure caps overall_score at 6.
 - Do not use error_categories ["none"] unless the transcript is essentially error-free.
 
-Respond ONLY with a valid JSON object using EXACTLY this schema — no markdown, no extra keys:
+Respond ONLY with a valid JSON object using EXACTLY this schema - no markdown, no extra keys:
 {
   "accuracy_score":       <integer 1-10>,
   "fluency_score":        <integer 1-10>,
@@ -1042,7 +1044,7 @@ _EMPTY_EVAL = {
     "fluency_score": 0,
     "completeness_score": 0,
     "overall_score": 0,
-    "failure_summary": "Model returned empty output — complete transcription failure.",
+    "failure_summary": "Model returned empty output - complete transcription failure.",
     "error_categories": ["deletion_errors"],
     "improvement_suggestions": (
         "Model produced no output for this audio. Check audio format compatibility, "
@@ -1068,12 +1070,14 @@ def evaluate_one(
         return _EMPTY_EVAL.copy()
 
     wer_str = f"{wer:.1%}" if wer is not None else "N/A (non-English)"
+    cer_str = f"{cer:.1%}" if cer is not None else "N/A"
+    mer_str = f"{mer:.1%}" if mer is not None else "N/A"
     user_msg = f"""\
 Variation type  : {variation}
 Language        : {language}
 WER             : {wer_str}
-CER             : {cer:.1%} if cer is not None else "N/A"
-MER             : {mer:.1%} if mer is not None else "N/A"
+CER             : {cer_str}
+MER             : {mer_str}
 
 The programmatic Word Error Rate (WER) ignoring capitalization and punctuation for this transcript is {wer_str}. Keeping this alignment score in mind, provide a final holistic AI score focused on semantic retention, recognizing entity names, and overall readability. Do not overly penalize minor formatting or capitalization errors.
 
@@ -1109,7 +1113,7 @@ Evaluate the model's transcription quality against the reference."""
 _SUMMARY_SYSTEM = """\
 You are a senior ML research engineer specialising in speech recognition evaluation.
 You will receive aggregated benchmark results and must produce a comprehensive analysis report as JSON.
-Respond ONLY with a valid JSON object — no markdown, no extra text.
+Respond ONLY with a valid JSON object - no markdown, no extra text.
 """
 
 _SUMMARY_SCHEMA = """\
@@ -1583,7 +1587,7 @@ def run_benchmark(
     for entry in tqdm(manifest, desc="Audio samples", unit="file"):
         audio_path = pathlib.Path(entry["file"])
         if not audio_path.exists():
-            logger.warning(f"Skipping {entry['id']} — file not found: {audio_path}")
+            logger.warning(f"Skipping {entry['id']} - file not found: {audio_path}")
             continue
 
         audio_id = entry["id"]
@@ -1677,7 +1681,7 @@ def run_benchmark(
             "language": language,
             "audio_file": str(audio_path),
             "audio_mime_type": MIME_MAP.get(audio_path.suffix.lower(), "audio/wav"),
-            "audio_base64": base64.b64encode(audio_path.read_bytes()).decode(),
+            "audio_base64": None, # base64.b64encode(audio_path.read_bytes()).decode()
             "reference_transcript": reference,
             "model_outputs": model_outputs,
             "evaluations": evaluations,

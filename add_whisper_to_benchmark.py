@@ -131,11 +131,20 @@ def compute_wer(reference: str, hypothesis: str) -> Optional[float]:
 
 
 def compute_cer(reference: str, hypothesis: str) -> Optional[float]:
-    if not reference.strip() or not hypothesis.strip():
+    if not reference.strip() or not str(hypothesis).strip():
         return None
     try:
-        return round(jiwer.cer(reference, hypothesis), 4)
-    except Exception:
+        return round(
+            jiwer.cer(
+                reference,
+                hypothesis,
+                reference_transform=_WER_TRANSFORM,
+                hypothesis_transform=_WER_TRANSFORM,
+            ),
+            4,
+        )
+    except Exception as exc:
+        logger.exception("add_whisper compute_cer failed: %s", exc)
         return None
 
 
