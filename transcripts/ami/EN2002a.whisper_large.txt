@@ -1,0 +1,786 @@
+funky stuff i wonder how much of the meetings is talking about the stuff at the meetings
+yeah exactly yeah yeah yeah yeah look at all this stuff man
+okay okay
+so what do we need to talk about shall we does anybody well shall we just go around and
+everyone says what they what they've been doing how far they've got
+has anybody done anything
+none of what i hope so yeah okay sounds like you've done some stuff
+okay
+okay
+well i've got a browser now which whoops already got good stuff
+oh i dropped mine as well
+good at this this wasn't a good story okay okay yeah so yeah we've got a browser with
+um which comes up automatically with the transcription box and the topics and then
+when you go on the menu you can select a summarization
+box and then you can go on the menu and then you can go on the menu and then you can go on the menu
+which pops up and an audio player right um and i think the search works as well so you can pop up a
+search and it loads up um just the background window so empty and um so when you start you
+have to either open open a particular observation or do a search and open it through that that makes
+sense um the transcription box has got a summarize button which doesn't do anything yet um now
+i wonder how we want to do you know we want a pop-up window with the speaker characterization um
+either we could do that you know when does the pop-up come either we can when you click on the
+the id any sort of id in the transcription box or we can put an extra button extra few buttons
+next to the summarize button so that you actually in the transcription box but so you click on the
+button and then it opens whatever that speaker characterization is the problem is the
+the left click is already used because it highlights that um that part of speech or
+whatever that what he's been saying you know that the left click highlights it so the left click
+can you use double click so that you can i don't know what happens when you double click actually
+but that'd be a bit annoying if you have left click for one thing and double click for something
+else um i think so yeah when you left click it you can for example set set the marker
+there so that the the audio goes from there i think um so we can't put it on left click we could put it
+on the right click we could for example have a little menu that pops up yeah that might be quite
+good i suppose so right click on that menu you know and you can click on speaker characterization
+what else could we have in the menu that's a good point
+i don't know
+yeah
+yeah yeah but um i don't know about you but usually in windows right click
+doesn't do anything does it is a window it opens a menu a menu yeah yeah so yeah
+yeah that's what it would be a bit weird for it to just start bringing up stuff wouldn't it yeah
+so but that'd be yeah if you just yeah yeah
+to just have sort of the same sort of idiom throughout yeah yeah um or just you know or just
+the button i guess the button button makes a bit more sense because otherwise you don't really know
+that oh what if i right click now what happens then it's like more if it's visual well no no you
+still have the menu the menu pop up that yeah yeah yeah it's more well oh yeah it's more obvious isn't
+it what you can do
+do you see my it's more idiot proof isn't it it's got a button
+yeah yeah that's right yeah yeah that's true yeah it's more intuitive really isn't it yeah
+well then it's not as extensible but well we can have both but whatever like if we want to add more
+things in the future then we have no new buttons maybe maybe have more buttons i don't know where's
+a menu type thing more flexible that way but probably not going to be adding too many things
+yeah well in i guess in in meeting browser 1.1 exactly you can have a menu instead of a button
+this one
+but actually what we could do is on in that menu as well we could have an option that pops up a
+window with all the all the meetings that that user has been in like a search for that user
+yeah is that going to be useful or too much or i guess so so what are you part of the menu that
+comes down is says give me all your meetings or something yeah so when you right click on it one
+one option will be give me all your meetings characterize the speaker yeah or is that too much
+i don't i mean it's more like part of the i guess so it's an ideal 很��的坐在一当中涉罪的会议人
+to use my pen. Browsing sort of thing more than the speaker characterization as Steve mentioned.
+Yeah yeah that's true yeah. I don't really know how to involve the speaker characters into the
+browsing. Yeah yeah yeah that's true. It would be nice to have it in connect interconnected.
+Yeah like maybe tie that in with dialogue acts or something as well. I mean speaker characterization
+tied into I don't know just some way to sort of leverage that information like we have it
+we're doing it but what how does it help the browsing or what can it give us in the browser?
+Well you mean the speaker characterization? Yeah. Oh well yeah I mean I don't know about that.
+I mean it's the speaker characterization a bit like you said I mean it's like a nice thing
+we don't we're not actually sure what the user wants with it but it's interesting so why not
+give it to him. Yeah yeah. I think we should do it. I mean yeah I mean I guess maybe we could
+have that as another thing of like well
+if you get the speaker characterization that someone talks a lot in a certain topic
+and then if you I don't know click on that topic you get everything that's in that topic or whatever.
+Yeah I mean that's that's still another level further. And in that way but I don't know. I mean
+we're not even there yet you know it doesn't even pop up the speaker characterization yet.
+No no no yeah yeah. We have to first define what what happens when you click on a user.
+We have to have a speaker characterization first before we cross any of the other bridges. Yeah.
+Yeah. Yes.
+So should we try try to do a right click menu then? Yeah all right why not. Is that just from
+the main main window? Even if only one thing comes up. Is that is that from any particular
+window? Like if we want to sort of get like if we're on the users versus like a topic or
+something have a right click from for these various things to. Yeah yes wait yeah there's
+a second thing about the topics. The topic window where you want to somehow
+click be able to click on a topic and it pops up with all the meetings that contain that. Right yeah.
+Yeah yeah. So we could do that in a similar way do it right click as well.
+So this slot is for um okay yeah and to have a different menu for it and it's consistent around
+yeah on the speaker so yeah and then this slot is on. So we have basically two options of of browsing.
+The meetings is by either um searching and opening individual observations and when then we have the
+interlinking by right click basically. Actually yeah like another common thing like if we have it
+so it's set up that um if you double click and it goes to a default thing on the menu I mean that's
+kind of a typical kind of action that would happen. Double click? If you double click on a particular
+topic or something then it goes to sort of like a default view. Oh. So it will be like all the
+um cases of that topic either whatever we decide the default to be whether it's in all meetings or
+just in one meeting and just show up the particular instances of that topic in the meeting.
+Like and just think to have the default there so if somebody knows exactly what they want to do and
+we know that that's the most common thing that's going to happen so the double click will do that
+and just save them the trouble of right clicking and choosing the item on the menu. Yeah I don't
+see there's anything obvious that was that would be able you know that would be yeah well it might
+start playing with it yeah what was that I didn't quite understand do you mean um like we have the
+the right click menu just have the menu right click but instead of like have a default double
+click yeah so if there's a so it'll be a choice from the menu but yeah exactly oh so and it
+figures out what's the most common use to double click yeah yeah okay like show the speaker
+characterization for instance yeah yeah but then then there's a problem with a lot of windows popping up again
+yeah or just and they pop up without you even being quite sure what it is yeah
+but if you do double click on something don't you expect something to happen then yeah
+I don't know sometimes you do it by accident I'll go away
+yeah
+especially if you're
+a touchpad yeah exactly it's still coming up oh then they close it yeah
+yeah it's not it's not the end of the world
+and she goes oh
+yeah yeah oh yeah
+yeah right
+well I'll check what it does on on the double click at the moment
+yeah okay because I think it might do something yeah and it's a good start
+but yeah but I don't I don't I really don't see anything obvious that yeah I mean if you
+can think of something I guess it depends on the yeah what you're clicking on obviously so
+um yeah another thing
+single audio files do we want to use it
+we don't know yet do we yeah do you mean single channel yeah single channel but single channel
+files so we want them I mean probably not but we might need them for the splint if we try to do it
+in audio wow yeah okay yeah yeah I mean we might use them while what to work with them but do we
+want to integrate them so that when you browse you can but at the moment no but yeah you might
+want to be able to say oh just give us a single audio file but that's just for the moment no just
+to say oh just give me what that person's saying do you though i mean it's not going to make much
+sense if you don't listen to it on its own do you no unless um you can't hear it properly or
+something somebody's talking over somebody else or something well we'll just say no for now and
+put it in later yeah yeah because otherwise it will the it will increase the amount of data
+um yeah what do people think in general about the windows cluttering that you mentioned do you think
+do you think it's really that bad i think we probably need that though to have the full
+flexibility we need to have that there but um yeah that's what i feel as well i mean i'm very
+much i want to have everything customizable um well the thing is typically though is someone
+going to have five windows open at the same time probably not probably just two or two or three of
+whatever whatever they're looking at like dialogue acts to whatever probably not no yeah two or three
+maybe but yeah but yeah
+depends i mean i really want to put the summary in somewhere you know and the summary for example
+it's typical you open the window you read through it you might click on you know close it again
+straight away yeah but it'd be good to have it there yeah i think it's fine it's fine but well
+couldn't we i mean you probably i don't know if you want to have like the the full transcription
+and the summary at the same time yeah so maybe you can just like choose the same window for
+transcription and summary
+it's like have a tab there i was just thinking of tab or something like that choose choose one
+yeah yeah tabs are nice yeah tabs are good i like tabs mozilla style that's true yeah
+yeah yeah yeah that's right i'm not sure yeah i don't know who you say it is does anybody know
+how to do that but i don't know but can you do that in java no i don't think java knows how to
+do that really
+oh you should be able to i don't know do you reckon maybe you probably can
+but i'm sure yeah yeah i'm sure you could do anything if you really knew what you're doing
+yeah i don't know it's a bit of a cripple java's windowing toolkit sometimes it's a bit of a
+cripple i can have a look yeah yeah or just i don't know but yeah that might be an idea yeah
+yeah change to
+contents of the same window like from transcription to summary yeah yeah yeah yeah or even just have
+buttons on it toggle buttons or something on the toolbar yeah yeah a lot of different ways we can
+do it it doesn't doesn't have to be a tab or whatever that could probably just be yeah no no
+it could be like transcription summary like two buttons and you just press on whichever yeah
+exactly yeah or check marks even have two of them checked
+yeah
+yeah
+yeah
+yeah
+yeah
+yeah
+yeah
+that will reduce the number of um windows we needed wouldn't it yeah yeah which is quite good
+because otherwise photoshop has a lot of windows if you ever use photoshop it's got loads and you're
+always forever going oh get out of the way there's always stuff in the way isn't there
+i don't like pop-ups i don't mean people get used to it i mean when you use a windows or linux
+you have a lot of windows open you do yeah and you manage them yeah yeah unless can you i don't
+spenn you can minimize
+them and stuff like that can you can you do that i guess that
+yeah yeah you can minimize them yeah yeah Madhu
+yeah well that's alright
+yeah yeah well of course you can actually yes
+probably mutually yeah they're definitely gonna be in the same window
+yeah yeah that was the plan for the differences anyway so yeah do you want
+to do that with summaries and put the summaries in in the same window yeah
+well I don't know with transcripts it sounds reasonable to have like
+transcripts like maybe three alternatives then like full meeting
+meeting without disabilities and summarize right summary yeah yeah and
+finally the prototype what kind of prototype could be produced because I'm
+I'm just you know I go into the lab and I say what am I gonna change today you
+know and it kind of just it just developed
+I'm not I guess it is I mean just to try it in I mean for us to be able to do
+something that we can include with your thing so so we yeah yeah that's what we
+need yeah yeah something just slightly more than just that on its own yeah yeah
+yeah yeah just so see the integration works yeah definitely so I guess that's
+what I think that's kind of what he meant as well yeah seeing it seeing it
+sort of start to do stuff yeah well I guess I mean that was probably our
+intention but we might not have written it down so I guess yeah yeah yeah yeah
+actually is the code accessible like the gooey stuff that you've done like can
+we just like copy like the latest stuff out of your directory like if we're
+gonna just try and like take a look or something try and just plug some stuff I
+think you can if you can make it if you make it world readable then anybody can
+access it well if you just tell us the directory and just make the file
+readable then we know the directory to get in then and just yeah yeah yeah yeah
+sure I don't know if it's readable at the moment but you can sure have a look
+no no they're not world readable I think by default they are I think yeah they're
+only default then only you can read them all right okay you can see them but you
+can't read them okay all right well I'll make that readable then so the directory
+is my number or you could just type it in and it'll read it for you or you could just
+email okay yeah yeah okay well this is not difficult what's your number okay
+it's in all the emails yeah okay your number
+oh four five five five six oh say that again oh four oh four five five five six
+and then it's and then there's a folder
+nlsd and it's called the mbrowser the mbrowser for meeting yes m for meeting
+lowercase I hope you never have to look in my directory it's just pure chaos
+mine is serious chaos
+really no I'm I'm extremely organized you see I've got folders
+everything I love folders yeah so that's me done someone else want to talk about
+their stuff final jump at once I can tell you what I've done in sp2 oh I don't
+know I basically I started like browsing a bit just like trying to see if there's
+anything out there
+what are you doing again um yeah searching yeah oh yeah all the searching stuff
+yeah yeah what was that like the inverted file stuff and the next search query and all
+that this search okay we're doing this YouTube yeah yeah so we just found a tutorial but
+inverted search indexing but I haven't read it yet okay so you could probably just use
+that code like that was behind the question she asked them earlier but yeah
+just you know the reusing code and stuff and just like okay oh yeah all right yeah oh that's
+pretty much there is it you found some code for it for the index yeah well i don't know if it's
+usable i haven't looked at it yeah okay but but i found some code for like from a tutorial about
+indexing yeah of making all right oh great whatever cool cool yeah so even if it doesn't
+work you can jiggery poke it around and make it work yeah probably yeah yeah we'll probably
+stop to do some other file management creation yeah yeah messing around stuff all sorts of
+nonsense but yeah by the basics is it okay that's good yeah yeah yeah that's handy
+yeah so you think it shouldn't be too difficult i don't know i'm i was a bit worried about when
+well when you talked about this with the file messing around with files i mean
+how much do we actually need to do like extracting things from the xml files and stuff to be able to
+do the indexing oh i see yeah yeah you have to convert it to some sort of format i've been trying
+to write something to read the xml and get rid of it and i can get rid of it but i'm having trouble
+putting it anywhere else so it'll come up on the screen but at the moment i haven't managed to put
+it into a vector or whatever in general
+i guess it's not very difficult okay what are you writing in java or yeah okay
+i mean you should look at look have a look at the the browser code then because
+um you know they already extract for example transcripts yeah yeah i'm sure they do put it
+into a window at least yeah yeah yeah yeah yeah yeah yeah yeah yeah yeah yeah yeah yeah yeah
+yeah oh yeah i will i'm sure it's not very difficult i'm sure i'm making a main of it
+yeah i guess i mean it was a good point you had that like collaborating with foul things yeah i
+mean if you already started on doing stuff i guess we can yeah yeah absolutely you should share as
+much as possible yeah yeah yeah yeah yeah yeah yeah yeah yeah yeah yeah yeah yeah yeah yeah
+yeah should we i don't know meet up and see what we can do i mean i don't know see what you've done
+and see what we need when we know more what we need maybe yeah
+next week sometime yeah what we need yeah yeah yeah yeah exactly exactly
+i actually haven't done anything this week because this week's been manic
+so you're still doing it yeah yeah yeah yeah yeah yeah yeah yeah yeah yeah yeah yeah yeah yeah
+still working yeah yeah but
+this week's only two days old
+well whatever it was last week then yes exactly same thing
+what do you mean yeah i mean between two days um
+yeah this week's only two days old well
+the the week as as is rather than the proper week you know
+it's been all a bit manic the last one
+Well, you're an SPNLP and SP2, right?
+That's right, yeah.
+So, yeah.
+Yeah.
+Yeah, that's where I'm at.
+And then we had to do an IRP, whatever it was, last week as well,
+which is only a page long, but it's quite difficult to write a page.
+Yeah.
+Yeah.
+Yeah, oh, yeah.
+That was completely rubbish.
+It was.
+It wasn't marked, but it was.
+I had to sit there and think about it for a bit, which was a bit irritating.
+It's just so stupid.
+Yeah, but SPNLP.
+Yeah, that's fun.
+Yeah, I was thinking that we can probably start attacking this seriously.
+Yeah, we're going to meet up.
+Yeah, hopefully have something by next week that we can sort of try integrating into the GUI.
+Mm-hmm.
+Okay.
+Yeah.
+That should be possible.
+Well, the browser as I use it now, or as, you know, because it's now, it was there when I took it.
+It uses the NXT search to get the data out of the files.
+Okay.
+Which I think is odd, but I'm not quite sure how it works here.
+I don't quite understand it.
+So when it...
+To get the data, for example, to get the summarization data, you have to search for, I think, the IDs or something.
+Yeah.
+That's pretty bizarre, isn't it?
+Yeah.
+I guess that's how it works.
+That is pretty bizarre.
+So they don't, you know, they don't say...
+That and that and that folder, but they say search everything.
+Yeah, yeah.
+It's pretty bizarre.
+Well, they did say it wasn't the most efficient.
+Okay.
+It does load up quite quickly.
+Very clearly, yeah.
+So, you know, it's not too bad.
+Okay.
+But, you know, you could have a look at that.
+But what, is it like a window where you have to...
+Write a search query or is it just what's behind it?
+So, or how does it work now?
+No, this is not the actual search.
+Okay.
+This is just when you open, you know, to load the transcript, for example, to find the transcript for a certain meeting.
+Yeah.
+It does an NXT search for the string, I don't know, transcript or text or whatever.
+Okay.
+For, and it, like, it just has an open variable, transcript this, whatever.
+Find everything that's got that and then, like...
+Yeah, yeah.
+So, I don't know if you've looked at the search query language, but it's like a dollar, a text, say.
+Yeah.
+Yeah, yeah, because that's the, like, it declares a variable, doesn't it?
+And then it can populate it.
+Yeah.
+And then, yeah, because every, every, all of these, these files have got an ID and all the transcript files have got the string.
+I don't know.
+I don't know what it is, words or text or something in it.
+So, it just searches for those files.
+Okay.
+Right.
+There you go.
+When you, like, is there an open thingy or, like, what did you do to, like, how did you figure out that this uses NXT search?
+Like, is it, so...
+Well, it's in the code, just that it, you know, you define a search object and then you search that string.
+Okay, okay.
+I had to figure out how to...
+How to do the same thing for the summary, that's how I...
+Oh, I see.
+I had to, I had to understand how to do the transcript, how they did the transcript to do the summary myself.
+So, did you have to write it in the way that they wrote it?
+Is that what you did?
+Yeah.
+Just search for a specific string.
+Right.
+Okay, thank you.
+So, you could just, you know, you could use that when you, if you want to take the data out and put it in there.
+Push the data out.
+I was just thinking that, yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Actually, in the moment, it's got a load of rubbish because the browser that I used from, you know, that they gave us had a lot of extra stuff in and I haven't dared to throw out all the functions that I don't need.
+Just in case.
+Right.
+Yeah, just in case.
+Mission critical.
+Exactly.
+Yes.
+So, they're all in there yet, still.
+Yeah.
+A lot of rubbish, but it will be chucked out by the end, I think.
+Coming, commenting it out one bit at a time and running it.
+Does it work?
+Yeah.
+Yes.
+Exactly.
+Yes.
+Yeah.
+Yeah.
+Okay, get rid of that next.
+Yeah.
+Precisely.
+Good.
+So, basically, we've got to go and do some work, really, I think, that's the answer to that, isn't it?
+Yeah.
+Especially on the weekend.
+The weekend?
+We're logging the short of it.
+The weekend's still four days off.
+Yeah.
+Still at the bottom of the mountain.
+Still at the bottom of the mountain.
+Yeah.
+Yeah.
+How many hours is this?
+Oh.
+Oh.
+Yeah.
+I don't actually have that much to do at the moment.
+Well, should you finally want to explore any other...
+How's your quantifier raising?
+I can't really.
+Yeah, seriously.
+Well...
+Oh, dear.
+Oh, dear.
+Well...
+Hmm.
+I can't remember what I'm supposed to do, by the way.
+Yeah.
+Yeah.
+That's what I've got to work on.
+Am I supposed to do the summarization thingy-bop?
+No.
+Who was doing it?
+Oh, really?
+You do it.
+Oh.
+Well, I'll do that, then.
+These can be changed as well.
+Okay, yeah.
+Shall I do that, then?
+I mean...
+I don't know.
+It doesn't matter.
+Well, you know...
+If you want to.
+I mean, it's just, you know, play around with some extra stuff.
+You have some time.
+Why not?
+It shouldn't be too difficult.
+So, what courses should I have picked?
+Are we not doing any work?
+Yeah.
+Well, I'm doing communications, which...
+I had one exercise, and I've done that, like, two weeks ago.
+That's fine.
+And that's in two weeks.
+Is that informatics course?
+Of course.
+Oh.
+Yeah, it's nine courses, or ten or something.
+Oh, like, digital.
+Okay.
+And then I'm doing parallel programming languages and systems,
+which we had one exercise as well, and that's in, like, Friday.
+Well, I'm not doing any background reading, so, you know.
+Sorry.
+Being lazy.
+Yeah.
+Yeah, me too.
+Yeah.
+I'll be happy when this week is over.
+I'll be happy when this course is over.
+Okay.
+Yeah.
+Yeah.
+Well, I don't know.
+Is that about it, then?
+Or anything else we need to discuss?
+No, at all.
+Did we want to...
+Do we want to meet before we talk to Steve next week?
+Well, I don't know.
+We'll probably get some work done over the weekend, so, I don't know, after D&LG or something,
+maybe just have a little quick little update and just...
+Yeah.
+Yeah, if you like.
+Yeah.
+We can always decide then.
+I mean, you know.
+Well, we can decide.
+Yeah, exactly.
+True.
+Yeah.
+Yeah.
+Yeah.
+So, what are you planning to do over the weekend, then?
+Search.
+You're going to do the search?
+And...
+You're going to do the search.
+Well, sure.
+Why not?
+Yeah.
+Yeah.
+You're going to implement the search?
+Yeah.
+Everything?
+It couldn't be that hard.
+Yeah.
+Well, it'll be, you know, still a limited version of, you know, the next query.
+It won't be the whole thing, though.
+No.
+Like, we can just decide, sort of, things that we do want to do.
+Yeah.
+Well, actually, most of it's just dialogue access.
+Yeah.
+And this was a summary topic, strangely.
+Yeah.
+It's just that I think we need to set ourselves up.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+We'll just build ourselves up.
+Yeah.
+Well, we'll get, like, some milestones, because otherwise, you know.
+Yeah.
+It'll get behind schedule.
+Yeah.
+Pretty quick.
+Weeks will go by.
+Like you're saying.
+Yeah.
+Well, actually, do we want to set a date for interim prototypes, specifically, I think?
+We must.
+Or you decide.
+I'm not doing much for that prototype.
+The progress report is June 23rd, February... or February.
+So, what's that?
+Two weeks, basically?
+Yeah.
+Yeah, well, how about we get it done by then, I mean, then we can write about it in the interim report, you know, now we've got something to show.
+Yeah, yeah, okay, so...
+I'm just looking at my own deadlines.
+Oh, and the search interface, maybe you should decide pretty early what kind of things you want to be able to search for, and then if you want, you can give that to me, and I'll build you a nice, you know, a few tick boxes and drop-down menus.
+Wasn't, like, what you had now, wasn't that pretty much what we agreed on?
+No, or was it just, like, that one?
+Oh, that's, that's, that doesn't exist.
+That's completely cut and pasted.
+That's completely cut and pasted.
+Okay, that does not exist.
+It's actually done, though, isn't it?
+This is illusion.
+Nicely done, though, isn't it?
+Semblance of reality.
+Yeah, that's quite impressive.
+It's actually, it's actually, all these, all these things are nicked from, you know, all these drop-down menus and tick boxes are nicked from Google Online.
+A screenshot of Google.
+That's quite sly, really.
+It's just so much fun.
+Nice start.
+I'm impressed.
+Maybe you should make it exist, then.
+It's going to be a little difficult, more difficult.
+Yeah, I mean, I was going to, but, you know, the whole drop-down menus and stuff, what we want to search for is not quite agreed on.
+We never agreed on what we want to be able to search for.
+No, it's not, is it, right?
+True.
+Yeah.
+So.
+Because I don't have them over the weekend.
+Yeah, do you want to, you know, just get together and think about the different types of search we could possibly do.
+And then we could discuss it next meeting.
+Which option?
+Which options we really want to include.
+That would probably involve researching the query language a bit as well to see what that can do.
+It would be nice to, I don't know, meet up and you can sort of show us a bit what you know already so we don't sort of have to do all the work again of just, like, figuring out stuff.
+Oh, just like the basics.
+No.
+No already?
+What?
+Just, like, accessing the corpus and stuff.
+Oh.
+Yeah.
+Just, like, all that.
+And seeing the code and just sort of how.
+Just.
+Just see the basics of what you've done.
+Like, just get a quick look over and just.
+The basics.
+You can take us for a tutorial sometimes.
+Yeah.
+Yeah.
+Yeah.
+You know, the class paths, all that sort of thing.
+Or, like, you know, the class paths, all that sort of thing.
+Like, just say, okay, well, here's, you know, everything's basic and set up and then just, you know, just jump right in.
+Yeah.
+Yeah, I can do that.
+Yeah.
+I can show you what fits the code.
+Okay.
+Next week sometime.
+Yeah.
+Yeah.
+Yeah.
+Cool.
+Yeah.
+In the morning.
+Yeah.
+Well, this time I'm dictating the time because if I'm not there, you can't do anything.
+Yeah.
+Yeah.
+Yeah.
+I know.
+Well, the thing is, you know, something like that could happen any time because, you know, like, my schedule is, like, class, break, class, break, class, you know, that sort of thing.
+Yeah.
+It's not going to take an hour to explain it, you know.
+So.
+Yeah.
+I know.
+Oh, exactly.
+Exactly.
+That's what I'm thinking.
+Yeah.
+Yeah.
+So something like that.
+And then if I have a class, I can run off and do whatever.
+I mean.
+Yeah.
+Pick a time.
+Yeah.
+I, you know, let me know whenever.
+Okay.
+Yeah.
+It's a Monday.
+Monday might be good.
+Yeah.
+Monday.
+Yeah.
+Yeah.
+What did you say?
+Next.
+Yeah.
+This Monday.
+Just.
+Anytime.
+Not at, not at noon or two or four.
+Monday afternoon.
+No.
+In between those, you know, like one.
+I know.
+Three.
+Three o'clock.
+Actually.
+Yeah.
+Three is all right.
+Possibly.
+What time is the energy?
+Four, isn't it?
+It's four, yeah.
+Unless you want to do it after.
+After.
+D.
+Yeah.
+Yeah.
+That's an option, too.
+Yeah.
+After.
+Yeah.
+Okay.
+Three is a good day.
+Yeah.
+But we have.
+Whatever.
+What was your fare?
+Four, three, thirty.
+I just.
+Yeah.
+Well, it doesn't matter for me.
+It doesn't necessarily.
+Necessarily.
+That's going to be tight.
+I mean, three, three or after.
+Three thirty in the, in the computer room in here.
+And then we can just go.
+If you can't, can you get in the front door?
+Actually, we can't get in there, though.
+Maybe we can.
+Oh, we haven't got a key, do we?
+Well, we can get in through the, through the, the card, the card door.
+Can none of you get in there?
+Yeah.
+Well, front door.
+There's computer rooms in here.
+The MSC computer lab in.
+It's in here.
+In the four book.
+I've not found that yet.
+How about if we take a tour?
+Sure.
+I'll show you.
+Well, if you find me, I'll show you where I'll let us all in there and we can all go
+in there.
+We can go look.
+We can look now afterwards.
+Right.
+Yeah.
+Yeah, exactly.
+Yeah.
+Yeah.
+Yeah.
+You do need to have a key for it.
+That's the thing.
+It's got a lock door, but.
+Okay.
+Okay.
+Yeah.
+Somebody else.
+Actually, I was asking Steve about that, whether we can get in there, whether he's
+going to get us in there.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+Yeah.
+It's only got this crap.
+It's only got about four or five computers in, but it would do quite good for our job
+because you can all sit around.
+It's not very, I've not made many people in it, right?
+Okay.
+Right.
+Is there a printer in there too?
+Yeah, there's a printer in there.
+And there's a photocopier with the code on it.
+Yeah.
+Really?
+Nice.
+Okay.
+That's cool.
+Really?
+That'd come in handy.
+Oh, is that the photocopier?
+I heard of it.
+well I'm just hey we could we could photocopy our assignment got on my
+computer yeah whatever is in my computer well the comments I'm thinking yeah so
+what time do we say I just think it's better to do afterwards yeah that's
+true all right so after D and LG rather than have half an hour and then we'll
+surely run out yeah yeah yeah yeah yeah yeah as long as D and LG doesn't
+go late hopefully it's not that man's that won't matter
+actually it's not even confirmed yet what she doesn't even know what she's
+talking about yet well maybe it doesn't happen at all
+sounds like me it's reading week next week
+should be
+it shouldn't be any well it's supposed to be next week is it really next week or the weekend
+it's week six next week really i don't think we have a reading window i don't know we have
+one class at least when we like speech perception we don't have any lectures
+that's canceled oh really but i think we're having like all other classes so
+there's not a point in having yeah i don't think there is an official one i don't think there was
+an official one last semester i think it was just a bank holiday wasn't it um something like that
+no i think i think when a couple classes were canceled some classes did and some classes didn't
+yeah yeah which are a bit crap yeah exactly yeah it was all a bit bizarre really they didn't really
+know what was going on i think the undergraduates had were totally i think it goes up to the
+professor whether they did it or not well i don't feel like yeah okay now make them work
+i think
+i think yeah i think dil will probably have one to make up for missing classes what dil will probably
+have classes yeah we will probably have it out now it's been last week
+okay let's meet monday yeah yeah um i guess that's it was there anything else
+do anyone know you want to like take care of this or should i take care of it
+uh wait just you can have it yeah yeah i don't know if there was something
+i think he basically said um the same things as in the comments if i could read it can you read that
+which one the top one no um we really want multiple windows from a single app
+from a single app but most will probably want to go with defaults yeah yeah but most will probably want to go with defaults
+oh that was what you said i guess yeah i think it comments are basically the same as what you said
+yeah exactly and just the other comment about whether you want to do both speaker characterization
+and topic segmentation yeah that's brilliant i'm terribly excited oh yeah yeah okay and now we have
+seven percent of the course already done
+yeah
+all right
+it's quite good okay all right so so i think we need to tick the okay box right if you're
+okay with it having
+it's exciting
+buzzes signing off in it yeah
+logo should we turn these off we're done now
+is she still here yes you are yeah
