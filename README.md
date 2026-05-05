@@ -1,7 +1,7 @@
 # 🎙️ Multi-Model ASR Transcription Benchmark
 
 Benchmarks **Gemma-4**, **Gemini 3.1 Pro Preview**, **Gemini 3 Flash Preview**, and **GPT-4o Transcribe**
-across 5 audio variations (10 files total), evaluated by **GPT-5.5**.
+across 5 audio variations (10 files total), evaluated by **GPT-5.4**.
 
 ---
 
