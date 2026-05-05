@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ASR Benchmark Report</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%2210 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -736,6 +737,32 @@
     </div>
   </div>
 
+  <!-- ── Insights ── -->
+  <section class="section" id="section-insights" style="display:none;">
+    <div class="section-header">
+      <div class="section-title">Benchmark Insights</div>
+      <div class="section-badge" id="insights-count">—</div>
+    </div>
+    <div class="insight-list" id="insights-list"></div>
+  </section>
+
+  <!-- ── Model Limitations ── -->
+  <section class="section" id="section-limitations">
+    <div class="section-header">
+      <div class="section-title">Model Limitations for Long Audio</div>
+      <div class="section-badge">General Purpose Models</div>
+    </div>
+    <div class="insight-list">
+      <div class="insight-item" style="border-left: 3px solid var(--red);">
+        <span class="insight-num" style="color:var(--red)">!</span>
+        <span>
+          <strong>For Gemma-4:</strong> Transcribing long audio files is not feasible. The Gemma-4 e4b model used for benchmarking has a context window of 128k tokens and consumes <a href="https://ai.google.dev/gemma/docs/capabilities/audio#:~:text=Token%20cost%3A%20Each%20second%20of%20audio%20is%2025%20tokens%20for%20Gemma%204.%20(6.25%20tokens%20for%20Gemma%203n)." target="_blank" style="color:var(--cyan);text-decoration:none;border-bottom:1px dashed var(--cyan);">25 tokens per second of audio</a>. Therefore, a one-hour audio file requires <code>60 * 60 * 25 = 90,000 tokens</code>. When factoring in the additional tokens required for the model's thinking process, the available context is insufficient to transcribe the entire audio file at once. While chunking the audio and transcribing it sequentially is a potential workaround, it is significantly slower and was therefore not utilized.<br><br>
+          <strong>The same limitation applies to other general-purpose models</strong>, such as Gemini 3.1 Pro, Gemini 3 Flash, etc.
+        </span>
+      </div>
+    </div>
+  </section>
+
   <!-- ── Aggregate Comparison ── -->
   <section class="section" id="section-agg">
     <div class="section-header">
@@ -766,15 +793,6 @@
       <div class="section-badge">easiest → hardest</div>
     </div>
     <div class="difficulty-track" id="difficulty-track"></div>
-  </section>
-
-  <!-- ── Insights ── -->
-  <section class="section" id="section-insights" style="display:none;">
-    <div class="section-header">
-      <div class="section-title">Benchmark Insights</div>
-      <div class="section-badge" id="insights-count">—</div>
-    </div>
-    <div class="insight-list" id="insights-list"></div>
   </section>
 
   <!-- ── Recommendations ── -->
@@ -1145,7 +1163,7 @@ function openModal(audioId) {
   // Build audio src — use audio_base64 from the result
   const audioSrc = r.audio_base64
     ? `data:${r.audio_mime_type || 'audio/wav'};base64,${r.audio_base64}`
-    : null;
+    : r.audio_file;
 
   let body = `
     ${audioSrc ? `
