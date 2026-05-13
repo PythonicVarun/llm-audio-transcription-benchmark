@@ -3,7 +3,7 @@
 ╔══════════════════════════════════════════════════════════════════╗
 ║         Multi-Model ASR Transcription Benchmark                  ║
 ║  Models : Gemma-4 | Gemini 3.1 Pro | Gemini 3 Flash | GPT-4o Tx  ║
-║  Eval   : GPT-5.5                                                ║
+║  Eval   : GPT-5.4                                                ║
 ║  Output : benchmark_report.json                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
 """

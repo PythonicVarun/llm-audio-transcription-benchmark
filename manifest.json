@@ -6,7 +6,7 @@
         "dataset": "AMI Corpus",
         "file": "dataset/ami/EN2002a.wav",
         "language": "en",
-        "reference_path": "dataset/ami/EN2002a.trans.txt"
+        "reference_path": "transcripts/ami/EN2002a.trans.txt"
     },
     {
         "id": "multi_speaker_2",
@@ -15,7 +15,7 @@
         "dataset": "AMI Corpus",
         "file": "dataset/ami/TS3003d.wav",
         "language": "en",
-        "reference_path": "dataset/ami/TS3003d.trans.txt"
+        "reference_path": "transcripts/ami/TS3003d.trans.txt"
     },
     {
         "id": "multi_speaker_1_noise",
@@ -24,7 +24,7 @@
         "dataset": "Chime-6",
         "file": "dataset/chime-6/audio_1.wav",
         "language": "en",
-        "reference_path": "dataset/chime-6/audio_1.trans.txt"
+        "reference_path": "transcripts/chime-6/audio_1.trans.txt"
     },
     {
         "id": "multi_speaker_2_noise",
@@ -33,7 +33,7 @@
         "dataset": "Chime-6",
         "file": "dataset/chime-6/audio_2.wav",
         "language": "en",
-        "reference_path": "dataset/chime-6/audio_2.trans.txt"
+        "reference_path": "transcripts/chime-6/audio_2.trans.txt"
     },
     {
         "id": "accent_1",
@@ -62,7 +62,7 @@
         "dataset": "FLEURS (hi_in)",
         "file": "dataset/fleurs/multilingual_1.wav",
         "language": "hi",
-        "reference_path": "dataset/fleurs/multilingual_1.trans.txt"
+        "reference_path": "transcripts/fleurs/multilingual_1.trans.txt"
     },
     {
         "id": "multilingual_2",
@@ -71,7 +71,7 @@
         "dataset": "FLEURS (fr_fr)",
         "file": "dataset/fleurs/multilingual_2.wav",
         "language": "fr",
-        "reference_path": "dataset/fleurs/multilingual_2.trans.txt"
+        "reference_path": "transcripts/fleurs/multilingual_2.trans.txt"
     },
     {
         "id": "noise_1",
@@ -80,7 +80,7 @@
         "dataset": "Librivox",
         "file": "dataset/librivox/cattlebrands_01_adams.mp3",
         "language": "en",
-        "reference_path": "dataset/librivox/cattlebrands_01_adams.trans.txt"
+        "reference_path": "transcripts/librivox/cattlebrands_01_adams.trans.txt"
     },
     {
         "id": "noise_2",
@@ -89,6 +89,6 @@
         "dataset": "FLEURS (en_us)",
         "file": "dataset/fleurs-noise/en_us.wav",
         "language": "en",
-        "reference_path": "dataset/fleurs-noise/en_us.trans.txt"
+        "reference_path": "transcripts/fleurs-noise/en_us.trans.txt"
     }
 ]
