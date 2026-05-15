@@ -20,34 +20,61 @@ Run order:
 # ═════════════════════════════════════════════════════════════════════════════
 # CELL 1 — install transformers from git, then KERNEL RESTART (not factory reset)
 # ═════════════════════════════════════════════════════════════════════════════
-import subprocess, sys
+import subprocess
+import sys
+
 subprocess.run(
-    [sys.executable, "-m", "pip", "install", "--upgrade", "--force-reinstall",
-     "--no-deps", "git+https://github.com/huggingface/transformers.git"],
+    [
+        sys.executable,
+        "-m",
+        "pip",
+        "install",
+        "--upgrade",
+        "--force-reinstall",
+        "--no-deps",
+        "git+https://github.com/huggingface/transformers.git",
+    ],
     check=True,
 )
 # transformers HEAD pinned huggingface_hub >= 1.5.0; Kaggle ships 1.4.1.
 # Bump only what's needed (not all deps, to avoid disturbing torch/numpy).
 subprocess.run(
-    [sys.executable, "-m", "pip", "install", "--upgrade", "-q",
-     "huggingface_hub>=1.5.0"],
+    [
+        sys.executable,
+        "-m",
+        "pip",
+        "install",
+        "--upgrade",
+        "-q",
+        "huggingface_hub>=1.5.0",
+    ],
     check=True,
 )
-out = subprocess.run([sys.executable, "-m", "pip", "show", "transformers"],
-                     capture_output=True, text=True).stdout
+out = subprocess.run(
+    [sys.executable, "-m", "pip", "show", "transformers"],
+    capture_output=True,
+    text=True,
+).stdout
 print(out)
-print(">>> NOW: Run > 'Restart & clear cell outputs' (NOT Factory reset), then run CELL 2. <<<\n")
+print(
+    ">>> NOW: Run > 'Restart & clear cell outputs' (NOT Factory reset), then run CELL 2. <<<\n"
+)
 
 
 # ═════════════════════════════════════════════════════════════════════════════
 # CELL 2 — load model and transcribe (run AFTER kernel restart)
 # ═════════════════════════════════════════════════════════════════════════════
 import os
+
 # Must be set BEFORE torch imports — reduces fragmentation between samples.
 os.environ["PYTORCH_ALLOC_CONF"] = "expandable_segments:True"
 
-import json, time, pathlib
-import librosa, torch
+import json
+import pathlib
+import time
+
+import librosa
+import torch
 from kaggle_secrets import UserSecretsClient
 
 # Verify the new transformers actually has Gemma-4. If this import fails,
@@ -61,25 +88,25 @@ from transformers.models.gemma4 import (
 kaggle_sec = UserSecretsClient()
 
 # ── config ───────────────────────────────────────────────────────────────────
-HF_TOKEN     = kaggle_sec.get_secret("HF_TOKEN", "")
-MODEL_ID     = "google/gemma-4-E4B-it"
-INPUT_ROOT   = pathlib.Path("/kaggle/input")    # searched recursively
-STATE_FILE   = pathlib.Path("/kaggle/working/gemma4_results_partial.json")
-RESET        = False   # set to True to ignore STATE_FILE and re-run everything
-REPO_ROOT    = pathlib.Path("/kaggle/working/llm-audio-transcription-benchmark")
+HF_TOKEN = kaggle_sec.get_secret("HF_TOKEN", "")
+MODEL_ID = "google/gemma-4-E4B-it"
+INPUT_ROOT = pathlib.Path("/kaggle/input")  # searched recursively
+STATE_FILE = pathlib.Path("/kaggle/working/gemma4_results_partial.json")
+RESET = False  # set to True to ignore STATE_FILE and re-run everything
+REPO_ROOT = pathlib.Path("/kaggle/working/llm-audio-transcription-benchmark")
 MANIFEST_PATH = REPO_ROOT / "manifest.json"
 
 MANIFEST = [
-    {"id": "clean_1",         "file": "6829-68769-0000.wav",  "variation": "clean"},
-    {"id": "clean_2",         "file": "5639-40744-0031.wav",  "variation": "clean"},
-    {"id": "noise_1",         "file": "83-11691-0035.wav",    "variation": "background_noise"},
-    {"id": "noise_2",         "file": "196-122150-0032.wav",  "variation": "background_noise"},
-    {"id": "multi_speaker_1", "file": "EN2002a.wav",          "variation": "multiple_speakers"},
-    {"id": "multi_speaker_2", "file": "TS3003d.wav",          "variation": "multiple_speakers"},
-    {"id": "accent_1",        "file": "hindko1.mp3",          "variation": "accents"},
-    {"id": "accent_2",        "file": "telugu1.mp3",          "variation": "accents"},
-    {"id": "multilingual_1",  "file": "multilingual_1.wav",   "variation": "multilingual"},
-    {"id": "multilingual_2",  "file": "multilingual_2.wav",   "variation": "multilingual"},
+    {"id": "clean_1", "file": "6829-68769-0000.wav", "variation": "clean"},
+    {"id": "clean_2", "file": "5639-40744-0031.wav", "variation": "clean"},
+    {"id": "noise_1", "file": "83-11691-0035.wav", "variation": "background_noise"},
+    {"id": "noise_2", "file": "196-122150-0032.wav", "variation": "background_noise"},
+    {"id": "multi_speaker_1", "file": "EN2002a.wav", "variation": "multiple_speakers"},
+    {"id": "multi_speaker_2", "file": "TS3003d.wav", "variation": "multiple_speakers"},
+    {"id": "accent_1", "file": "hindko1.mp3", "variation": "accents"},
+    {"id": "accent_2", "file": "telugu1.mp3", "variation": "accents"},
+    {"id": "multilingual_1", "file": "multilingual_1.wav", "variation": "multilingual"},
+    {"id": "multilingual_2", "file": "multilingual_2.wav", "variation": "multilingual"},
 ]
 
 SINGLE_PROMPT = (
@@ -94,6 +121,7 @@ MULTI_PROMPT = (
     "one turn per line. Output only the labeled transcript — no timestamps "
     "or explanations."
 )
+
 
 def find_audio(filename: str):
     matches = list(INPUT_ROOT.rglob(filename))
@@ -111,7 +139,9 @@ def compute_metrics(reference: str, hypothesis: str, language: str):
     try:
         import jiwer
     except Exception:
-        import sys, subprocess
+        import subprocess
+        import sys
+
         subprocess.run(
             [sys.executable, "-m", "pip", "install", "-q", "jiwer"],
             check=True,
@@ -130,14 +160,20 @@ def compute_metrics(reference: str, hypothesis: str, language: str):
         return (None, cer, None)
     return (jiwer.wer(reference, hypothesis), cer, jiwer.mer(reference, hypothesis))
 
+
 # ── load model directly (auto-mapping doesn't know about gemma4 yet) ─────────
-print(f"transformers={__import__('transformers').__version__}  "
-      f"torch={torch.__version__}  cuda={torch.version.cuda}  "
-      f"devices={torch.cuda.device_count()}")
+print(
+    f"transformers={__import__('transformers').__version__}  "
+    f"torch={torch.__version__}  cuda={torch.version.cuda}  "
+    f"devices={torch.cuda.device_count()}"
+)
 print(f"Loading {MODEL_ID}...")
 
+import gc
+
 # --- BEFORE LOADING MODEL ---
-import torch, gc
+import torch
+
 gc.collect()
 torch.cuda.empty_cache()
 
@@ -147,7 +183,7 @@ processor = Gemma4Processor.from_pretrained(MODEL_ID, token=HF_TOKEN)
 model = Gemma4ForConditionalGeneration.from_pretrained(
     MODEL_ID,
     torch_dtype=torch.float16,
-    device_map="auto",                 # more stable than balanced here
+    device_map="auto",  # more stable than balanced here
     max_memory={0: "11GiB", 1: "11GiB", "cpu": "20GiB"},  # leave headroom
     low_cpu_mem_usage=True,
     token=HF_TOKEN,
@@ -157,8 +193,9 @@ print("Model loaded.\n")
 # ── transcribe (resumable: skip entries already in STATE_FILE) ──────────────
 if STATE_FILE.exists() and not RESET:
     saved = json.loads(STATE_FILE.read_text())
-    done_by_id = {r["audio_id"]: r for r in saved
-                  if r.get("transcript") and not r.get("error")}
+    done_by_id = {
+        r["audio_id"]: r for r in saved if r.get("transcript") and not r.get("error")
+    }
     print(f"Resuming: {len(done_by_id)}/{len(MANIFEST)} already transcribed.\n")
 else:
     done_by_id = {}
@@ -176,20 +213,36 @@ for entry in MANIFEST:
     path = find_audio(entry["file"])
     if path is None:
         print(f"[SKIP] {entry['id']} — {entry['file']} not found under /kaggle/input")
-        results.append({"audio_id": entry["id"], "transcript": "",
-                        "latency_ms": 0, "error": "file not found"})
+        results.append(
+            {
+                "audio_id": entry["id"],
+                "transcript": "",
+                "latency_ms": 0,
+                "error": "file not found",
+            }
+        )
         continue
 
     audio, _ = librosa.load(str(path), sr=16000, mono=True)
-    prompt = MULTI_PROMPT if entry["variation"] == "multiple_speakers" else SINGLE_PROMPT
+    prompt = (
+        MULTI_PROMPT if entry["variation"] == "multiple_speakers" else SINGLE_PROMPT
+    )
 
-    messages = [{"role": "user", "content": [
-        {"type": "audio", "audio": audio},
-        {"type": "text",  "text": prompt},
-    ]}]
+    messages = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "audio", "audio": audio},
+                {"type": "text", "text": prompt},
+            ],
+        }
+    ]
     inputs = processor.apply_chat_template(
-        messages, tokenize=True, return_dict=True,
-        return_tensors="pt", add_generation_prompt=True,
+        messages,
+        tokenize=True,
+        return_dict=True,
+        return_tensors="pt",
+        add_generation_prompt=True,
     ).to(model.device)
     input_len = inputs["input_ids"].shape[-1]
 
@@ -206,8 +259,11 @@ for entry in MANIFEST:
                 text = parsed.get("text") or parsed.get("content") or str(parsed)
             elif isinstance(parsed, list):
                 text = " ".join(
-                    (p.get("text") or p.get("content") or "")
-                    if isinstance(p, dict) else str(p)
+                    (
+                        (p.get("text") or p.get("content") or "")
+                        if isinstance(p, dict)
+                        else str(p)
+                    )
                     for p in parsed
                 )
             else:
@@ -220,32 +276,36 @@ for entry in MANIFEST:
         reference = manifest_entry.get("reference", "")
         language = manifest_entry.get("language", "en")
         wer, cer, mer = compute_metrics(reference, text, language)
-        results.append({
-            "audio_id": entry["id"],
-            "transcript": text,
-            "latency_ms": latency_ms,
-            "error": None,
-            "wer": wer,
-            "cer": cer,
-            "mer": mer,
-            "transcription_source": "kaggle_gemma4",
-        })
+        results.append(
+            {
+                "audio_id": entry["id"],
+                "transcript": text,
+                "latency_ms": latency_ms,
+                "error": None,
+                "wer": wer,
+                "cer": cer,
+                "mer": mer,
+                "transcription_source": "kaggle_gemma4",
+            }
+        )
         print(f"OK ({latency_ms:.0f}ms)")
     except Exception as exc:
         manifest_entry = manifest_by_id.get(entry["id"], {})
         reference = manifest_entry.get("reference", "")
         language = manifest_entry.get("language", "en")
         wer, cer, mer = compute_metrics(reference, "", language)
-        results.append({
-            "audio_id": entry["id"],
-            "transcript": "",
-            "latency_ms": 0,
-            "error": str(exc),
-            "wer": wer,
-            "cer": cer,
-            "mer": mer,
-            "transcription_source": "kaggle_gemma4",
-        })
+        results.append(
+            {
+                "audio_id": entry["id"],
+                "transcript": "",
+                "latency_ms": 0,
+                "error": str(exc),
+                "wer": wer,
+                "cer": cer,
+                "mer": mer,
+                "transcription_source": "kaggle_gemma4",
+            }
+        )
         print(f"ERROR: {exc}")
 
     # Free the per-sample tensors and KV cache before the next iteration —
@@ -254,7 +314,9 @@ for entry in MANIFEST:
         del inputs, out
     except NameError:
         pass
-    import gc; gc.collect()
+    import gc
+
+    gc.collect()
     torch.cuda.empty_cache()
 
     # Persist progress so KeyboardInterrupt / OOM doesn't lose finished work.
@@ -263,5 +325,8 @@ for entry in MANIFEST:
 
 # ── output ───────────────────────────────────────────────────────────────────
 print("\n\n=== PASTE THIS BLOCK BACK INTO CLAUDE ===\n")
-print(json.dumps({"model_key": "gemma-4-local", "results": results},
-                 ensure_ascii=False, indent=2))
+print(
+    json.dumps(
+        {"model_key": "gemma-4-local", "results": results}, ensure_ascii=False, indent=2
+    )
+)

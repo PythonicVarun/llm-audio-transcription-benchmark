@@ -1,19 +1,22 @@
+import argparse
 import os
 import random
-import argparse
+
 from pydub import AudioSegment
 
-def add_mixed_noises(main_audio_path, noise_folder, output_path, noise_volume_decrease_db=15):
+
+def add_mixed_noises(
+    main_audio_path, noise_folder, output_path, noise_volume_decrease_db=15
+):
     try:
         main_audio = AudioSegment.from_file(main_audio_path)
     except Exception as e:
         print(f"Error loading main audio: {e}")
         return
 
-    valid_extensions = ('.wav', '.mp3', '.ogg', '.flac', '.m4a')
+    valid_extensions = (".wav", ".mp3", ".ogg", ".flac", ".m4a")
     noise_files = [
-        f for f in os.listdir(noise_folder)
-        if f.lower().endswith(valid_extensions)
+        f for f in os.listdir(noise_folder) if f.lower().endswith(valid_extensions)
     ]
 
     if not noise_files:
@@ -49,21 +52,39 @@ def add_mixed_noises(main_audio_path, noise_folder, output_path, noise_volume_de
     print("Overlaying tracks...")
     final_audio = main_audio.overlay(combined_noise)
 
-    export_format = output_path.split('.')[-1].lower()
-    if export_format not in ['mp3', 'wav', 'ogg', 'flac']:
-        export_format = 'wav'
+    export_format = output_path.split(".")[-1].lower()
+    if export_format not in ["mp3", "wav", "ogg", "flac"]:
+        export_format = "wav"
 
     print(f"Exporting to {output_path}...")
     final_audio.export(output_path, format=export_format)
     print("Done.")
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Add mixed background noise to an audio file.")
 
-    parser.add_argument("-i", "--input", required=True, help="Path to the main audio file.")
-    parser.add_argument("-n", "--noise_dir", required=True, help="Directory containing background noise files.")
-    parser.add_argument("-o", "--output", required=True, help="Path for the output audio file.")
-    parser.add_argument("-v", "--vol_decrease", type=int, default=15, help="Decibels to drop noise volume (default: 15).")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Add mixed background noise to an audio file."
+    )
+
+    parser.add_argument(
+        "-i", "--input", required=True, help="Path to the main audio file."
+    )
+    parser.add_argument(
+        "-n",
+        "--noise_dir",
+        required=True,
+        help="Directory containing background noise files.",
+    )
+    parser.add_argument(
+        "-o", "--output", required=True, help="Path for the output audio file."
+    )
+    parser.add_argument(
+        "-v",
+        "--vol_decrease",
+        type=int,
+        default=15,
+        help="Decibels to drop noise volume (default: 15).",
+    )
 
     args = parser.parse_args()
 
@@ -75,4 +96,9 @@ if __name__ == "__main__":
         print(f"Fatal: Noise directory '{args.noise_dir}' does not exist.")
         exit(1)
 
-    add_mixed_noises(args.input, args.noise_dir, args.output, noise_volume_decrease_db=args.vol_decrease)
+    add_mixed_noises(
+        args.input,
+        args.noise_dir,
+        args.output,
+        noise_volume_decrease_db=args.vol_decrease,
+    )

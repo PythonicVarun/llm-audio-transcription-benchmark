@@ -281,7 +281,9 @@ def placeholder_evaluation(has_transcript: bool, message: str) -> dict[str, Any]
     }
 
 
-def compute_whisper_aggregate(results: list[dict[str, Any]], model_key: str) -> dict[str, Any]:
+def compute_whisper_aggregate(
+    results: list[dict[str, Any]], model_key: str
+) -> dict[str, Any]:
     wers: list[Optional[float]] = []
     cers: list[Optional[float]] = []
     mers: list[Optional[float]] = []

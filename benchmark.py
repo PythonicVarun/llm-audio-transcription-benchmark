@@ -18,12 +18,12 @@ import re
 import shlex
 import subprocess
 import time
-import soundfile as sf
+import traceback
 from datetime import datetime, timezone
 from typing import Any, Optional
 
-import traceback
 import jiwer
+import soundfile as sf
 from tqdm import tqdm
 
 # LOGGING
@@ -37,7 +37,9 @@ logger = logging.getLogger(__name__)
 
 # ⚠️  FILL IN YOUR API KEYS BELOW
 
-GOOGLE_API_KEY = os.getenv("CODEX_STRAIVE_OPENAI_TOKEN", "YOUR_GOOGLE_API_KEY")  # google-genai key
+GOOGLE_API_KEY = os.getenv(
+    "CODEX_STRAIVE_OPENAI_TOKEN", "YOUR_GOOGLE_API_KEY"
+)  # google-genai key
 OPENAI_API_KEY = os.getenv("CODEX_STRAIVE_OPENAI_TOKEN", "YOUR_OPENAI_API_KEY")  # openai key
 OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://llmfoundry.straivedemo.com/openai/v1").strip() or None  # e.g. https://api.openai.com/v1
 
@@ -51,9 +53,13 @@ DEFAULT_LOCAL_OPENAI_API_KEY = (
     or os.getenv("LOCAL_OPENAI_API_KEY")
     or "local"
 ).strip()
-DEFAULT_LOCAL_AUDIO_MODE = os.getenv("BENCHMARK_LOCAL_AUDIO_MODE", "input_audio").strip().lower()
+DEFAULT_LOCAL_AUDIO_MODE = (
+    os.getenv("BENCHMARK_LOCAL_AUDIO_MODE", "input_audio").strip().lower()
+)
 DEFAULT_LOCAL_MODELS_RAW = os.getenv("BENCHMARK_LOCAL_MODELS", "").strip()
-DEFAULT_LOCAL_COMMAND_MODELS_RAW = os.getenv("BENCHMARK_LOCAL_COMMAND_MODELS", "").strip()
+DEFAULT_LOCAL_COMMAND_MODELS_RAW = os.getenv(
+    "BENCHMARK_LOCAL_COMMAND_MODELS", ""
+).strip()
 DEFAULT_LOCAL_COMMAND_TIMEOUT_SECONDS = float(
     os.getenv("BENCHMARK_LOCAL_COMMAND_TIMEOUT_SECONDS", "600")
 )
@@ -293,7 +299,9 @@ def _build_local_command_model_cfg(
             ),
         }
     else:
-        raise ValueError(f"Unsupported local command model config for {key!r}: {spec!r}")
+        raise ValueError(
+            f"Unsupported local command model config for {key!r}: {spec!r}"
+        )
 
     if not cfg.get("command_template") and not cfg.get("output_file_template"):
         raise ValueError(
@@ -410,7 +418,7 @@ def get_google_client() -> Any:
             api_key=GOOGLE_API_KEY,
             http_options=google_types.HttpOptions(
                 base_url="https://llmfoundry.straivedemo.com/gemini/",
-            )
+            ),
         )
     return google_client
 
@@ -434,6 +442,7 @@ def get_local_openai_client(base_url: str, api_key: str) -> Any:
             base_url=base_url,
         )
     return local_openai_clients[key]
+
 
 # TRANSCRIPTION LOGIC
 
@@ -464,6 +473,7 @@ def transcription_prompt_for_variation(variation: str) -> str:
 def get_audio_duration(audio_path: pathlib.Path) -> Optional[float]:
     info = sf.info(str(audio_path))
     return info.duration
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -792,7 +802,9 @@ def transcribe_local_command(
             text=True,
             encoding="utf-8",
             errors="replace",
-            timeout=float(cfg.get("timeout_seconds", DEFAULT_LOCAL_COMMAND_TIMEOUT_SECONDS)),
+            timeout=float(
+                cfg.get("timeout_seconds", DEFAULT_LOCAL_COMMAND_TIMEOUT_SECONDS)
+            ),
             check=False,
         )
         if completed.returncode != 0:
@@ -835,8 +847,15 @@ def transcribe(
     if "gpt-4o" in model_key.lower():
         duration = get_audio_duration(audio_path)
         if duration is not None and duration > 1400:
-            logger.warning(f"  ✗ [{model_key}] Audio duration ({duration:.0f}s) exceeds 1400s limit for GPT-4o")
-            return "", 0.0, f"Audio duration {duration:.0f}s exceeds GPT-4o 1400s limit", "skipped"
+            logger.warning(
+                f"  ✗ [{model_key}] Audio duration ({duration:.0f}s) exceeds 1400s limit for GPT-4o"
+            )
+            return (
+                "",
+                0.0,
+                f"Audio duration {duration:.0f}s exceeds GPT-4o 1400s limit",
+                "skipped",
+            )
 
     try:
         if cfg["provider"] == "google":
@@ -916,6 +935,7 @@ _cer_transform = jiwer.Compose(
     ]
 )
 
+
 def compute_cer(reference: str, hypothesis: str) -> Optional[float]:
     if not reference.strip() or not str(hypothesis).strip():
         return None
@@ -932,6 +952,7 @@ def compute_cer(reference: str, hypothesis: str) -> Optional[float]:
     except Exception as exc:
         logger.exception("compute_cer failed: %s", exc)
         return None
+
 
 def compute_mer(reference: str, hypothesis: str) -> Optional[float]:
     """Match Error Rate - useful for multi-speaker / noisy audio."""
@@ -1412,7 +1433,9 @@ def merge_results(
     return merged_results, stats
 
 
-def merge_transcription_model_metadata(existing_report: Optional[dict]) -> tuple[dict, dict]:
+def merge_transcription_model_metadata(
+    existing_report: Optional[dict],
+) -> tuple[dict, dict]:
     existing_metadata = (existing_report or {}).get("benchmark_metadata", {})
     existing_models = existing_metadata.get("transcription_models", {})
     existing_details = existing_metadata.get("transcription_model_details", {})
@@ -1429,11 +1452,7 @@ def merge_transcription_model_metadata(existing_report: Optional[dict]) -> tuple
     )
     transcription_model_details.update(
         {
-            mk: {
-                key: value
-                for key, value in cfg.items()
-                if key not in {"api_key"}
-            }
+            mk: {key: value for key, value in cfg.items() if key not in {"api_key"}}
             for mk, cfg in TRANSCRIPTION_MODELS.items()
         }
     )
@@ -1539,7 +1558,9 @@ def run_benchmark(
         )
 
     if model_filter:
-        missing_models = [key for key in model_filter if key not in TRANSCRIPTION_MODELS]
+        missing_models = [
+            key for key in model_filter if key not in TRANSCRIPTION_MODELS
+        ]
         if missing_models:
             raise ValueError(
                 "Unknown model key(s) in --models: "
@@ -1556,7 +1577,9 @@ def run_benchmark(
     logger.info(f"Loaded {len(manifest)} audio samples from manifest.json")
     if append_report:
         if existing_report:
-            logger.info("Append report enabled. Merging into: %s", OUTPUT_PATH.resolve())
+            logger.info(
+                "Append report enabled. Merging into: %s", OUTPUT_PATH.resolve()
+            )
         else:
             logger.info(
                 "Append report enabled, but no existing report was found at: %s",
@@ -1681,7 +1704,7 @@ def run_benchmark(
             "language": language,
             "audio_file": str(audio_path),
             "audio_mime_type": MIME_MAP.get(audio_path.suffix.lower(), "audio/wav"),
-            "audio_base64": None, # base64.b64encode(audio_path.read_bytes()).decode()
+            "audio_base64": None,  # base64.b64encode(audio_path.read_bytes()).decode()
             "reference_transcript": reference,
             "model_outputs": model_outputs,
             "evaluations": evaluations,
@@ -1713,8 +1736,8 @@ def run_benchmark(
             merge_stats["model_outputs_updated"],
         )
 
-    transcription_models, transcription_model_details = merge_transcription_model_metadata(
-        existing_report if append_report else None
+    transcription_models, transcription_model_details = (
+        merge_transcription_model_metadata(existing_report if append_report else None)
     )
     model_keys = collect_model_keys(all_results, list(transcription_models))
     for model_key in model_keys:
@@ -1764,9 +1787,7 @@ def run_benchmark(
             if agg["avg_latency_ms"] is not None
             else "N/A"
         )
-        logger.info(
-            f"    {display_name:<35} {wer_s:>9}  {score_s:>10}  {lat_s:>10}"
-        )
+        logger.info(f"    {display_name:<35} {wer_s:>9}  {score_s:>10}  {lat_s:>10}")
     logger.info(f"{'═'*65}\n")
 
 

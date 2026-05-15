@@ -79,8 +79,7 @@ def parse_args() -> argparse.Namespace:
         default="",
         help=(
             "Optional comma-separated manual model keys to run. "
-            "Available: "
-            + ", ".join(MANUAL_TRANSCRIPTION_MODELS)
+            "Available: " + ", ".join(MANUAL_TRANSCRIPTION_MODELS)
         ),
     )
     parser.add_argument(
@@ -99,7 +98,9 @@ def _split_csv(raw: str) -> list[str]:
     return [part.strip() for part in raw.split(",") if part.strip()]
 
 
-def load_manual_transcript(audio_path: pathlib.Path, suffix: str) -> tuple[str, pathlib.Path]:
+def load_manual_transcript(
+    audio_path: pathlib.Path, suffix: str
+) -> tuple[str, pathlib.Path]:
     transcript_path = audio_path.parent / f"{audio_path.stem}{suffix}"
     if not transcript_path.exists():
         raise FileNotFoundError(f"Manual transcript not found: {transcript_path}")
@@ -131,9 +132,13 @@ def run_manual_benchmark(
     if model_filter:
         logger.info("Model filter enabled: %s", ", ".join(selected_models))
 
-    missing_audio = [e["file"] for e in manifest if not pathlib.Path(e["file"]).exists()]
+    missing_audio = [
+        e["file"] for e in manifest if not pathlib.Path(e["file"]).exists()
+    ]
     if missing_audio:
-        logger.warning("Missing audio files (will be skipped):\n  %s", "\n  ".join(missing_audio))
+        logger.warning(
+            "Missing audio files (will be skipped):\n  %s", "\n  ".join(missing_audio)
+        )
 
     all_results: list[dict] = []
 
@@ -161,11 +166,15 @@ def run_manual_benchmark(
         language = entry.get("language", "en")
 
         logger.info("\n%s", "─" * 65)
-        logger.info("▶ [%s]  %s  (%s)", audio_id, entry["dataset"], entry["variation_label"])
+        logger.info(
+            "▶ [%s]  %s  (%s)", audio_id, entry["dataset"], entry["variation_label"]
+        )
 
         model_outputs: dict[str, dict] = {}
         for model_key, model_cfg in selected_models.items():
-            logger.info("  ▷ Loading manual transcript for %s ...", model_cfg["display"])
+            logger.info(
+                "  ▷ Loading manual transcript for %s ...", model_cfg["display"]
+            )
             try:
                 transcript, transcript_path = load_manual_transcript(
                     audio_path=audio_path,
@@ -216,7 +225,11 @@ def run_manual_benchmark(
                     mer=out["mer"],
                 )
                 score = evaluations[model_key].get("overall_score", "?")
-                logger.info("    %-30s → score=%s/10", selected_models[model_key]["display"], score)
+                logger.info(
+                    "    %-30s → score=%s/10",
+                    selected_models[model_key]["display"],
+                    score,
+                )
 
         result = {
             "audio_id": audio_id,
@@ -226,7 +239,7 @@ def run_manual_benchmark(
             "language": language,
             "audio_file": str(audio_path),
             "audio_mime_type": MIME_MAP.get(audio_path.suffix.lower(), "audio/wav"),
-            "audio_base64": None, # base64.b64encode(audio_path.read_bytes()).decode()
+            "audio_base64": None,  # base64.b64encode(audio_path.read_bytes()).decode()
             "reference_transcript": reference,
             "model_outputs": model_outputs,
             "evaluations": evaluations,
